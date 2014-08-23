@@ -25,7 +25,7 @@ import net.mostlyoriginal.game.manager.EntityFactorySystem;
 @Wire
 public class RouteSystem extends EntityProcessingSystem {
 
-    public static final int CHANCE_OF_ROUTE_BEING_NODE = 50;
+    public static final int CHANCE_OF_ROUTE_BEING_NODE = 38;
     public static final int DEFAULT_ROUTE_LENGTH = 16;
 
     protected GroupManager groupManager;
