@@ -20,6 +20,6 @@ public class RouteNode extends Component {
 
     public enum Action {
         SKIP,
-        EVENT
+        FINISH, EVENT
     }
 }

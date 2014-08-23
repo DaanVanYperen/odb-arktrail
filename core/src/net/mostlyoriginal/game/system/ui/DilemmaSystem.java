@@ -95,4 +95,9 @@ public class DilemmaSystem extends EntityProcessingSystem {
     protected void process(Entity e) {
 
     }
+
+    public void finishDilemma() {
+        createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, "[VICTORY CONDITION REACHED. YAY.]");
+        dilemmaActive=true;
+    }
 }

@@ -59,7 +59,9 @@ public class RouteSystem extends EntityProcessingSystem {
 
         for ( int i=0; i<length; i++ )
         {
-            RouteNode.Action action = ( (i==0) || (i==length-1) || (MathUtils.random(0, 99) < CHANCE_OF_ROUTE_BEING_NODE) ) ? RouteNode.Action.EVENT : RouteNode.Action.SKIP;
+            RouteNode.Action action =
+                    ( i==length-1 ) ? RouteNode.Action.FINISH :
+                    ( (i==0) || (MathUtils.random(0, 99) < CHANCE_OF_ROUTE_BEING_NODE) ) ? RouteNode.Action.EVENT : RouteNode.Action.SKIP;
 
             efs.createRouteNode( startX + i * 8, G.SCREEN_HEIGHT - 16, action, i);
          }
@@ -126,6 +128,7 @@ public class RouteSystem extends EntityProcessingSystem {
                 anim.id = routeNode.visited ? "progress-bar-1" : "progress-bar-0";
                 break;
             case EVENT:
+            case FINISH:
                 anim.id = routeNode.visited ? "progress-bubble-1" : "progress-bubble-0";
                 break;
         }

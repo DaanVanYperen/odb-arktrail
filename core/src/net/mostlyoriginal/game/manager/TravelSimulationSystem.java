@@ -42,6 +42,9 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
                 case EVENT:
                     dilemmaSystem.randomDilemma();
                     break;
+                case FINISH:
+                    dilemmaSystem.finishDilemma();
+                    break;
             }
         }
     }
