@@ -18,6 +18,7 @@ import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.manager.AbstractAssetSystem;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
+import net.mostlyoriginal.game.system.render.BarRenderSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class AnimRenderSystem extends EntitySystem {
 
     private float age;
     private boolean labelsRendered;
+    private BarRenderSystem barRenderSystem;
 
     public AnimRenderSystem() {
         super(Aspect.getAspectForAll(Pos.class, Anim.class));
@@ -119,6 +121,7 @@ public class AnimRenderSystem extends EntitySystem {
         {
             labelsRendered=true;
             labelRenderSystem.process();
+            barRenderSystem.process();
         }
     }
 

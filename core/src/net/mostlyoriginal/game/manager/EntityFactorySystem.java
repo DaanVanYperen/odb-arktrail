@@ -27,7 +27,9 @@ import net.mostlyoriginal.game.component.agent.PlayerControlled;
 import net.mostlyoriginal.game.component.agent.Slumberer;
 import net.mostlyoriginal.game.component.environment.RouteIndicator;
 import net.mostlyoriginal.game.component.environment.RouteNode;
-import net.mostlyoriginal.game.component.environment.Travels;
+import net.mostlyoriginal.game.component.ship.Inventory;
+import net.mostlyoriginal.game.component.ship.Travels;
+import net.mostlyoriginal.game.component.ui.Bar;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
@@ -56,6 +58,8 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
         createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);
 
+        new EntityBuilder(world).with(new Pos(50,100), new Bar("fuel", "bar-fuel",5)).build();
+
         // engage button.
         createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage", new ButtonListener() {
             @Override
@@ -74,7 +78,9 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
     }
 
     private void createSpaceshipMetadata() {
-        new EntityBuilder(world).with(new Travels()).tag("travels").build();
+        new EntityBuilder(world).with(
+                new Travels(),
+                new Inventory()).tag("travels").build();
     }
 
     @Override

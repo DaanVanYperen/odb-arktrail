@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.component.environment;
+package net.mostlyoriginal.game.component.ship;
 
 import com.artemis.Component;
 

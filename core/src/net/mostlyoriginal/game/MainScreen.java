@@ -21,6 +21,7 @@ import net.mostlyoriginal.game.manager.AssetSystem;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 import net.mostlyoriginal.game.manager.FontManager;
 import net.mostlyoriginal.game.manager.TravelSimulationSystem;
+import net.mostlyoriginal.game.system.render.BarRenderSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 import net.mostlyoriginal.game.system.ui.ButtonSystem;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
@@ -109,6 +110,7 @@ public class MainScreen implements Screen {
         //world.setSystem(new MapRenderSystem());
         world.setSystem(new AnimRenderSystem());
         world.setSystem(new LabelRenderSystem(), true); // triggered from AnimRenderSystem.
+        world.setSystem(new BarRenderSystem(), true); // triggered from AnimRenderSystem.
 
         world.initialize();
     }

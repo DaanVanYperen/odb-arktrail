@@ -7,7 +7,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
 import net.mostlyoriginal.game.component.environment.RouteNode;
-import net.mostlyoriginal.game.component.environment.Travels;
+import net.mostlyoriginal.game.component.ship.Travels;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 import net.mostlyoriginal.game.system.ui.RouteSystem;
 

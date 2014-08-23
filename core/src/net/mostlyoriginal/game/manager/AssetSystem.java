@@ -38,6 +38,9 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("btn-engage-down", 171, 81, 56, 20, 1);
 
 
+        add("bar-fuel", 40,177, 8, 6, 1);
+        add("bar-food", 40,185, 8, 6, 1);
+
         loadSounds(new String[] {
         });
     }
