@@ -4,9 +4,8 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
+import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.Inventory;
@@ -28,6 +27,16 @@ public class InventorySystem extends EntityProcessingSystem {
     public Entity foodIndicator;
     protected ComponentMapper<Inventory> mInventory;
     protected ComponentMapper<Bar> mBar;
+    private Inventory inventory;
+    private TagManager tagManager;
+
+    public Inventory getInventory() {
+        final Entity entity = tagManager.getEntity("travels");
+        if ( entity != null ) {
+            return mInventory.get(entity);
+        }
+        return null;
+    }
 
     public enum Resource {
         FUEL,
@@ -38,23 +47,33 @@ public class InventorySystem extends EntityProcessingSystem {
         super(Aspect.getAspectForAll(Inventory.class));
     }
 
+    /** inc/dec resource by amount. */
     public void alter(Resource resource, int amount) {
-        final ImmutableBag<Entity> actives = getActives();
-        final Object[] array = ((Bag<Entity>) actives).getData();
-        for (int i = 0, s = actives.size(); s > i; i++) {
-            final Entity e = (Entity)array[i];
-            if ( e != null ) {
-                final Inventory inventory = mInventory.get(e);
-                switch (resource) {
-                    case FUEL:
-                        inventory.fuel = MathUtils.clamp(inventory.fuel + amount, 0, 64);
-                        break;
-                    case FOOD:
-                        inventory.food = MathUtils.clamp(inventory.food + amount, 0, 64);
-                        break;
-                }
+        final Inventory inventory = getInventory();
+        if ( inventory != null ) {
+            switch (resource) {
+                case FUEL:
+                    inventory.fuel = MathUtils.clamp(inventory.fuel + amount, 0, 64);
+                    break;
+                case FOOD:
+                    inventory.food = MathUtils.clamp(inventory.food + amount, 0, 64);
+                    break;
             }
         }
+    }
+
+    /** get resource amount. */
+    public int get(Resource resource) {
+        final Inventory inventory = getInventory();
+        if ( inventory != null ) {
+            switch (resource) {
+                case FUEL:
+                    return inventory.fuel;
+                case FOOD:
+                    return inventory.food;
+            }
+        }
+        return 0;
     }
 
     @Override

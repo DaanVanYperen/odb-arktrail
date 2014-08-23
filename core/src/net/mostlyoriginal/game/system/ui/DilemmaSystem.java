@@ -102,4 +102,9 @@ public class DilemmaSystem extends EntityProcessingSystem {
         createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, "[VICTORY CONDITION REACHED. YAY.]");
         dilemmaActive=true;
     }
+
+    public void outOfGasDilemma() {
+        createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, "[OUT OF GAS. BOO.]");
+        dilemmaActive=true;
+    }
 }

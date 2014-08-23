@@ -34,10 +34,19 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     /** immediately warp, and continue warping if required */
     public void warp()
     {
-        Entity entity = routeSystem.gotoNext();
+        // cost to travel to next warp point.
+        final int fuelcost = 1;
+
+        if ( inventorySystem.get(InventorySystem.Resource.FUEL) < fuelcost )
+        {
+            dilemmaSystem.outOfGasDilemma();
+            return;
+        }
+
+        final Entity entity = routeSystem.gotoNext();
         if ( entity != null && mRouteNode.has(entity) ) {
             inventorySystem.alter(InventorySystem.Resource.FOOD, -1);
-            inventorySystem.alter(InventorySystem.Resource.FUEL, -1);
+            inventorySystem.alter(InventorySystem.Resource.FUEL, -fuelcost);
 
             switch ( mRouteNode.get(entity).action )
             {
