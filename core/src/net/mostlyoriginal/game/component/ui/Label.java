@@ -1,6 +1,7 @@
 package net.mostlyoriginal.game.component.ui;
 
 import com.artemis.Component;
+import com.badlogic.gdx.graphics.Color;
 
 /**
  * @author Daan van Yperen
@@ -8,6 +9,7 @@ import com.artemis.Component;
 public class Label extends Component {
 
     public String text;
+    public Color color = Color.WHITE;
     public Align align = Align.LEFT;
 
     /** target layer, higher is in front, lower is behind. */
@@ -17,9 +19,9 @@ public class Label extends Component {
         this.text = text;
     }
 
-    public Label(String text, Align align) {
+    public Label(String text, Color color) {
         this.text = text;
-        this.align = align;
+        this.color = color;
     }
 
     public enum Align {

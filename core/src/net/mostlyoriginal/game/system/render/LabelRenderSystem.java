@@ -10,7 +10,7 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
@@ -92,8 +92,11 @@ public class LabelRenderSystem extends EntitySystem {
         final Label label = mLabel.get(entity);
         final Pos pos = pm.get(entity);
 
-        batch.setColor(Color.WHITE);
-        fontManager.font.draw(batch, label.text, pos.x, pos.y);
+        batch.setColor(label.color);
+
+        final BitmapFont font = fontManager.font;
+        font.setColor(label.color);
+        font.draw(batch, label.text, pos.x, pos.y);
     }
 
     @Override

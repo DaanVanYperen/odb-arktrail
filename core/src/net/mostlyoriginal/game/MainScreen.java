@@ -23,6 +23,7 @@ import net.mostlyoriginal.game.manager.FontManager;
 import net.mostlyoriginal.game.manager.TravelSimulationSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 import net.mostlyoriginal.game.system.ui.ButtonSystem;
+import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 import net.mostlyoriginal.game.system.ui.MouseClickSystem;
 import net.mostlyoriginal.game.system.ui.RouteSystem;
 
@@ -56,6 +57,7 @@ public class MainScreen implements Screen {
         /** CONTROL */
         world.setSystem(new RouteSystem());
         world.setSystem(new TravelSimulationSystem());
+        world.setSystem(new DilemmaSystem());
 
         // control systems.
         /** Agency Systems (Control and Interact) */

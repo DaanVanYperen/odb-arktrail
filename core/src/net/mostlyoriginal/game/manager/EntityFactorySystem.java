@@ -28,10 +28,8 @@ import net.mostlyoriginal.game.component.agent.Slumberer;
 import net.mostlyoriginal.game.component.environment.RouteIndicator;
 import net.mostlyoriginal.game.component.environment.RouteNode;
 import net.mostlyoriginal.game.component.environment.Travels;
-import net.mostlyoriginal.game.component.interact.Pluckable;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.Clickable;
-import net.mostlyoriginal.game.component.ui.Label;
 
 /**
  * Game specific entity factory.
@@ -54,8 +52,6 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
         createSpaceshipMetadata();
 
         createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);
-
-        new EntityBuilder(world).with(new Pos(50, 50), new Label("Chickens are awesome")).build();
 
         // engage button.
         createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage", new Runnable() {
@@ -231,5 +227,4 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
         return new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(), new Anim("progress-indicator", MOUSE_CURSOR_LAYER)).tag("cursor").build();
 
     }
-
 }
