@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.EntityUtil;
+import net.mostlyoriginal.game.MyGame;
 import net.mostlyoriginal.game.component.ui.*;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 import net.mostlyoriginal.game.system.ship.InventorySystem;
@@ -68,21 +69,34 @@ public class DilemmaSystem extends EntityProcessingSystem {
     /** Spawn a random dilemma. */
     public void randomDilemma() {
         if (!dilemmaActive) {
-            createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, "Captain, ensign Jovoc");
-            createLabel(10, 10 + ROW_HEIGHT * 3, COLOR_DILEMMA, "contracted a brainslug!");
-            createOption(10, 10 + ROW_HEIGHT * 2, "[DUMP HIM OUT OF AIRLOCK]", new ButtonListener() {
+            startDilemma(new Dilemma("Captain, ensign Jovoc", "contracted a brainslug!", "[DUMP HIM OUT OF AIRLOCK]", new ButtonListener() {
                 @Override
                 public void run() {
                     stopDilemma();
                 }
-            });
-            createOption(10, 10 + ROW_HEIGHT, "[DO NOTHING]", new ButtonListener() {
+            }, "[DO NOTHING]", new ButtonListener() {
                 @Override
                 public void run() {
                     stopDilemma();
                 }
-            });
+            })) ;
             dilemmaActive = true;
+        }
+    }
+
+    private void startDilemma(Dilemma dilemma) {
+        dilemmaActive=true;
+        if (dilemma.getText1() != null ) {
+            createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, dilemma.getText1());
+        }
+        if (dilemma.getText2() != null ) {
+            createLabel(10, 10 + ROW_HEIGHT * 3, COLOR_DILEMMA, dilemma.getText2());
+        }
+        if (dilemma.getOption1() != null ) {
+            createOption(10, 10 + ROW_HEIGHT * 2, dilemma.getOption1(), dilemma.getListener1());
+        }
+        if (dilemma.getOption2() != null ) {
+            createOption(10, 10 + ROW_HEIGHT, dilemma.getOption2(), dilemma.getListener2());
         }
     }
 
@@ -98,13 +112,68 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     }
 
-    public void finishDilemma() {
-        createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, "[VICTORY CONDITION REACHED. YAY.]");
-        dilemmaActive=true;
+    /** Victory! :D */
+    public void victoryDilemma() {
+        startDilemma(new Dilemma("[VICTORY CONDITION REACHED. YAY.]", "Restart", new RestartListener() ));
     }
 
+    /** Out of gas. :( */
     public void outOfGasDilemma() {
-        createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, "[OUT OF GAS. BOO.]");
-        dilemmaActive=true;
+        startDilemma(new Dilemma("[OUT OF GAS. BOO.]", "Restart", new RestartListener() ));
+    }
+
+    private class RestartListener extends ButtonListener {
+        @Override
+        public void run() {
+            MyGame.getInstance().restart();
+        }
+    }
+
+    private static class Dilemma {
+        private String text1;
+        private String text2;
+        private final String option1;
+        private final ButtonListener listener1;
+        private String option2;
+        private ButtonListener listener2;
+
+        public Dilemma(String text1, String text2, String option1, ButtonListener listener1, String option2, ButtonListener listener2) {
+            this.text1 = text1;
+            this.text2 = text2;
+            this.option1 = option1;
+            this.listener1 = listener1;
+            this.option2 = option2;
+            this.listener2 = listener2;
+        }
+
+        public Dilemma(String text2, String option1, ButtonListener listener1) {
+            this.text2 = text2;
+            this.option1 = option1;
+            this.listener1 = listener1;
+        }
+
+        public String getText1() {
+            return text1;
+        }
+
+        public String getText2() {
+            return text2;
+        }
+
+        public String getOption1() {
+            return option1;
+        }
+
+        public ButtonListener getListener1() {
+            return listener1;
+        }
+
+        public String getOption2() {
+            return option2;
+        }
+
+        public ButtonListener getListener2() {
+            return listener2;
+        }
     }
 }
