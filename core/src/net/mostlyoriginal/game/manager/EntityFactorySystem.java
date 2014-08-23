@@ -31,6 +31,7 @@ import net.mostlyoriginal.game.component.environment.Travels;
 import net.mostlyoriginal.game.component.interact.Pluckable;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.component.ui.Label;
 
 /**
  * Game specific entity factory.
@@ -41,6 +42,7 @@ import net.mostlyoriginal.game.component.ui.Clickable;
 @Wire
 public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
+    public static final int MOUSE_CURSOR_LAYER = 9999;
     private TagManager tagManager;
     private AbstractAssetSystem abstractAssetSystem;
     private TravelSimulationSystem travelSimulationSystem;
@@ -52,6 +54,8 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
         createSpaceshipMetadata();
 
         createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);
+
+        new EntityBuilder(world).with(new Pos(50, 50), new Label("Chickens are awesome")).build();
 
         // engage button.
         createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage", new Runnable() {
@@ -70,21 +74,6 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
     @Override
     public Entity createEntity(String entity, int cx, int cy, MapProperties properties) {
-        switch (entity) {
-            case "player":
-                return createPlayer(cx, cy);
-            case "slumberer":
-                return createSlumberer(cx, cy);
-            case "turnip":
-                return defaultEntity(cx, cy, "turnip-stuck")
-                        .addComponent(new Pluckable("turnip-idle"))
-                        .addComponent(new Frozen());
-            case "chicklet":
-                return defaultEntity(cx, cy, "chicklet-stuck")
-                        .addComponent(new Pluckable("chicklet-idle"))
-                        .addComponent(new Frozen());
-            /** @todo Add your entities here */
-        }
         return null;
     }
 
@@ -239,7 +228,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
     }
 
     private Entity createMousecursor() {
-        return new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(), new Anim("progress-indicator", 9999)).tag("cursor").build();
+        return new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(), new Anim("progress-indicator", MOUSE_CURSOR_LAYER)).tag("cursor").build();
 
     }
 

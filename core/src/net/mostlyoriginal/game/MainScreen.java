@@ -19,7 +19,9 @@ import net.mostlyoriginal.api.system.script.EntitySpawnerSystem;
 import net.mostlyoriginal.api.system.script.SchedulerSystem;
 import net.mostlyoriginal.game.manager.AssetSystem;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
+import net.mostlyoriginal.game.manager.FontManager;
 import net.mostlyoriginal.game.manager.TravelSimulationSystem;
+import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 import net.mostlyoriginal.game.system.ui.ButtonSystem;
 import net.mostlyoriginal.game.system.ui.MouseClickSystem;
 import net.mostlyoriginal.game.system.ui.RouteSystem;
@@ -41,6 +43,7 @@ public class MainScreen implements Screen {
         world.setManager(new GroupManager());
         world.setManager(new TagManager());
         world.setManager(new UuidEntityManager());
+        world.setManager(new FontManager());
 
         /** UTILITY - PASSIVE */
 
@@ -103,6 +106,7 @@ public class MainScreen implements Screen {
         /** Rendering */
         //world.setSystem(new MapRenderSystem());
         world.setSystem(new AnimRenderSystem());
+        world.setSystem(new LabelRenderSystem(), true); // triggered from AnimRenderSystem.
 
         world.initialize();
     }

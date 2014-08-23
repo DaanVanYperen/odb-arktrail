@@ -17,6 +17,8 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.manager.AbstractAssetSystem;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
+import net.mostlyoriginal.game.manager.EntityFactorySystem;
+import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +40,8 @@ public class AnimRenderSystem extends EntitySystem {
     private CameraSystem cameraSystem;
     private AbstractAssetSystem abstractAssetSystem;
 
+    private LabelRenderSystem labelRenderSystem;
+
     private SpriteBatch batch;
     private final List<Entity> sortedEntities = new ArrayList<Entity>();
     public boolean sortedDirty = false;
@@ -50,6 +54,7 @@ public class AnimRenderSystem extends EntitySystem {
     };
 
     private float age;
+    private boolean labelsRendered;
 
     public AnimRenderSystem() {
         super(Aspect.getAspectForAll(Pos.class, Anim.class));
@@ -58,6 +63,8 @@ public class AnimRenderSystem extends EntitySystem {
 
     @Override
     protected void begin() {
+
+        labelsRendered = false;
 
         age += world.delta;
 
@@ -69,6 +76,9 @@ public class AnimRenderSystem extends EntitySystem {
     @Override
     protected void end() {
         batch.end();
+        if ( !labelsRendered ) {
+            renderLabels();
+        }
     }
 
     @Override
@@ -92,8 +102,24 @@ public class AnimRenderSystem extends EntitySystem {
 
         anim.age += world.delta * anim.speed;
 
+        // manually render labels before mouse cursor.
+        if ( !labelsRendered && anim.layer >= EntityFactorySystem.MOUSE_CURSOR_LAYER )
+        {
+            batch.end();
+            renderLabels();
+            batch.begin();
+        }
+
         batch.setColor( anim.color );
         drawAnimation(anim, angle, pos, anim.id);
+    }
+
+    private void renderLabels() {
+        if ( !labelsRendered )
+        {
+            labelsRendered=true;
+            labelRenderSystem.process();
+        }
     }
 
     private void drawAnimation(final Anim animation, final Angle angle, final Pos position, String id) {
