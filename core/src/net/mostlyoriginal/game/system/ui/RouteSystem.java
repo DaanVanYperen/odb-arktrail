@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.manager;
+package net.mostlyoriginal.game.system.ui;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -12,6 +12,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.environment.RouteNode;
+import net.mostlyoriginal.game.manager.EntityFactorySystem;
 
 /**
  * Plot system.
