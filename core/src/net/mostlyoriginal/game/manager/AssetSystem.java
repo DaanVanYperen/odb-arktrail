@@ -25,26 +25,14 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
 
         // @todo GAME SPECIFIC, split into library and game specific logic.
 
-        add("player-idle", 144, 48, 32, 16, 2);
-        add("player-prepare-leap", 144, 16, 32, 32, 1);
-        add("player-leap", 144+32, 16, 32, 32, 1);
-        add("player-roll", 144, 68, 32, 20, 4,1,tileset,0.1f);
-        add("player-nibble", 144, 92, 32, 20, 1);
-        add("player-pluck", 272, 16, 32, 24, 2,1,tileset,0.4f);
-        add("player-plucked", 240, 68, 32, 20, 1);
+        add("progress-bubble-0", 56, 112, 8, 8, 1);
+        add("progress-bubble-1", 56, 120, 8, 8, 1);
+        add("progress-bar-0", 64, 112, 8, 8, 1);
+        add("progress-bar-1", 64, 120, 8, 8, 1);
+        add("progress-indicator", 56, 96, 8, 11, 1);
 
-        add("chicklet-stuck", 192, 112,  16, 16, 1);
-        add("chicklet-waddle", 192+16, 112, 16, 16, 2);
-        add("chicklet-idle", 192+32, 112,   16, 16, 1);
+        add("gate", 32, 56, 24, 56, 1);
 
-        add("turnip-stuck", 144, 144,  16, 16, 1);
-        add("turnip-idle", 144+16, 144, 16, 16, 1);
-
-        add("slumberer-idle", 239, 112, 33, 47, 1);
-        add("slumberer-eye", 272, 105, 16, 15, 3,1,tileset,1/10f);
-        add("slumberer-eyelid", 272, 136, 12, 11, 4,1,tileset,0.1f);
-
-        add("particle-sweat", 144, 128, 8, 8, 2, 1, tileset, 1f);
 
         loadSounds(new String[] {
         });

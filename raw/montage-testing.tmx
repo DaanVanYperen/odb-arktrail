@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="60" height="40" tilewidth="8" tileheight="8" backgroundcolor="#000000">
+ <tileset firstgid="1" name="arktrail-raw-spritesheet-2" tilewidth="8" tileheight="8">
+  <image source="arktrail-raw-spritesheet-2.png" trans="000000" width="256" height="256"/>
+ </tileset>
+ <layer name="Tilelaag 6" width="60" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzt2F0KgkAUhuGjS8isNMs9VJuqDbcPta79goJujPCH0Zn3gRe8kpEzimoG4JdVZJaotUoj16tBHyfN7awuPef32QP3eNx1YXxDZz3VuaZ2Vbf3cQjPqe/rhT+GznVJ9+yLr/u4UrVq1EM93S7HGV/n2yW06w0J30JA2Ob2DFja+x6A/6Wx2UZt1U5lKld7VaiDOqqSf3MAAAAAZqwFrZsQAw==
+  </data>
+ </layer>
+ <layer name="Scaffolding" width="60" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzt1ktPE1EYxvFTGvUjeMGt+j1EQFEBY+IVNyKgILRGAoiwAaGIUGpMLNcNCihQQHbqzis3xa26U67CyguJuPF/0kkYx4HapjIzzXmSXzJnkjbvk3M6HSFUVP7OgkuIRQN5b0wzrtFfG9fyWiWx8yxJiOd4gZd4hdcYwzgmMImpJKsnjU8+0eMzZjCLOcxjAYv4giUsO6BvidUDbGKa4EcAxWKtu/46kTKIEDxoFuHuLRq/di9g2XTxj+xbiqs6sv+ozohl00WfWcxh3nBfnmO5d14R7puFNybe4t1mDRuHbOFdYSu2Gd4Z5L7e0QyJtfPs9LO7h557sW+DviHdtZPOrllS6ZmGdJO+oybW6xtEK9rQjg50ouu/TB178uiZj4IN9ndYRN7f7Xx+B3ZiF5Kx24bv1XXMVA9fhPMsn1fTwlnPJrP00LMXfYa+UyL87M3GceH83+2/Ru5zovTd7xYiBQeQijSk4yAOIQOHcQRHkYksZOOY+8/vcsLz6jwz5+IC8pCPAlzEJRSiCJdRjBJ44MUVB/atYeZa3EAd6uFDA26iEbfQhGb40YIAbrsjf7/d0s3M93AfPehFHx7gIfoxgEGEMIRhjOCRA/vGkq/4hu/4gRVrx4k5j/k/eoKnrujXJ3ASp3AaZ3AWOThnw3cOmffM9QEfXdGvy1COClxDJa6jCtU27fuTuVbxyxX9+i6CaEUb2tGBTnTZtK+KioqKioqKioqKikqi5DfVa7e5
+  </data>
+ </layer>
+ <layer name="Overlay" width="60" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzt2M0JwkAQhuFYgYXGQiwlpgA12kf8q0H0ZKJe/A57COKKiO5ks+8DH8vcZpiBQLIM35qOrDsIq0hsXgCITa5MrJsI6NN5T8r5z73gd573erRqJJB3dzyU2y2UWSelbTtBpbDfrtS+Q68Mca9A6sb8C0GPzXWfC2Xp7rTSu1LWnjp2tebYKFs3z07vXjl46thdNEejtG6eq96bcvfUAAAAAABbDzsDKQE=
+  </data>
+ </layer>
+ <layer name="Crew" width="60" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztz7ENgDAMBMAwAcMxBpRskjlRMgIuPINB0Z30suTqvzUAAIB/2bevG9Syd232rs1egDo974jMyBm5Ikf+77xPcS8AAAB4AciDBW4=
+  </data>
+ </layer>
+ <layer name="Tilelaag 4" width="60" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzt0rkNACAMA0AYACQGYf+p2IGCHfhy16S15aQEAABwl5rXbflsjl16sL7R9i3B+kb7Z/v+bZwOAAAAAMATJo6OAjA=
+  </data>
+ </layer>
+ <layer name="Tilelaag 5" width="60" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzt1MENgkAURVHswEpoR6wE0ZpZg7LxLWhh+BrOSe7+/UwyXQcAAPBb+kv1Alq67u97S0O6V4450JgeaUrP9Kqd09yS1vROn7TVzmnmbP/V2e6dqwcAAAAA8Be+RRwJzg==
+  </data>
+ </layer>
+</map>

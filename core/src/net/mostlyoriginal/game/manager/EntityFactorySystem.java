@@ -12,7 +12,6 @@ import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.camera.Camera;
 import net.mostlyoriginal.api.component.graphics.Anim;
-import net.mostlyoriginal.api.component.map.MapSolid;
 import net.mostlyoriginal.api.component.map.MapWallSensor;
 import net.mostlyoriginal.api.component.physics.*;
 import net.mostlyoriginal.api.component.script.Schedule;
@@ -20,9 +19,10 @@ import net.mostlyoriginal.api.manager.AbstractAssetSystem;
 import net.mostlyoriginal.api.manager.AbstractEntityFactorySystem;
 import net.mostlyoriginal.api.utils.SafeEntityReference;
 import net.mostlyoriginal.api.utils.TagEntityReference;
+import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.MainScreen;
-import net.mostlyoriginal.game.component.agent.Slumberer;
 import net.mostlyoriginal.game.component.agent.PlayerControlled;
+import net.mostlyoriginal.game.component.agent.Slumberer;
 import net.mostlyoriginal.game.component.interact.Pluckable;
 
 /**
@@ -36,6 +36,17 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
     private TagManager tagManager;
     private AbstractAssetSystem abstractAssetSystem;
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+
+        createCamera(G.CANVAS_WIDTH / 8 ,G.CANVAS_HEIGHT / 8);
+
+        defaultEntity(0, 0, "progress-indicator").addToWorld();
+        defaultEntity(G.CANVAS_WIDTH / 8,G.CANVAS_HEIGHT/8, "progress-indicator").addToWorld();
+        defaultEntity(G.CANVAS_WIDTH / 4 - 8,G.CANVAS_HEIGHT/4 - 11, "progress-indicator").addToWorld();
+    }
 
     @Override
     public Entity createEntity(String entity, int cx, int cy, MapProperties properties) {
@@ -126,6 +137,15 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 .addComponent(anim);
     }
 
+    public void createCamera(int cx, int cy)
+    {
+        // now create a drone that will swerve towards the player which contains the camera. this will create a smooth moving camera.
+        world.createEntity()
+                .addComponent(new Pos(cx, cy))
+                .addComponent(createCameraBounds())
+                .addComponent(new Camera())
+                .addToWorld();
+    }
 
     private Entity createPlayer(int cx, int cy) {
         Entity player =
@@ -164,9 +184,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 .addComponent(new Angle())
                 .addComponent(new Bounds(0, 0, 25, 16))
                 .addComponent(new Anim(startingAnim))
-                .addComponent(new MapSolid())
-                .addComponent(new Physics())
-                .addComponent(new Gravity());
+                .addComponent(new Physics());
     }
 
 }
