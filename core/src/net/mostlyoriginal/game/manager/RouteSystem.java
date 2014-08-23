@@ -22,7 +22,7 @@ import net.mostlyoriginal.game.component.environment.RouteNode;
 public class RouteSystem extends EntityProcessingSystem {
 
     public static final int CHANCE_OF_ROUTE_BEING_NODE = 50;
-    public static final int DEFAULT_ROUTE_LENGTH = 10;
+    public static final int DEFAULT_ROUTE_LENGTH = 16;
 
     protected GroupManager groupManager;
     protected EntityFactorySystem efs;
@@ -49,11 +49,14 @@ public class RouteSystem extends EntityProcessingSystem {
 
         deleteRoute();
 
+        // center our route.
+        int startX = (G.SCREEN_WIDTH / 2) - (length * 4);
+
         for ( int i=0; i<length; i++ )
         {
             RouteNode.Action action = ( (i==0) || (i==length-1) || (MathUtils.random(0, 99) < CHANCE_OF_ROUTE_BEING_NODE) ) ? RouteNode.Action.EVENT : RouteNode.Action.SKIP;
 
-            efs.createRouteNode( 8 + i * 8, G.SCREEN_TOP - 16, action, i);
+            efs.createRouteNode( startX + i * 8, G.SCREEN_HEIGHT - 16, action, i);
          }
 
         markVisitedUpTo(0);
@@ -84,7 +87,7 @@ public class RouteSystem extends EntityProcessingSystem {
             Pos indicatorPos = mPos.get(routeIndicator);
             Pos nodePos = mPos.get(node);
             indicatorPos.x = nodePos.x;
-            indicatorPos.y = nodePos.y + 6;
+            indicatorPos.y = nodePos.y + 5;
         }
     }
 
