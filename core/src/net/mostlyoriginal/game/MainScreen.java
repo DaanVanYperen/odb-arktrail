@@ -23,6 +23,7 @@ import net.mostlyoriginal.game.manager.FontManager;
 import net.mostlyoriginal.game.manager.TravelSimulationSystem;
 import net.mostlyoriginal.game.system.render.BarRenderSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
+import net.mostlyoriginal.game.system.ship.CrewSystem;
 import net.mostlyoriginal.game.system.ship.InventorySystem;
 import net.mostlyoriginal.game.system.ui.ButtonSystem;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
@@ -61,6 +62,7 @@ public class MainScreen implements Screen {
         world.setSystem(new TravelSimulationSystem());
         world.setSystem(new DilemmaSystem());
         world.setSystem(new InventorySystem());
+        world.setSystem(new CrewSystem());
 
         // control systems.
         /** Agency Systems (Control and Interact) */

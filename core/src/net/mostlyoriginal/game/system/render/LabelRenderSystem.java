@@ -51,7 +51,7 @@ public class LabelRenderSystem extends EntitySystem {
 
     public LabelRenderSystem() {
         super(Aspect.getAspectForAll(Pos.class, Label.class));
-        batch  = new SpriteBatch(1000);
+        batch = new SpriteBatch(1000);
     }
 
     @Override
@@ -92,11 +92,20 @@ public class LabelRenderSystem extends EntitySystem {
         final Label label = mLabel.get(entity);
         final Pos pos = pm.get(entity);
 
-        batch.setColor(label.color);
+        if (label.text != null) {
+            batch.setColor(label.color);
 
-        final BitmapFont font = fontManager.font;
-        font.setColor(label.color);
-        font.draw(batch, label.text, pos.x, pos.y);
+            final BitmapFont font = fontManager.font;
+            font.setColor(label.color);
+            switch ( label.align) {
+                case LEFT:
+                    font.draw(batch, label.text, pos.x, pos.y);
+                    break;
+                case RIGHT:
+                    font.draw(batch, label.text, pos.x - font.getBounds(label.text).width, pos.y);
+                    break;
+            }
+        }
     }
 
     @Override

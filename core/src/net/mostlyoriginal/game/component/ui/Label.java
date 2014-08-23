@@ -25,6 +25,6 @@ public class Label extends Component {
     }
 
     public enum Align {
-        LEFT;
+        LEFT, RIGHT;
     }
 }

@@ -41,6 +41,10 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("bar-fuel", 40,177, 8, 6, 1);
         add("bar-food", 40,185, 8, 6, 1);
 
+        add("crew-0", 104,64, 8, 8, 1);
+        add("crew-1", 104 - 8,64, 8, 8, 1);
+        add("crew-2", 104 - 8,64 + 8, 8, 8, 1);
+
         loadSounds(new String[] {
         });
     }

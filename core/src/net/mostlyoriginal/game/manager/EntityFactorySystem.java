@@ -27,6 +27,7 @@ import net.mostlyoriginal.game.component.agent.PlayerControlled;
 import net.mostlyoriginal.game.component.agent.Slumberer;
 import net.mostlyoriginal.game.component.environment.RouteIndicator;
 import net.mostlyoriginal.game.component.environment.RouteNode;
+import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.Inventory;
 import net.mostlyoriginal.game.component.ship.Travels;
 import net.mostlyoriginal.game.component.ui.Bar;
@@ -56,6 +57,12 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
         createSpaceshipMetadata();
 
+        createCrew("Daan", "crew-0", CrewMember.Effect.HEALTHY);
+        createCrew("Rellik", "crew-1", CrewMember.Effect.DEAD);
+        createCrew("Flaterectomy", "crew-2", CrewMember.Effect.HEALTHY);
+        createCrew("Troop", "crew-1", CrewMember.Effect.HEALTHY);
+
+
         createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);
 
         // engage button.
@@ -73,6 +80,10 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
         });
 
         createMousecursor();
+    }
+
+    private void createCrew(String name, String animId, CrewMember.Effect effect) {
+        new EntityBuilder(world).with(new CrewMember(name, animId, effect)).build();
     }
 
     public Entity createBar(int x, int y, String label, String icon, int value) {
