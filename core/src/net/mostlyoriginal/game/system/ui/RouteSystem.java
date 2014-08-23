@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.game.G;
+import net.mostlyoriginal.game.component.environment.RouteIndicator;
 import net.mostlyoriginal.game.component.environment.RouteNode;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 
@@ -31,6 +32,7 @@ public class RouteSystem extends EntityProcessingSystem {
     protected ComponentMapper<RouteNode> mRouteNode;
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<Pos> mPos;
+    protected ComponentMapper<RouteIndicator> mRouteIndicator;
     private TagManager tagManager;
 
     public RouteSystem() {
@@ -64,8 +66,9 @@ public class RouteSystem extends EntityProcessingSystem {
     }
 
     /** Signal everything visited up to given step. */
-    public void markVisitedUpTo(int upToStep)
+    public Entity markVisitedUpTo(int upToStep)
     {
+        Entity atNode = null;
 
         for ( Entity node : groupManager.getEntities("route")) {
             if( mRouteNode.has(node) )
@@ -76,20 +79,31 @@ public class RouteSystem extends EntityProcessingSystem {
                 // move indicator to active step.
                 if ( routeNode.order == upToStep )
                 {
+                    atNode = node;
                     placeIndicatorAboveNode(node);
                 }
             }
         }
+
+        return atNode;
     }
 
     private void placeIndicatorAboveNode(Entity node) {
-        Entity routeIndicator = tagManager.getEntity("routeindicator");
+        final Entity routeIndicator = getIndicator();
         if ( routeIndicator != null && mPos.has(routeIndicator)) {
             Pos indicatorPos = mPos.get(routeIndicator);
             Pos nodePos = mPos.get(node);
             indicatorPos.x = nodePos.x;
             indicatorPos.y = nodePos.y + 5;
+
+            // keep track of our current location.
+            RouteIndicator indicator = mRouteIndicator.get(routeIndicator);
+            indicator.at = mRouteNode.get(node).order;
         }
+    }
+
+    private Entity getIndicator() {
+        return tagManager.getEntity("routeindicator");
     }
 
     private void deleteRoute() {
@@ -113,5 +127,11 @@ public class RouteSystem extends EntityProcessingSystem {
                 anim.id = routeNode.visited ? "progress-bubble-1" : "progress-bubble-0";
                 break;
         }
+    }
+
+    /** go to next step in route. */
+    public Entity gotoNext() {
+        final Entity routeIndicator = getIndicator();
+        return markVisitedUpTo(mRouteIndicator.get(routeIndicator).at + 1);
     }
 }

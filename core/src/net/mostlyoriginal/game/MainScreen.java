@@ -19,6 +19,7 @@ import net.mostlyoriginal.api.system.script.EntitySpawnerSystem;
 import net.mostlyoriginal.api.system.script.SchedulerSystem;
 import net.mostlyoriginal.game.manager.AssetSystem;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
+import net.mostlyoriginal.game.manager.TravelSimulationSystem;
 import net.mostlyoriginal.game.system.ui.ButtonSystem;
 import net.mostlyoriginal.game.system.ui.MouseClickSystem;
 import net.mostlyoriginal.game.system.ui.RouteSystem;
@@ -51,6 +52,7 @@ public class MainScreen implements Screen {
 
         /** CONTROL */
         world.setSystem(new RouteSystem());
+        world.setSystem(new TravelSimulationSystem());
 
         // control systems.
         /** Agency Systems (Control and Interact) */

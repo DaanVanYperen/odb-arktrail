@@ -15,6 +15,7 @@ import net.mostlyoriginal.game.component.ui.Clickable;
 @Wire
 public class ButtonSystem extends EntityProcessingSystem {
 
+    public static final float COOLDOWN_AFTER_BUTTON_CLICK = 0.15f;
     protected ComponentMapper<Clickable> mClickable;
 
     protected ComponentMapper<Button> mButton;
@@ -37,14 +38,27 @@ public class ButtonSystem extends EntityProcessingSystem {
         final Clickable clickable = mClickable.get(e);
         final Button button = mButton.get(e);
 
+        // disable the button temporarily after use to avoid trouble.
+        if ( button.cooldown >= 0 )
+        {
+            button.cooldown -= world.delta;
+            return button.animClicked;
+        }
+
         switch (clickable.state)
         {
             case HOVER:
                 return button.animHover;
             case CLICKED:
+                button.cooldown = COOLDOWN_AFTER_BUTTON_CLICK;
+                triggerButton(button);
                 return button.animClicked;
             default:
                 return button.animDefault;
         }
+    }
+
+    private void triggerButton(Button button) {
+        button.runnable.run();
     }
 }

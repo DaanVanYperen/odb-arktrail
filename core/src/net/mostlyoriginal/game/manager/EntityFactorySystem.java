@@ -25,7 +25,9 @@ import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.MainScreen;
 import net.mostlyoriginal.game.component.agent.PlayerControlled;
 import net.mostlyoriginal.game.component.agent.Slumberer;
+import net.mostlyoriginal.game.component.environment.RouteIndicator;
 import net.mostlyoriginal.game.component.environment.RouteNode;
+import net.mostlyoriginal.game.component.environment.Travels;
 import net.mostlyoriginal.game.component.interact.Pluckable;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.Clickable;
@@ -41,23 +43,29 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
     private TagManager tagManager;
     private AbstractAssetSystem abstractAssetSystem;
+    private TravelSimulationSystem travelSimulationSystem;
 
     @Override
     protected void initialize() {
         super.initialize();
 
-        createCamera(G.CANVAS_WIDTH / 8 ,G.CANVAS_HEIGHT / 8);
+        createSpaceshipMetadata();
 
-        // create default entities.
-
-        defaultEntity(0, 0, "progress-indicator").addToWorld();
-        defaultEntity(G.CANVAS_WIDTH / 8,G.CANVAS_HEIGHT/8, "progress-indicator").addToWorld();
-        defaultEntity(G.CANVAS_WIDTH / 4 - 8,G.CANVAS_HEIGHT/4 - 11, "progress-indicator").addToWorld();
+        createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);
 
         // engage button.
-        createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage" );
+        createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage", new Runnable() {
+            @Override
+            public void run() {
+                travelSimulationSystem.planWarp();
+            }
+        });
 
         createMousecursor();
+    }
+
+    private void createSpaceshipMetadata() {
+        new EntityBuilder(world).with(new Travels()).tag("travels").build();
     }
 
     @Override
@@ -199,13 +207,13 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 .addComponent(new Physics());
     }
 
-    public Entity createButton(int x, int y, int width, int height, String animPrefix )
+    public Entity createButton(int x, int y, int width, int height, String animPrefix, Runnable runnable)
     {
         return new EntityBuilder(world)
                 .with(new Pos(x, y),
                         new Bounds(0, 0, width, height),
                         new Anim(1100),
-                        new Button(animPrefix),
+                        new Button(animPrefix, runnable),
                         new Clickable()).build();
     }
 
@@ -225,7 +233,8 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
         return new EntityBuilder(world)
                 .with(new Pos(5,5),
                       new Bounds(0,0,8,8),
-                      new Anim("progress-indicator", 1000))
+                      new Anim("progress-indicator", 1000),
+                      new RouteIndicator())
                 .tag("routeindicator").build();
     }
 
