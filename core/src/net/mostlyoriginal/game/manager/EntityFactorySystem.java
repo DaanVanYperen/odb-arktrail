@@ -58,8 +58,6 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
         createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);
 
-        new EntityBuilder(world).with(new Pos(50,100), new Bar("fuel", "bar-fuel",5)).build();
-
         // engage button.
         createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage", new ButtonListener() {
             @Override
@@ -75,6 +73,10 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
         });
 
         createMousecursor();
+    }
+
+    public Entity createBar(int x, int y, String label, String icon, int value) {
+        return new EntityBuilder(world).with(new Pos(x,y), new Bar(label, icon, value)).build();
     }
 
     private void createSpaceshipMetadata() {
