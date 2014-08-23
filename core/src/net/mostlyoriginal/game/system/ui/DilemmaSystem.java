@@ -6,10 +6,10 @@ import com.artemis.annotations.Wire;
 import com.artemis.managers.GroupManager;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
-import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
+import net.mostlyoriginal.api.utils.EntityUtil;
 import net.mostlyoriginal.game.component.ui.*;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 
@@ -50,7 +50,8 @@ public class DilemmaSystem extends EntityProcessingSystem {
                 new Bounds(0, -8, text.length() * 8, 0),
                 new Clickable( ),
                 new Button( COLOR_RAW_DIMMED, COLOR_RAW_BRIGHT, "FFFFFF", listener)
-        ).group(DILEMMA_GROUP).build();
+        )
+        .group(DILEMMA_GROUP).build();
     }
 
     public boolean isDilemmaActive()
@@ -81,12 +82,10 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     /** Remove active dilemma from screen. */
     private void stopDilemma() {
-        ImmutableBag<Entity> entities = groupManager.getEntities(DILEMMA_GROUP);
-        for (Entity entity : entities) {
-            entity.deleteFromWorld();
-        }
+        EntityUtil.safeDeleteAll(groupManager.getEntities(DILEMMA_GROUP));
         dilemmaActive=false;
     }
+
 
     @Override
     protected void process(Entity e) {

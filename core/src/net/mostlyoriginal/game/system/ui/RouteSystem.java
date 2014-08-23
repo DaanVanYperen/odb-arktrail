@@ -7,9 +7,11 @@ import com.artemis.annotations.Wire;
 import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.utils.EntityUtil;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.environment.RouteIndicator;
 import net.mostlyoriginal.game.component.environment.RouteNode;
@@ -70,7 +72,10 @@ public class RouteSystem extends EntityProcessingSystem {
     {
         Entity atNode = null;
 
-        for ( Entity node : groupManager.getEntities("route")) {
+        ImmutableBag<Entity> entities = groupManager.getEntities("route");
+        for (int i=0,s=entities.size();i<s; i++)
+        {
+            Entity node = entities.get(i);
             if( mRouteNode.has(node) )
             {
                 RouteNode routeNode = (RouteNode) mRouteNode.get(node);
@@ -107,10 +112,7 @@ public class RouteSystem extends EntityProcessingSystem {
     }
 
     private void deleteRoute() {
-
-        for ( Entity e : groupManager.getEntities("route")) {
-            e.deleteFromWorld();
-        }
+        EntityUtil.safeDeleteAll(groupManager.getEntities("route"));
     }
 
     @Override
