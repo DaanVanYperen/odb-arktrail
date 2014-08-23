@@ -21,6 +21,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     protected ComponentMapper<Travels> mTravels;
     protected ComponentMapper<RouteNode> mRouteNode;
     private TagManager tagManager;
+    private boolean traveling;
 
     public TravelSimulationSystem() {
         super(Aspect.getAspectForAll(Travels.class));
@@ -72,5 +73,18 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
                 }
             }
         }
+    }
+
+    public boolean isTraveling() {
+        Entity shipMetadata = getShipMetadata();
+        if ( shipMetadata != null )
+        {
+            Travels travels = mTravels.get(shipMetadata);
+            if ( travels != null )
+            {
+                return travels.nextJumpAfterCooldown > 0;
+            }
+        }
+        return false;
     }
 }

@@ -26,37 +26,47 @@ public class ButtonSystem extends EntityProcessingSystem {
     protected ComponentMapper<Anim> mAnim;
 
     public ButtonSystem() {
-        super(Aspect.getAspectForAll(Button.class, Clickable.class, Bounds.class).one(Anim.class,Label.class));
+        super(Aspect.getAspectForAll(Button.class, Clickable.class, Bounds.class).one(Anim.class, Label.class));
     }
 
     @Override
     protected void process(Entity e) {
-            updateAnim(e);
+        updateAnim(e);
     }
 
     private void updateAnim(Entity e) {
         final String id = getNewAnimId(e);
 
-        if ( mAnim.has(e)) {
+        if (mAnim.has(e)) {
             mAnim.get(e).id = id;
         } else if (mLabel.has(e)) {
             mLabel.get(e).color = Color.valueOf(id);
         }
     }
 
-    private String getNewAnimId(Entity e ) {
+    private String getNewAnimId(Entity e) {
         final Clickable clickable = mClickable.get(e);
         final Button button = mButton.get(e);
 
         // disable the button temporarily after use to avoid trouble.
-        if ( button.cooldown >= 0 )
-        {
+        if (button.cooldown >= 0) {
             button.cooldown -= world.delta;
             return button.animClicked;
         }
 
-        switch (clickable.state)
-        {
+        // gray out disabled items. @todo separate.
+        boolean active = button.listener.enabled();
+        if (mAnim.has(e)) {
+            Anim anim = mAnim.get(e);
+            anim.color.r = active ? 1f : 0.5f;
+            anim.color.g = active ? 1f : 0.5f;
+            anim.color.b = active ? 1f : 0.5f;
+            if ( !active ) {
+                return button.animDefault;
+            }
+        }
+
+        switch (clickable.state) {
             case HOVER:
                 return button.animHover;
             case CLICKED:
@@ -69,6 +79,8 @@ public class ButtonSystem extends EntityProcessingSystem {
     }
 
     private void triggerButton(Button button) {
-        button.runnable.run();
+        if (button.listener.enabled()) {
+            button.listener.run();
+        }
     }
 }

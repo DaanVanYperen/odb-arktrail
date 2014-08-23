@@ -29,7 +29,9 @@ import net.mostlyoriginal.game.component.environment.RouteIndicator;
 import net.mostlyoriginal.game.component.environment.RouteNode;
 import net.mostlyoriginal.game.component.environment.Travels;
 import net.mostlyoriginal.game.component.ui.Button;
+import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 
 /**
  * Game specific entity factory.
@@ -44,6 +46,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
     private TagManager tagManager;
     private AbstractAssetSystem abstractAssetSystem;
     private TravelSimulationSystem travelSimulationSystem;
+    private DilemmaSystem dilemmaSystem;
 
     @Override
     protected void initialize() {
@@ -54,10 +57,16 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
         createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);
 
         // engage button.
-        createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage", new Runnable() {
+        createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage", new ButtonListener() {
             @Override
             public void run() {
                 travelSimulationSystem.planWarp();
+            }
+
+            @Override
+            public boolean enabled() {
+                // we don't want to allow engaging while busy!.
+                return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive();
             }
         });
 
@@ -192,13 +201,13 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 .addComponent(new Physics());
     }
 
-    public Entity createButton(int x, int y, int width, int height, String animPrefix, Runnable runnable)
+    public Entity createButton(int x, int y, int width, int height, String animPrefix, ButtonListener listener)
     {
         return new EntityBuilder(world)
                 .with(new Pos(x, y),
                         new Bounds(0, 0, width, height),
                         new Anim(1100),
-                        new Button(animPrefix, runnable),
+                        new Button(animPrefix, listener),
                         new Clickable()).build();
     }
 

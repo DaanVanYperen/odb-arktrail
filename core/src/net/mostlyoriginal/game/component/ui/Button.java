@@ -7,21 +7,26 @@ import com.artemis.Component;
  */
 public class Button extends Component {
 
-    public final Runnable runnable;
+    // not the best design but hey, ludum haste!
+    public ButtonListener listener;
+
+    private String animPrefix;
     public String animDefault;
+    private ButtonListener buttonListener;
     public String animClicked;
     public String animHover;
     public float cooldown=0;
 
-    public Button(String animDefault, String animHover, String animClicked, Runnable runnable) {
+    public Button(String animDefault, String animHover, String animClicked, ButtonListener listener) {
         this.animHover = animHover;
         this.animClicked = animClicked;
         this.animDefault = animDefault;
-        this.runnable = runnable;
+        this.listener = listener;
     }
 
-    public Button(String animPrefix, Runnable runnable) {
-        this.runnable = runnable;
+    public Button(String animPrefix, ButtonListener listener) {
+        this.animPrefix = animPrefix;
+        this.listener = listener;
         this.animDefault = animPrefix + "-up";
         this.animHover = animPrefix + "-hover";
         this.animClicked = animPrefix + "-down";

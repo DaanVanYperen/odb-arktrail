@@ -3,15 +3,14 @@ package net.mostlyoriginal.game.system.ui;
 import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
+import com.artemis.managers.GroupManager;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
+import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
-import net.mostlyoriginal.game.component.ui.Button;
-import net.mostlyoriginal.game.component.ui.Clickable;
-import net.mostlyoriginal.game.component.ui.DilemmaChoice;
-import net.mostlyoriginal.game.component.ui.Label;
+import net.mostlyoriginal.game.component.ui.*;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 
 /**
@@ -23,12 +22,14 @@ import net.mostlyoriginal.game.manager.EntityFactorySystem;
 public class DilemmaSystem extends EntityProcessingSystem {
 
     public static final String DILEMMA_GROUP = "dilemma";
-    public static final int ROW_HEIGHT = 8;
+    public static final int ROW_HEIGHT = 9;
     EntityFactorySystem efs;
 
     public static final Color COLOR_DILEMMA = Color.valueOf("6AD7ED");
     public static final String COLOR_RAW_BRIGHT = "E7E045";
     public static final String COLOR_RAW_DIMMED = "FDF1AA";
+    private boolean dilemmaActive;
+    private GroupManager groupManager;
 
 
     public DilemmaSystem() {
@@ -42,19 +43,19 @@ public class DilemmaSystem extends EntityProcessingSystem {
         ).group(DILEMMA_GROUP).build();
     }
 
-    private Entity createOption(int x, int y, String text) {
+    private Entity createOption(int x, int y, String text, ButtonListener listener) {
         return new EntityBuilder(world).with(
                 new Pos(x, y),
                 new Label(text),
                 new Bounds(0, -8, text.length() * 8, 0),
                 new Clickable( ),
-                new Button( COLOR_RAW_DIMMED, COLOR_RAW_BRIGHT, "FFFFFF", new Runnable(){
-                    @Override
-                    public void run() {
-
-                    }
-                })
+                new Button( COLOR_RAW_DIMMED, COLOR_RAW_BRIGHT, "FFFFFF", listener)
         ).group(DILEMMA_GROUP).build();
+    }
+
+    public boolean isDilemmaActive()
+    {
+        return dilemmaActive;
     }
 
     @Override
@@ -63,10 +64,29 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
         createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, "Captain, ensign Jovoc");
         createLabel(10, 10 + ROW_HEIGHT * 3, COLOR_DILEMMA, "contracted a brainslug!");
-        createOption(10, 10 + ROW_HEIGHT * 2, "[DUMP HIM OUT OF AIRLOCK]");
-        createOption(10, 10 + ROW_HEIGHT * 1, "[DO NOTHING]");
+        createOption(10, 10 + ROW_HEIGHT * 2, "[DUMP HIM OUT OF AIRLOCK]", new ButtonListener() {
+            @Override
+            public void run() {
+                stopDilemma();
+            }
+        });
+        createOption(10, 10 + ROW_HEIGHT, "[DO NOTHING]", new ButtonListener() {
+                    @Override
+                    public void run() {
+                        stopDilemma();
+                    }
+                });
+        dilemmaActive=true;
     }
 
+    /** Remove active dilemma from screen. */
+    private void stopDilemma() {
+        ImmutableBag<Entity> entities = groupManager.getEntities(DILEMMA_GROUP);
+        for (Entity entity : entities) {
+            entity.deleteFromWorld();
+        }
+        dilemmaActive=false;
+    }
 
     @Override
     protected void process(Entity e) {
