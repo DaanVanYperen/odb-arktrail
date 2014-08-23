@@ -12,6 +12,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.EntityUtil;
 import net.mostlyoriginal.game.component.ui.*;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
+import net.mostlyoriginal.game.system.ship.InventorySystem;
 
 /**
  * Responsible for serving and processing dilemmas.
@@ -30,6 +31,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
     public static final String COLOR_RAW_DIMMED = "FDF1AA";
     private boolean dilemmaActive;
     private GroupManager groupManager;
+    private InventorySystem inventorySystem;
 
 
     public DilemmaSystem() {

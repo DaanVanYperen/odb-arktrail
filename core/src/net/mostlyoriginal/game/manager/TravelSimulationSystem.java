@@ -8,6 +8,7 @@ import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
 import net.mostlyoriginal.game.component.environment.RouteNode;
 import net.mostlyoriginal.game.component.ship.Travels;
+import net.mostlyoriginal.game.system.ship.InventorySystem;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 import net.mostlyoriginal.game.system.ui.RouteSystem;
 
@@ -24,6 +25,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     private TagManager tagManager;
     private boolean traveling;
     private DilemmaSystem dilemmaSystem;
+    private InventorySystem inventorySystem;
 
     public TravelSimulationSystem() {
         super(Aspect.getAspectForAll(Travels.class));
@@ -34,6 +36,9 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     {
         Entity entity = routeSystem.gotoNext();
         if ( entity != null && mRouteNode.has(entity) ) {
+            inventorySystem.alter(InventorySystem.Resource.FOOD, -1);
+            inventorySystem.alter(InventorySystem.Resource.FUEL, -1);
+
             switch ( mRouteNode.get(entity).action )
             {
                 case SKIP:
