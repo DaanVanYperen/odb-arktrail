@@ -14,6 +14,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.camera.Camera;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.map.MapWallSensor;
+import net.mostlyoriginal.api.component.mouse.MouseCursor;
 import net.mostlyoriginal.api.component.physics.*;
 import net.mostlyoriginal.api.component.script.Schedule;
 import net.mostlyoriginal.api.manager.AbstractAssetSystem;
@@ -26,6 +27,8 @@ import net.mostlyoriginal.game.component.agent.PlayerControlled;
 import net.mostlyoriginal.game.component.agent.Slumberer;
 import net.mostlyoriginal.game.component.environment.RouteNode;
 import net.mostlyoriginal.game.component.interact.Pluckable;
+import net.mostlyoriginal.game.component.ui.Button;
+import net.mostlyoriginal.game.component.ui.Clickable;
 
 /**
  * Game specific entity factory.
@@ -45,9 +48,16 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
         createCamera(G.CANVAS_WIDTH / 8 ,G.CANVAS_HEIGHT / 8);
 
+        // create default entities.
+
         defaultEntity(0, 0, "progress-indicator").addToWorld();
         defaultEntity(G.CANVAS_WIDTH / 8,G.CANVAS_HEIGHT/8, "progress-indicator").addToWorld();
         defaultEntity(G.CANVAS_WIDTH / 4 - 8,G.CANVAS_HEIGHT/4 - 11, "progress-indicator").addToWorld();
+
+        // engage button.
+        createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage" );
+
+        createMousecursor();
     }
 
     @Override
@@ -189,6 +199,16 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 .addComponent(new Physics());
     }
 
+    public Entity createButton(int x, int y, int width, int height, String animPrefix )
+    {
+        return new EntityBuilder(world)
+                .with(new Pos(x, y),
+                        new Bounds(0, 0, width, height),
+                        new Anim(1100),
+                        new Button(animPrefix),
+                        new Clickable()).build();
+    }
+
     public Entity createRouteNode(int x, int y, RouteNode.Action action, int order) {
 
         return new EntityBuilder(world)
@@ -208,4 +228,10 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                       new Anim("progress-indicator", 1000))
                 .tag("routeindicator").build();
     }
+
+    private Entity createMousecursor() {
+        return new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(), new Anim("progress-indicator", 9999)).tag("cursor").build();
+
+    }
+
 }

@@ -19,7 +19,9 @@ import net.mostlyoriginal.api.system.script.EntitySpawnerSystem;
 import net.mostlyoriginal.api.system.script.SchedulerSystem;
 import net.mostlyoriginal.game.manager.AssetSystem;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
-import net.mostlyoriginal.game.manager.RouteSystem;
+import net.mostlyoriginal.game.system.ui.ButtonSystem;
+import net.mostlyoriginal.game.system.ui.MouseClickSystem;
+import net.mostlyoriginal.game.system.ui.RouteSystem;
 
 /**
  * @author Daan van Yperen
@@ -60,6 +62,10 @@ public class MainScreen implements Screen {
         world.setSystem(new SchedulerSystem());
         world.setSystem(new EntitySpawnerSystem());
 
+        world.setSystem(new MouseCursorSystem());
+        world.setSystem(new MouseClickSystem());
+        world.setSystem(new ButtonSystem());
+
         /** SIMULATE */
 
 
@@ -67,18 +73,20 @@ public class MainScreen implements Screen {
         world.setSystem(new HomingSystem());
         world.setSystem(new GravitySystem());
         /** Physics systems that constrain the movement*/
-        //world.setSystem(new MapCollisionSystem());
+        world.setSystem(new CollisionSystem());
         //world.setSystem(new ClampedSystem());
         /** Physics systems that move the entity to an absolute location. */
         world.setSystem(new AttachmentSystem());
         world.setSystem(new InbetweenSystem());
-        world.setSystem(new MouseCursorSystem());
+
+
         /** apply velocity */
         world.setSystem(new PhysicsSystem());
 
         /** Post Physics Simulations */
         //world.setSystem(new AimSystem());
         //world.setSystem(new MapWallSensorSystem());
+
 
         /** PRE-RENDER */
 
