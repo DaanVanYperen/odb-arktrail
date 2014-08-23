@@ -19,6 +19,7 @@ import net.mostlyoriginal.api.system.script.EntitySpawnerSystem;
 import net.mostlyoriginal.api.system.script.SchedulerSystem;
 import net.mostlyoriginal.game.manager.AssetSystem;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
+import net.mostlyoriginal.game.manager.RouteSystem;
 
 /**
  * @author Daan van Yperen
@@ -47,6 +48,7 @@ public class MainScreen implements Screen {
         world.setSystem(new CameraSystem(CAMERA_ZOOM_FACTOR));
 
         /** CONTROL */
+        world.setSystem(new RouteSystem());
 
         // control systems.
         /** Agency Systems (Control and Interact) */
@@ -59,6 +61,7 @@ public class MainScreen implements Screen {
         world.setSystem(new EntitySpawnerSystem());
 
         /** SIMULATE */
+
 
         /** Physics systems that apply a vector on an entity */
         world.setSystem(new HomingSystem());

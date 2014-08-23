@@ -3,6 +3,7 @@ package net.mostlyoriginal.game.manager;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
+import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapProperties;
@@ -23,6 +24,7 @@ import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.MainScreen;
 import net.mostlyoriginal.game.component.agent.PlayerControlled;
 import net.mostlyoriginal.game.component.agent.Slumberer;
+import net.mostlyoriginal.game.component.environment.RouteNode;
 import net.mostlyoriginal.game.component.interact.Pluckable;
 
 /**
@@ -187,4 +189,23 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 .addComponent(new Physics());
     }
 
+    public Entity createRouteNode(int x, int y, RouteNode.Action action, int order) {
+
+        return new EntityBuilder(world)
+                .with(new Pos(x,y),
+                      new Bounds(0,0,8,8),
+                      new Anim(900),
+                      new RouteNode(action, order))
+                .group("route").build();
+
+
+    }
+
+    public Entity createRouteIndicator() {
+        return new EntityBuilder(world)
+                .with(new Pos(5,5),
+                      new Bounds(0,0,8,8),
+                      new Anim("progress-indicator", 1000))
+                .tag("routeindicator").build();
+    }
 }

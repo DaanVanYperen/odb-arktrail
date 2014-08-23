@@ -25,4 +25,5 @@ public abstract class AbstractEntityFactorySystem extends VoidEntitySystem {
     @Override
     protected void processSystem() {
     }
+
 }
