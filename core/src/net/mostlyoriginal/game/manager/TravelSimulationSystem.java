@@ -8,6 +8,7 @@ import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
 import net.mostlyoriginal.game.component.environment.RouteNode;
 import net.mostlyoriginal.game.component.environment.Travels;
+import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 import net.mostlyoriginal.game.system.ui.RouteSystem;
 
 /**
@@ -22,6 +23,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     protected ComponentMapper<RouteNode> mRouteNode;
     private TagManager tagManager;
     private boolean traveling;
+    private DilemmaSystem dilemmaSystem;
 
     public TravelSimulationSystem() {
         super(Aspect.getAspectForAll(Travels.class));
@@ -38,6 +40,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
                     planWarp();
                     break;
                 case EVENT:
+                    dilemmaSystem.randomDilemma();
                     break;
             }
         }

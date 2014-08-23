@@ -48,42 +48,46 @@ public class DilemmaSystem extends EntityProcessingSystem {
                 new Pos(x, y),
                 new Label(text),
                 new Bounds(0, -8, text.length() * 8, 0),
-                new Clickable( ),
-                new Button( COLOR_RAW_DIMMED, COLOR_RAW_BRIGHT, "FFFFFF", listener)
+                new Clickable(),
+                new Button(COLOR_RAW_DIMMED, COLOR_RAW_BRIGHT, "FFFFFF", listener)
         )
-        .group(DILEMMA_GROUP).build();
+                .group(DILEMMA_GROUP).build();
     }
 
-    public boolean isDilemmaActive()
-    {
+    public boolean isDilemmaActive() {
         return dilemmaActive;
     }
 
     @Override
     protected void initialize() {
         super.initialize();
+    }
 
-        createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, "Captain, ensign Jovoc");
-        createLabel(10, 10 + ROW_HEIGHT * 3, COLOR_DILEMMA, "contracted a brainslug!");
-        createOption(10, 10 + ROW_HEIGHT * 2, "[DUMP HIM OUT OF AIRLOCK]", new ButtonListener() {
-            @Override
-            public void run() {
-                stopDilemma();
-            }
-        });
-        createOption(10, 10 + ROW_HEIGHT, "[DO NOTHING]", new ButtonListener() {
-                    @Override
-                    public void run() {
-                        stopDilemma();
-                    }
-                });
-        dilemmaActive=true;
+    /** Spawn a random dilemma. */
+    public void randomDilemma() {
+        if (!dilemmaActive) {
+            createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, "Captain, ensign Jovoc");
+            createLabel(10, 10 + ROW_HEIGHT * 3, COLOR_DILEMMA, "contracted a brainslug!");
+            createOption(10, 10 + ROW_HEIGHT * 2, "[DUMP HIM OUT OF AIRLOCK]", new ButtonListener() {
+                @Override
+                public void run() {
+                    stopDilemma();
+                }
+            });
+            createOption(10, 10 + ROW_HEIGHT, "[DO NOTHING]", new ButtonListener() {
+                @Override
+                public void run() {
+                    stopDilemma();
+                }
+            });
+            dilemmaActive = true;
+        }
     }
 
     /** Remove active dilemma from screen. */
     private void stopDilemma() {
         EntityUtil.safeDeleteAll(groupManager.getEntities(DILEMMA_GROUP));
-        dilemmaActive=false;
+        dilemmaActive = false;
     }
 
 
