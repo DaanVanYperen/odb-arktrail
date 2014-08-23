@@ -11,7 +11,14 @@ public class Button extends Component {
     public String animDefault;
     public String animClicked;
     public String animHover;
-    public float cooldown;
+    public float cooldown=0;
+
+    public Button(String animDefault, String animHover, String animClicked, Runnable runnable) {
+        this.animHover = animHover;
+        this.animClicked = animClicked;
+        this.animDefault = animDefault;
+        this.runnable = runnable;
+    }
 
     public Button(String animPrefix, Runnable runnable) {
         this.runnable = runnable;

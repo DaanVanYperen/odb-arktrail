@@ -5,9 +5,12 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
+import com.badlogic.gdx.graphics.Color;
+import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.component.ui.Label;
 
 /**
  * @author Daan van Yperen
@@ -18,11 +21,12 @@ public class ButtonSystem extends EntityProcessingSystem {
     public static final float COOLDOWN_AFTER_BUTTON_CLICK = 0.15f;
     protected ComponentMapper<Clickable> mClickable;
 
+    protected ComponentMapper<Label> mLabel;
     protected ComponentMapper<Button> mButton;
     protected ComponentMapper<Anim> mAnim;
 
     public ButtonSystem() {
-        super(Aspect.getAspectForAll(Button.class, Clickable.class, Anim.class));
+        super(Aspect.getAspectForAll(Button.class, Clickable.class, Bounds.class).one(Anim.class,Label.class));
     }
 
     @Override
@@ -31,7 +35,13 @@ public class ButtonSystem extends EntityProcessingSystem {
     }
 
     private void updateAnim(Entity e) {
-        mAnim.get(e).id = getNewAnimId(e);
+        final String id = getNewAnimId(e);
+
+        if ( mAnim.has(e)) {
+            mAnim.get(e).id = id;
+        } else if (mLabel.has(e)) {
+            mLabel.get(e).color = Color.valueOf(id);
+        }
     }
 
     private String getNewAnimId(Entity e ) {
