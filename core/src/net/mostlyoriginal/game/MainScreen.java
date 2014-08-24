@@ -48,6 +48,7 @@ public class MainScreen implements Screen {
         /** UTILITY - PASSIVE */
 
         //world.setSystem(new CollisionSystem());
+        world.setSystem(new InventorySystem());
         world.setSystem(new EntityFactorySystem());
         world.setSystem(new ConstructionSystem());
         world.setSystem(new ShipComponentSystem());
@@ -62,7 +63,6 @@ public class MainScreen implements Screen {
         /* */ world.setSystem(new LifesupportSimulationSystem(),true);
         /* */ world.setSystem(new ProductionSimulationSystem(),true);
         world.setSystem(new DilemmaSystem());
-        world.setSystem(new InventorySystem());
         world.setSystem(new CrewSystem());
 
         // control systems.

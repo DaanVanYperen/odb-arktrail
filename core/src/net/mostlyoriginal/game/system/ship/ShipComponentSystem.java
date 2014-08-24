@@ -25,8 +25,10 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     public static final int MARGIN_LEFT = 16;
     protected ComponentMapper<Pos> mPos;
     protected ComponentMapper<Anim> mAnim;
+    protected ComponentMapper<ShipComponent> mShipComponent;
     private HullSystem hullSystem;
     private AccelerationEffectSystem accelerationEffectSystem;
+    private InventorySystem inventorySystem;
 
     public ShipComponentSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class, Pos.class, Anim.class));
@@ -50,8 +52,9 @@ public class ShipComponentSystem extends EntityProcessingSystem {
         // create test expansion slot.
         createComponent(shipCenterX -1, shipCenterY, ShipComponent.Type.ENGINE, ShipComponent.State.CONSTRUCTED);
         createComponent(shipCenterX, shipCenterY, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
-        createComponent(shipCenterX, shipCenterY - 1, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
-        createComponent(shipCenterX, shipCenterY + 1, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX, shipCenterY - 1, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX, shipCenterY + 1, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX+1, shipCenterY, ShipComponent.Type.MEDBAY, ShipComponent.State.CONSTRUCTED);
         hullSystem.dirty();
     }
 
@@ -61,18 +64,39 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     public Entity createComponent(int gridX, int gridY, ShipComponent.Type type, ShipComponent.State state) {
         if (gridY < 0 || gridX < 0 || gridX >= MAX_X || gridY >= MAX_Y) return null;
         if (get(gridX, gridY) == null) {
-            Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(), new ShipComponent(type, gridX, gridY, state), new Bounds(0, 0, 8, 8), new Clickable()).build();
+            Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(), new ShipComponent(type, gridX, gridY, ShipComponent.State.UNDER_CONSTRUCTION), new Bounds(0, 0, 8, 8), new Clickable()).build();
             set(gridX,gridY, entity);
 
-            switch(type)
-            {
-                case ENGINE:
-                    createEngineFlame(gridX-3, gridY);
-                    break;
-            }
+            completeConstructionOf(entity);
             return entity;
         }
         return null;
+    }
+
+    private void completeConstructionOf(Entity entity) {
+        final ShipComponent c = mShipComponent.get(entity);
+        if ( c.state == ShipComponent.State.UNDER_CONSTRUCTION) {
+            c.state = ShipComponent.State.CONSTRUCTED;
+            switch (c.type) {
+                case HULL:
+                    break;
+                case BUNKS:
+                    break;
+                case MEDBAY:
+                    inventorySystem.alter(InventorySystem.Resource.BIOGEL_STORAGE, 1);
+                    break;
+                case HYDROPONICS:
+                    break;
+                case STORAGEPOD:
+                    inventorySystem.alter(InventorySystem.Resource.STORAGE, 1);
+                    break;
+                case ENGINE:
+                    createEngineFlame(c.gridX - 3, c.gridY);
+                    break;
+                case RAMSCOOP:
+                    break;
+            }
+        }
     }
 
     private void createEngineFlame(int gridX, int gridY) {

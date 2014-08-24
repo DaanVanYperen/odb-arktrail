@@ -8,12 +8,12 @@ import com.artemis.Component;
 public class Inventory extends Component {
     public static final int DEFAULT_FUEL = 3;
     public static final int DEFAULT_FOOD = 3;
-    public static final int DEFAULT_BIOGEL = 1;
+    public static final int DEFAULT_BIOGEL = 0;
     public int fuel = DEFAULT_FUEL;
     public int food = DEFAULT_FOOD;
     public int biogel = DEFAULT_BIOGEL;
 
-    public int maxFuel = 3;
-    public int maxFood = 3;
-    public int maxBiogel = 1;
+    public int maxFuel = 0;
+    public int maxFood = 0;
+    public int maxBiogel = 0;
 }

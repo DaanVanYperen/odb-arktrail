@@ -43,7 +43,8 @@ public class InventorySystem extends EntityProcessingSystem {
         FUEL("pickup-fuel"),
         BIOGEL("pickup-biogel"),
         CREWMEMBER("pickup-crew"),
-        FOOD("pickup-food");
+        FOOD("pickup-food"),
+        STORAGE(""), BIOGEL_STORAGE("");
         public final String pickupAnimId;
 
         Resource(String pickupAnimId) {
@@ -69,6 +70,12 @@ public class InventorySystem extends EntityProcessingSystem {
                 case BIOGEL:
                     inventory.biogel = MathUtils.clamp(inventory.biogel + amount, 0, inventory.maxBiogel);
                     break;
+                case STORAGE:
+                    inventory.maxFuel = inventory.maxFood = inventory.maxFood + amount;
+                    break;
+                case BIOGEL_STORAGE:
+                    inventory.maxBiogel = (int)MathUtils.clamp(inventory.maxBiogel + amount, 1f, 3f);
+                    break;
             }
         }
     }
@@ -84,6 +91,8 @@ public class InventorySystem extends EntityProcessingSystem {
                     return inventory.food;
                 case BIOGEL:
                     return inventory.biogel;
+                case STORAGE:
+                    return inventory.maxBiogel;
             }
         }
         return 0;
@@ -102,9 +111,9 @@ public class InventorySystem extends EntityProcessingSystem {
     protected void process(Entity e) {
 
         Inventory inventory = mInventory.get(e);
-        updateBar(fuelIndicator, inventory.fuel, inventory.maxFuel);
-        updateBar(foodIndicator, inventory.food, inventory.maxFood);
-        updateBar(biogelIndicator, inventory.biogel, inventory.maxBiogel);
+        updateBar(fuelIndicator, inventory.fuel, inventory.maxFuel - inventory.fuel);
+        updateBar(foodIndicator, inventory.food, inventory.maxFood- inventory.food);
+        updateBar(biogelIndicator, inventory.biogel, inventory.maxBiogel- inventory.biogel);
     }
 
     private void updateBar(Entity indicator, int value, int emptyValue) {

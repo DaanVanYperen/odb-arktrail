@@ -112,6 +112,9 @@ public class BarRenderSystem extends EntitySystem {
         final TextureRegion frame = gdxanim.getKeyFrame(0,false);
         final TextureRegion frame2 = gdxanim2.getKeyFrame(0,false);
 
+        // make sure one bubble is always shown.
+        int emptyCount = ( bar.value == 0 && bar.valueEmpty == 0 ) ? 1 : bar.valueEmpty;
+
         for ( int i =0; i< bar.value; i++)
         {
             batch.draw(frame,
@@ -120,7 +123,7 @@ public class BarRenderSystem extends EntitySystem {
                     frame.getRegionWidth(),
                     frame.getRegionHeight());
         }
-        for ( int i =0; i< bar.valueEmpty; i++)
+        for ( int i =0; i< emptyCount; i++)
         {
             batch.draw(frame2,
                     (int)pos.x + bounds.width + (i+bar.value) * frame.getRegionWidth()+1,
