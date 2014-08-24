@@ -41,7 +41,7 @@ public class CrewMember extends Component {
         STARVING("Starving", null, Color.valueOf("A9301B"), Ability.PILOT, Ability.EAT, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE),
 
         /** Nothing wrong. */
-        BRAINSLUG("Brainslug", "state-slug", Color.valueOf("42FA29"), Ability.PILOT, Ability.BUILD, Ability.INFECT, Ability.AGE),
+        BRAINSLUG("Brainslug", "state-slug", Color.valueOf("42FA29"), Ability.PILOT, Ability.BUILD, Ability.INFECT),
 
         /** Elderly */
         ELDERLY("Elderly", null, Color.valueOf("2C4142"), Ability.INFECTABLE),
