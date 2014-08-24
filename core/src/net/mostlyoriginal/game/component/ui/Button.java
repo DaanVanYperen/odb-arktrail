@@ -1,6 +1,7 @@
 package net.mostlyoriginal.game.component.ui;
 
 import com.artemis.Component;
+import net.mostlyoriginal.api.utils.EntityReference;
 
 /**
  * @author Daan van Yperen
@@ -19,6 +20,8 @@ public class Button extends Component {
     public String hint=null;
     public boolean autoclick = false;
     public float autoclickCooldown;
+    public boolean hideIfDisabled = false;
+    public EntityReference transientIcon;
 
     /** create a button event handler without effects. */
     public Button(ButtonListener listener) {

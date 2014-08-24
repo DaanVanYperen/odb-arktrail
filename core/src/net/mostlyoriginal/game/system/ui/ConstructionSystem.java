@@ -10,6 +10,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.utils.SafeEntityReference;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.Button;
@@ -118,8 +119,10 @@ public class ConstructionSystem extends EntityProcessingSystem {
                 Entity button = efs.createButton(x, y, 15, 15, "btn-construct", new ToolSelectButton(structure), null);
                 Button button1 = mButton.get(button);
                 button1.hint = structure.label;
+                button1.hideIfDisabled  =true;
+                button1.transientIcon = new SafeEntityReference(new EntityBuilder(world).with(new Pos(x + 4, y + 5), new Anim(structure.animId, 4000)).build());
                 // add icon over button. @todo merge with button logic.
-                new EntityBuilder(world).with(new Pos(x + 4, y + 5), new Anim(structure.animId, 4000)).build();
+
                 index++;
             }
         }

@@ -53,9 +53,27 @@ public class ButtonSystem extends EntityProcessingSystem {
     }
 
     private void updateAnim(Entity e) {
-        final String id = getNewAnimId(e);
+        String id = getNewAnimId(e);
 
         if (id != null) {
+            final Button button = mButton.get(e);
+            boolean disabled = button.hideIfDisabled && !button.listener.enabled();
+            if (disabled) {
+                id = null;
+            }
+
+            // quick hack to hide icons when button is hidden. @todo cleanup.
+            if ( button.transientIcon != null  ) {
+                if (button.transientIcon.isActive()) {
+                    Entity bute = button.transientIcon.get();
+                    if (disabled && bute.isEnabled())
+                        bute.disable();
+                    if (!disabled && !bute.isEnabled()) {
+                        bute.enable();
+                    }
+                }
+            }
+
             if (mAnim.has(e)) {
                 mAnim.get(e).id = id;
             } else if (mLabel.has(e)) {
