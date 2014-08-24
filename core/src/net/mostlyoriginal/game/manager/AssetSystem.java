@@ -76,6 +76,11 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("hull-6",96, 48, 8, 8, 1); // bottom
         add("hull-7",120,48, 8, 8, 1); // bottom right
 
+        add("hull-inny-0", 112,16, 8, 8, 1); // bottom-right-inny.
+        add("hull-inny-1", 120,16, 8, 8, 1); // bottom-left-inny
+        add("hull-inny-2", 112,24, 8, 8, 1); // top-right-inny
+        add("hull-inny-3", 120,24, 8, 8, 1); // top-left-inny
+
         add("hull-missing",96,40, 8, 8, 1); // missing
 
         loadSounds(new String[] {

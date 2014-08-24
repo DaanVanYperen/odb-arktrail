@@ -97,7 +97,27 @@ public class HullSystem extends EntityProcessingSystem {
             new Pattern("hull-7",
                     1, 1, 2,
                     1, 1, 0,
-                    2, 0, 0)
+                    2, 0, 0),
+            // b-right
+            new Pattern("hull-inny-0",
+                    1, 1, 2,
+                    1, 1, 1,
+                    2, 1, 0),
+            // b-left
+            new Pattern("hull-inny-1",
+                    2, 1, 1,
+                    1, 1, 1,
+                    0, 1, 2),
+            // t-right
+            new Pattern("hull-inny-2",
+                    2, 1, 0,
+                    1, 1, 1,
+                    1, 1, 1),
+            // t-left
+            new Pattern("hull-inny-3",
+                    0, 1, 2,
+                    1, 1, 1,
+                    2, 1, 1)
     };
 
     private static final int[] pat = new int[9];
