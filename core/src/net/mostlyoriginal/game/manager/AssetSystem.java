@@ -34,6 +34,9 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
 
         add("gate", 32, 56, 24, 56, 1);
 
+        add("state-dead", 120, 64, 8, 8, 1);
+        add("state-slug", 104, 72, 8, 8, 1);
+
         add("btn-engage-up", 171, 85, 56, 20, 1);
         add("btn-engage-hover", 171, 84, 56, 20, 1);
         add("btn-engage-down", 171, 81, 56, 20, 1);

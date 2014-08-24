@@ -42,6 +42,7 @@ public class CrewSystem extends EntitySystem {
 
     protected ComponentMapper<CrewMember> mCrewMember;
     protected ComponentMapper<Pos> mPos;
+    protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<Label> mLabel;
     protected EntityFactorySystem efs;
 
@@ -120,6 +121,11 @@ public class CrewSystem extends EntitySystem {
 
                 offsetX -= 4;
             }
+            if ( mAnim.has(e2))
+            {
+                Anim anim = mAnim.get(e2);
+                anim.id2=crewMember.effect.animStatusId;
+            }
         }
 
         // fonts are typically offset in the wrong dir.
@@ -178,6 +184,21 @@ public class CrewSystem extends EntitySystem {
         }
 
         return list.toArray(new Entity[list.size()]);
+    }
+
+    public int countNotOf(CrewMember.Ability ability) {
+        int count=0;
+        for (Entity e : sortedEntities) {
+            final CrewMember crewMember = mCrewMember.get(e);
+            if ( crewMember != null )
+            {
+                if ( !crewMember.effect.can( ability ) )
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     /** return count of crew with given ability. */
@@ -265,4 +286,5 @@ public class CrewSystem extends EntitySystem {
         Entity entity = randomWith(ability);
         return entity != null ? mCrewMember.get(entity) : null;
     }
+
 }

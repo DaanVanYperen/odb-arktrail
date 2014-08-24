@@ -24,25 +24,29 @@ public class CrewMember extends Component {
     }
 
     public static enum Ability {
-        EAT, PILOT, GIVE_BIRTH, BUILD
+        EAT, PILOT, GIVE_BIRTH, BUILD, INFECTABLE, INFECT
     }
 
 
     public static enum Effect {
 
         /** Nothing wrong. */
-        HEALTHY("Healthy", Color.valueOf("2C4142"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH),
+        HEALTHY("Healthy", null, Color.valueOf("2C4142"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH, Ability.INFECTABLE),
 
         /** Nothing wrong. */
-        HUNGRY("Hungry", Color.valueOf("46140B"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH),
+        HUNGRY("Hungry",  null,Color.valueOf("46140B"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH, Ability.INFECTABLE),
 
         /** Nothing wrong. */
-        STARVING("Starving", Color.valueOf("A9301B"), Ability.PILOT, Ability.EAT, Ability.GIVE_BIRTH),
+        STARVING("Starving", null, Color.valueOf("A9301B"), Ability.PILOT, Ability.EAT, Ability.GIVE_BIRTH, Ability.INFECTABLE),
+
+        /** Nothing wrong. */
+        BRAINSLUG("Brainslug", "state-slug", Color.valueOf("42FA29"), Ability.PILOT, Ability.BUILD, Ability.INFECT),
 
         /** NOOOOOOOOO TIMMYYYYYYYYY (crewmember dead) */
-        DEAD("Dead", Color.valueOf("4C3448"));
+        DEAD("Dead", "state-dead", Color.valueOf("4C3448"));
 
         public final String label;
+        public final String animStatusId;
         public final Color color;
         private final Ability[] abilities;
 
@@ -56,8 +60,9 @@ public class CrewMember extends Component {
             return false;
         }
 
-        Effect(String label, Color color, Ability ... abilities ) {
+        Effect(String label, String animStatusId, Color color, Ability ... abilities ) {
             this.label = label;
+            this.animStatusId = animStatusId;
             this.color = color;
             this.abilities = abilities;
         }

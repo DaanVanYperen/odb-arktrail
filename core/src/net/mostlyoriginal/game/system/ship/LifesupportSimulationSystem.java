@@ -7,6 +7,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.game.component.ship.CrewMember;
+import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 
 /**
  * Lifesupport simulation for the crew.
@@ -31,6 +32,7 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
      * Total food available
      */
     private float foodFactor;
+    private DilemmaSystem dilemmaSystem;
 
     public LifesupportSimulationSystem() {
         super(Aspect.getAspectForAll(CrewMember.class));
@@ -58,6 +60,13 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
             // two crew members eat 0.5 - 1.5 food.
             inventorySystem.alter(InventorySystem.Resource.FOOD, -(int) MathUtils.random(crewThatAte / CREW_FED_PER_FOOD, crewThatAte / CREW_FED_PER_FOOD + 1f));
         }
+
+        int infect    = crewSystem.countOf(CrewMember.Ability.INFECT);
+        int notInfect = crewSystem.countNotOf(CrewMember.Ability.INFECT);
+        if ( infect > 0 && notInfect == 0 )
+        {
+            dilemmaSystem.brainslugTakeoverDilemma();
+        }
     }
 
     @Override
@@ -74,11 +83,28 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
             case STARVING:
                 attemptEat(e, CrewMember.Effect.DEAD);
                 break;
+            case BRAINSLUG:
+                attemptInfect(e);
+                break;
             case DEAD:
                 break;
         }
 
 
+    }
+
+    private void attemptInfect(Entity e) {
+        // attempt to infect.
+        if (MathUtils.random(0f, 0.99f) > 0.5f) {
+            infectRandomCrewmember();
+        }
+    }
+
+    public void infectRandomCrewmember() {
+        final Entity victim = crewSystem.randomWith(CrewMember.Ability.INFECTABLE);
+        if (victim != null) {
+            changeState(victim, CrewMember.Effect.BRAINSLUG);
+        }
     }
 
     /**

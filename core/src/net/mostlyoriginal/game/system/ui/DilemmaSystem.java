@@ -82,6 +82,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
 
     private void startDilemma(Dilemma dilemma) {
+        if ( dilemma == null ) return;
         if ( !dilemmaActive ) {
             dilemmaActive = true;
             if (dilemma.getText1() != null) {
@@ -112,6 +113,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
     }
 
     public void tutorialDilemma() {
+
         startDilemma(new Dilemma("Fresh out of space dock, ", "you are ready for your biggest adventure yet!", "[Embark my very own Ark!]",
                 new ChainDilemma(new Dilemma("you have been tasked with transporting a gate,", "and activating it at a resource heavy planet!", "[Stop talking and hand me the keys!]",
                 new ChainDilemma(
@@ -131,11 +133,14 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     /** Spawn am even weighted random dilemma. */
     public void randomDilemma() {
+        startDilemma(brainslugOnPlanet());
+        return;
+/*
             if ( MathUtils.random(0, 99) < 50 ) {
                 randomPositiveDilemma();
             } else {
                 randomNegativeDilemma();
-            }
+            } */
     }
 
     /** player is look for a fight, the odds are against him! */
@@ -154,8 +159,14 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     /** Out of gas. :( */
     public void outOfGasDilemma() {
-        startDilemma(new Dilemma("OUT OF GAS. BOO.", DONT_GIVE_UP, new CloseDilemmaListener(),GIVE_UP, new RestartListener() ));
+        startDilemma(new Dilemma("You have run out of gas.", DONT_GIVE_UP, new CloseDilemmaListener(),GIVE_UP, new RestartListener() ));
     }
+
+    public void brainslugTakeoverDilemma() {
+        startDilemma(new Dilemma("Brainslugs have taken over!", "None of your crew remains.", GIVE_UP, new RestartListener() ));
+    }
+
+
 
     /** No pilots remain. :( */
     public void noPilotsDilemma() {
@@ -219,6 +230,10 @@ public class DilemmaSystem extends EntityProcessingSystem {
                     dilemma = plasmaAccident();
                     break;
                 }
+                case 1: {
+                    dilemma = brainslugOnPlanet();
+                    break;
+                }
                 default:
                     // nothing happens.
                     dilemma = new Dilemma("Another year, another mile.", null, "[I wish something exploded]", new CloseDilemmaListener());
@@ -255,6 +270,18 @@ public class DilemmaSystem extends EntityProcessingSystem {
         return null;
     }
 
+    private Dilemma brainslugOnPlanet() {
+        final Entity e = crewSystem.randomWith(CrewMember.Ability.INFECTABLE);
+        if ( e != null ) {
+            final CrewMember member = mCrewMember.get(e);
+            if ( member != null ) {
+                return new Dilemma("During a spacewalk, " + member.name,  "suit was breached.",
+                        "[I wonder if that slug on his head is dangerous!]", new InfectCrewmemberDilemma(e),
+                        "[Throw him out the airlock]", new KillCrewmemberDilemma(e));
+            }
+        }
+        return null;
+    }
 
     /** Just closes dilemma, no action */
     private class CloseDilemmaListener extends ButtonListener {
@@ -364,6 +391,21 @@ public class DilemmaSystem extends EntityProcessingSystem {
         public void run() {
             super.run();
             lifesupportSimulationSystem.changeState(e, CrewMember.Effect.DEAD);
+        }
+    }
+
+    private class InfectCrewmemberDilemma extends CloseDilemmaListener {
+
+        private final Entity e;
+
+        private InfectCrewmemberDilemma( Entity e ) {
+            this.e = e;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            lifesupportSimulationSystem.changeState(e, CrewMember.Effect.BRAINSLUG);
         }
     }
 
