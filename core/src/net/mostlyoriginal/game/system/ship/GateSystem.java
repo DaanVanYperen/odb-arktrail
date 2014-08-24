@@ -6,6 +6,7 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
+import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.game.component.ship.Gate;
@@ -18,6 +19,8 @@ public class GateSystem extends EntityProcessingSystem {
 
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<Pos> mPos;
+
+    float bobTimer=0;
 
     protected AccelerationEffectSystem accelerationEffectSystem;
 
@@ -34,10 +37,16 @@ public class GateSystem extends EntityProcessingSystem {
     }
 
     @Override
+    protected void begin() {
+        super.begin();
+        bobTimer+= world.delta;
+    }
+
+    @Override
     protected void process(Entity e) {
         Anim anim = mAnim.get(e);
         Pos pos = mPos.get(e);
         pos.x = 30 + 9f * accelerationEffectSystem.speedFactor + 2;
-        pos.y = 80;
+        pos.y = 80 + MathUtils.sin(bobTimer * 0.5f) * 1f;
     }
 }
