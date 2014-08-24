@@ -27,6 +27,7 @@ public class ButtonSystem extends EntityProcessingSystem {
     protected ComponentMapper<Button> mButton;
     protected ComponentMapper<Anim> mAnim;
     public Label hintlabel;
+    public float globalButtonCooldown = 0;
 
     public ButtonSystem() {
         super(Aspect.getAspectForAll(Button.class, Clickable.class, Bounds.class).one(Anim.class, Label.class));
@@ -50,6 +51,7 @@ public class ButtonSystem extends EntityProcessingSystem {
     protected void begin() {
         super.begin();
         hintlabel.text = null;
+        globalButtonCooldown -= world.delta;
     }
 
     private void updateAnim(Entity e) {
@@ -115,7 +117,7 @@ public class ButtonSystem extends EntityProcessingSystem {
                 hintlabel.text = button.hint;
                 return button.animHover;
             case CLICKED:
-                return click(button);
+                if ( !button.autoclick ) return click(button);
             default:
                 return button.animDefault;
         }
@@ -128,7 +130,10 @@ public class ButtonSystem extends EntityProcessingSystem {
     }
 
     private void triggerButton(Button button) {
-        if (button.listener.enabled()) {
+        if (button.listener.enabled() && globalButtonCooldown <= 0 ) {
+
+            // prevent spamming by accident.
+            if ( !button.autoclick ) globalButtonCooldown = 0.1f;
             button.listener.run();
         }
     }

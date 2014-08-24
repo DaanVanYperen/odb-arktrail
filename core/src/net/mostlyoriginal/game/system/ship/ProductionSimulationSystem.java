@@ -4,13 +4,16 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
+import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.physics.Clamped;
 import net.mostlyoriginal.api.component.physics.Physics;
+import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.Button;
@@ -35,6 +38,7 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     public CrewSystem crewSystem;
     public int builders;
     private ShipComponentSystem shipComponentSystem;
+    private TagManager tagManager;
 
     public ProductionSimulationSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class));
@@ -97,7 +101,7 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         }
     }
 
-    private void spawnCollectible(float x, float y, InventorySystem.Resource resource) {
+    public void spawnCollectible(float x, float y, InventorySystem.Resource resource) {
 
         CollectCollectible listener = new CollectCollectible(resource);
         Button button = new Button(listener);
@@ -106,8 +110,26 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         Physics physics = new Physics();
         physics.vx = MathUtils.random(-10f, 10f);
         physics.vy = MathUtils.random(-10f, 10f);
-        listener.entity = new EntityBuilder(world).with(new Pos(x, y), physics, new Clickable(), new Anim(resource.pickupAnimId, 4000), new Bounds(0, 0, 8, 6), button).build();
+        listener.entity =
+                new EntityBuilder(world).
+                        with(
+                                new Pos(x, y),
+                                physics,
+                                new Clickable(),
+                                new Clamped(0,0, G.SCREEN_WIDTH, G.SCREEN_HEIGHT),
+                                new Anim(resource.pickupAnimId, 10000), new Bounds(0, 0, 8, 6), button).build();
 
+
+    }
+
+    public void spawnCollectibleNearMouse(InventorySystem.Resource resource) {
+        final Entity cursor = tagManager.getEntity("cursor");
+        if ( cursor != null ) {
+            Pos pos = mPos.get(cursor);
+            if ( pos != null ) {
+                spawnCollectible(pos.x + MathUtils.random(-10, 10),pos.y + MathUtils.random(-10, 10), resource);
+            }
+        }
 
     }
 
