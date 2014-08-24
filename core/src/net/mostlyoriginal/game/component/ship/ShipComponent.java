@@ -32,7 +32,8 @@ public class ShipComponent extends Component {
         HYDROPONICS("c-hydroponics", "Hydroponics: may produce food each jump.", true, 500, 0, false, 2),
         STORAGEPOD("c-storagepod", "Storage Pod: increases ship capacity for fuel, food and medigel.", true, 500, 0, false, 1),
         ENGINE("c-engine", "Engine: Faster travel, +fuel usage, -births, -food usage, +sanity.", true, 550, -8, true, 1),
-        RAMSCOOP("c-ramscoop", "Ramscoop: May produce food each jump.", true, 550, 0, true, 1);
+        RAMSCOOP("c-ramscoop", "Ramscoop: May produce food each jump.", true, 550, 0, true, 1),
+        CHAIN("c-chain", null, false, 500, 0, true, 1);
 
         public final String animId;
         public final boolean buildable;

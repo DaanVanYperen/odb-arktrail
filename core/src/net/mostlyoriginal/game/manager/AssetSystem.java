@@ -69,6 +69,7 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("c-storagepod",144,32, 8, 8, 1);
         add("c-engine",80,24, 8, 8, 1);
         add("c-ramscoop",112+8,56, 8, 8, 1);
+        add("c-chain",64,40, 8, 8, 1);
 
         add("c-bunks-placed",152,24, 8, 8, 1);
         add("c-medbay-placed",144,16, 8, 8, 1);
@@ -76,6 +77,7 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("c-storagepod-placed",144,32, 8, 8, 1);
         add("c-engine-placed",80,24, 16, 8, 1);
         add("c-ramscoop-placed",112,56, 16, 8, 1);
+        add("c-chain-placed",64,40, 8, 8, 1);
 
         add("hull-0",88, 32, 8, 8, 1); // top left
         add("hull-1",96, 32, 8, 8, 1); // top
