@@ -37,6 +37,7 @@ import net.mostlyoriginal.game.component.ui.Clickable;
 public class ProductionSimulationSystem extends EntityProcessingSystem {
 
     public static final float CREW_FED_PER_FOOD = 1.25f;
+    public static final float BUILDERS_BONUS_FACTOR = 2f;
     protected ComponentMapper<ShipComponent> mShipComponent;
     protected ComponentMapper<Pos> mPos;
     public InventorySystem inventorySystem;
@@ -53,7 +54,7 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     protected void begin() {
         super.begin();
 
-        builders = crewSystem.countOf(CrewMember.Ability.BUILD);
+        builders = (int)(crewSystem.countOf(CrewMember.Ability.BUILD) * BUILDERS_BONUS_FACTOR);
     }
 
     @Override

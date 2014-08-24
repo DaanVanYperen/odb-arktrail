@@ -54,7 +54,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
         createComponent(shipCenterX, shipCenterY, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
         createComponent(shipCenterX, shipCenterY - 1, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
         createComponent(shipCenterX, shipCenterY + 1, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
-        createComponent(shipCenterX+1, shipCenterY, ShipComponent.Type.MEDBAY, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX+1, shipCenterY, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
 
         createComponent(shipCenterX-2, shipCenterY+1, ShipComponent.Type.CHAIN, ShipComponent.State.CONSTRUCTED);
         createComponent(shipCenterX-3, shipCenterY+1, ShipComponent.Type.CHAIN, ShipComponent.State.CONSTRUCTED);
