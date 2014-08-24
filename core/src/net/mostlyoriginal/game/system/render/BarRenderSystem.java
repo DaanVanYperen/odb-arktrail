@@ -115,10 +115,17 @@ public class BarRenderSystem extends EntitySystem {
         // make sure one bubble is always shown.
         int emptyCount = ( bar.value == 0 && bar.valueEmpty == 0 ) ? 1 : bar.valueEmpty;
 
+        int barWidth = frame.getRegionWidth() + 1;
+
+        if ( bar.value + bar.valueEmpty >= 10 ) barWidth -=1;
+        if ( bar.value + bar.valueEmpty >= 20 ) barWidth -=1;
+        if ( bar.value + bar.valueEmpty >= 30 ) barWidth -=1;
+        if ( bar.value + bar.valueEmpty >= 40 ) barWidth -=1;
+
         for ( int i =0; i< bar.value; i++)
         {
             batch.draw(frame,
-                    (int)pos.x + bounds.width + i * (frame.getRegionWidth()+1),
+                    (int)pos.x + bounds.width + i * barWidth,
                     (int)pos.y - bounds.height,
                     frame.getRegionWidth(),
                     frame.getRegionHeight());
@@ -126,7 +133,7 @@ public class BarRenderSystem extends EntitySystem {
         for ( int i =0; i< emptyCount; i++)
         {
             batch.draw(frame2,
-                    (int)pos.x + bounds.width + (i+bar.value) * (frame.getRegionWidth()+1),
+                    (int)pos.x + bounds.width + (i+bar.value) * barWidth,
                     (int)pos.y - bounds.height,
                     frame.getRegionWidth(),
                     frame.getRegionHeight());

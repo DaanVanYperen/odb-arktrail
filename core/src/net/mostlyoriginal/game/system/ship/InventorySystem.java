@@ -72,7 +72,7 @@ public class InventorySystem extends EntityProcessingSystem {
                     inventory.biogel = MathUtils.clamp(inventory.biogel + amount, 0, inventory.maxBiogel);
                     break;
                 case STORAGE:
-                    inventory.maxFuel = inventory.maxFood = inventory.maxFood + amount;
+                    inventory.maxFuel = inventory.maxFood = (int)MathUtils.clamp(inventory.maxFood + amount, 1f, 50f);
                     break;
                 case BIOGEL_STORAGE:
                     inventory.maxBiogel = (int)MathUtils.clamp(inventory.maxBiogel + amount, 1f, 3f);
