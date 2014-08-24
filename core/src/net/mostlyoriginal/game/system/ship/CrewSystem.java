@@ -17,6 +17,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.utils.SafeEntityReference;
 import net.mostlyoriginal.game.G;
+import net.mostlyoriginal.game.NameRolodex;
 import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ui.Label;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
@@ -232,6 +233,6 @@ public class CrewSystem extends EntitySystem {
     }
 
     public String getRandomName() {
-        return "Random";
+        return NameRolodex.randomName();
     }
 }
