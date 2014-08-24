@@ -35,6 +35,7 @@ import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.system.ship.CrewSystem;
+import net.mostlyoriginal.game.system.ship.LifesupportSimulationSystem;
 import net.mostlyoriginal.game.system.ship.TravelSimulationSystem;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 
@@ -53,6 +54,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
     private TravelSimulationSystem travelSimulationSystem;
     private DilemmaSystem dilemmaSystem;
     private CrewSystem crewSystem;
+    private LifesupportSimulationSystem lifesupportSimulationSystem;
 
     @Override
     protected void initialize() {
@@ -82,6 +84,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
             @Override
             public void run() {
                 dilemmaSystem.scanDilemma();
+                lifesupportSimulationSystem.process();
             }
 
             @Override
