@@ -17,14 +17,13 @@ import net.mostlyoriginal.api.system.physics.*;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.api.system.script.EntitySpawnerSystem;
 import net.mostlyoriginal.api.system.script.SchedulerSystem;
-import net.mostlyoriginal.game.manager.AssetSystem;
-import net.mostlyoriginal.game.manager.EntityFactorySystem;
-import net.mostlyoriginal.game.manager.FontManager;
-import net.mostlyoriginal.game.manager.TravelSimulationSystem;
+import net.mostlyoriginal.game.manager.*;
 import net.mostlyoriginal.game.system.render.BarRenderSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 import net.mostlyoriginal.game.system.ship.CrewSystem;
 import net.mostlyoriginal.game.system.ship.InventorySystem;
+import net.mostlyoriginal.game.system.ship.LifesupportSimulationSystem;
+import net.mostlyoriginal.game.system.ship.TravelSimulationSystem;
 import net.mostlyoriginal.game.system.ui.ButtonSystem;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 import net.mostlyoriginal.game.system.ui.MouseClickSystem;
@@ -60,6 +59,7 @@ public class MainScreen implements Screen {
         /** CONTROL */
         world.setSystem(new RouteSystem());
         world.setSystem(new TravelSimulationSystem());
+        /* */ world.setSystem(new LifesupportSimulationSystem(),true);
         world.setSystem(new DilemmaSystem());
         world.setSystem(new InventorySystem());
         world.setSystem(new CrewSystem());

@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.manager;
+package net.mostlyoriginal.game.system.ship;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -9,8 +9,6 @@ import com.artemis.systems.EntityProcessingSystem;
 import net.mostlyoriginal.game.component.environment.RouteNode;
 import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.Travels;
-import net.mostlyoriginal.game.system.ship.CrewSystem;
-import net.mostlyoriginal.game.system.ship.InventorySystem;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 import net.mostlyoriginal.game.system.ui.RouteSystem;
 
@@ -29,6 +27,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     private DilemmaSystem dilemmaSystem;
     private InventorySystem inventorySystem;
     private CrewSystem crewSystem;
+    private LifesupportSimulationSystem lifesupportSimulationSystem;
 
     public TravelSimulationSystem() {
         super(Aspect.getAspectForAll(Travels.class));
@@ -48,9 +47,11 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
             return;
         }
 
+        // step the lifesupport system forward.
+        lifesupportSimulationSystem.process();
+
         final Entity entity = routeSystem.gotoNext();
         if ( entity != null && mRouteNode.has(entity) ) {
-            inventorySystem.alter(InventorySystem.Resource.FOOD, -1);
             inventorySystem.alter(InventorySystem.Resource.FUEL, -fuelcost);
 
             switch ( mRouteNode.get(entity).action )
