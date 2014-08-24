@@ -29,6 +29,7 @@ public class InventorySystem extends EntityProcessingSystem {
     protected ComponentMapper<Bar> mBar;
     private Inventory inventory;
     private TagManager tagManager;
+    private CrewSystem crewSystem;
     private Entity biogelIndicator;
 
     public Inventory getInventory() {
@@ -75,6 +76,13 @@ public class InventorySystem extends EntityProcessingSystem {
                     break;
                 case BIOGEL_STORAGE:
                     inventory.maxBiogel = (int)MathUtils.clamp(inventory.maxBiogel + amount, 1f, 3f);
+                    break;
+                case CREWMEMBER:
+                    if ( amount > 0 ){
+                        for ( int i=0; i<amount;i++) {
+                            crewSystem.createRandomCrewmember();
+                        }
+                    }
                     break;
             }
         }

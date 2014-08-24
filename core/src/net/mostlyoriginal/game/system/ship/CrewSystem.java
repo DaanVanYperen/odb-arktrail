@@ -12,6 +12,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.utils.EntityBuilder;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.utils.SafeEntityReference;
@@ -63,6 +64,13 @@ public class CrewSystem extends EntitySystem {
 
     public CrewSystem() {
         super(Aspect.getAspectForAll(CrewMember.class));
+    }
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+
+        createCrew("You", "crew-0", CrewMember.Effect.HEALTHY);
     }
 
     @Override
@@ -212,5 +220,18 @@ public class CrewSystem extends EntitySystem {
                 crewMember.labelStatus.get().deleteFromWorld();
             }
         }
+    }
+
+    public void createRandomCrewmember()
+    {
+        createCrew(getRandomName(), "crew-" + MathUtils.random(0,2), CrewMember.Effect.HEALTHY);
+    }
+
+    public void createCrew(String name, String animId, CrewMember.Effect effect) {
+        new EntityBuilder(world).with(new CrewMember(name, animId, effect)).build();
+    }
+
+    public String getRandomName() {
+        return "Random";
     }
 }

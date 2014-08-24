@@ -58,11 +58,6 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
         createSpaceshipMetadata();
 
-        createCrew("Daan", "crew-0", CrewMember.Effect.HEALTHY);
-        createCrew("Rellik", "crew-1", CrewMember.Effect.DEAD);
-        createCrew("Flaterectomy", "crew-2", CrewMember.Effect.HEALTHY);
-        createCrew("Troop", "crew-1", CrewMember.Effect.HEALTHY);
-
 
         createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);
 
@@ -81,10 +76,6 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
         }, "warp to next landmark.");
 
         createMousecursor();
-    }
-
-    private void createCrew(String name, String animId, CrewMember.Effect effect) {
-        new EntityBuilder(world).with(new CrewMember(name, animId, effect)).build();
     }
 
     public Entity createBar(int x, int y, String label, String icon, String iconEmpty, int value, int valueEmpty) {
