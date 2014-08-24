@@ -115,9 +115,9 @@ public class InventorySystem extends EntityProcessingSystem {
     protected void initialize() {
         super.initialize();
 
-        fuelIndicator = efs.createBar(LEFT_BAR_MARGIN, G.SCREEN_HEIGHT - 16, "fuel", "bar-fuel", "bar-fuel-open", 0 , 0 );
-        foodIndicator = efs.createBar(LEFT_BAR_MARGIN, G.SCREEN_HEIGHT - 16 - BAR_OFFSET_Y, "food", "bar-food", "bar-food-open",0, 0);
-        biogelIndicator = efs.createBar(LEFT_BAR_MARGIN, G.SCREEN_HEIGHT - 16 - BAR_OFFSET_Y*2, "biogel", "bar-biogel", "bar-biogel-open", 0, 0);
+        fuelIndicator = efs.createBar(LEFT_BAR_MARGIN, G.SCREEN_HEIGHT - 18, "fuel", "bar-fuel", "bar-fuel-open", 0 , 0 );
+        foodIndicator = efs.createBar(LEFT_BAR_MARGIN, G.SCREEN_HEIGHT - 18 - BAR_OFFSET_Y, "food", "bar-food", "bar-food-open",0, 0);
+        biogelIndicator = efs.createBar(LEFT_BAR_MARGIN, G.SCREEN_HEIGHT - 18 - BAR_OFFSET_Y*2, "biogel", "bar-biogel", "bar-biogel-open", 0, 0);
     }
 
     @Override
