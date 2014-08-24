@@ -45,7 +45,7 @@ public class InventorySystem extends EntityProcessingSystem {
         BIOGEL("pickup-biogel"),
         CREWMEMBER("pickup-crew"),
         FOOD("pickup-food"),
-        STORAGE(""), BIOGEL_STORAGE("");
+        STORAGE(""), BIOGEL_STORAGE(""), THRUST("");
         public final String pickupAnimId;
 
         Resource(String pickupAnimId) {
@@ -77,6 +77,9 @@ public class InventorySystem extends EntityProcessingSystem {
                 case BIOGEL_STORAGE:
                     inventory.maxBiogel = (int)MathUtils.clamp(inventory.maxBiogel + amount, 1f, 3f);
                     break;
+                case THRUST:
+                    inventory.thrust = inventory.thrust + amount;
+                    break;
                 case CREWMEMBER:
                     if ( amount > 0 ){
                         for ( int i=0; i<amount;i++) {
@@ -101,6 +104,8 @@ public class InventorySystem extends EntityProcessingSystem {
                     return inventory.biogel;
                 case STORAGE:
                     return inventory.maxBiogel;
+                case THRUST:
+                    return inventory.thrust;
             }
         }
         return 0;

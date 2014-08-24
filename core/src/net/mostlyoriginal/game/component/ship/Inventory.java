@@ -16,4 +16,5 @@ public class Inventory extends Component {
     public int maxFuel = 0;
     public int maxFood = 0;
     public int maxBiogel = 0;
+    public int thrust = 0;
 }

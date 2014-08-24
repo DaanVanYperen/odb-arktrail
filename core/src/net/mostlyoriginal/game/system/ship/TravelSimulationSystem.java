@@ -6,6 +6,7 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
+import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.game.component.environment.RouteNode;
 import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.Travels;
@@ -35,7 +36,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     }
 
     /** immediately warp, and continue warping if required */
-    public void warp()
+    public void warp(int speed)
     {
         // cost to travel to next warp point.
         if (handleNoPilotsLeft()) return;
@@ -46,17 +47,27 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
             return;
         }
 
-        // step the lifesupport system forward.
-        productionSimulationSystem.process();
-        lifesupportSimulationSystem.process();
-
         final Entity entity = routeSystem.gotoNext();
         if ( entity != null && mRouteNode.has(entity) ) {
 
-            switch ( mRouteNode.get(entity).action )
+            RouteNode.Action action = mRouteNode.get(entity).action;
+
+            // only tick when we are not skipping a step in route.
+            if ( action != RouteNode.Action.SKIP || speed == 0 ) {
+                // step the lifesupport system forward.
+                productionSimulationSystem.process();
+                lifesupportSimulationSystem.process();
+            }
+
+            switch (action)
             {
                 case SKIP:
-                    planWarp();
+                    if ( speed > 0 )
+                    {
+                        warp(speed-1);
+                    } else {
+                        planWarp();
+                    }
                     break;
                 case EVENT:
                     dilemmaSystem.randomDilemma();
@@ -106,7 +117,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
                 travels.nextJumpAfterCooldown -= world.delta;
                 if (travels.nextJumpAfterCooldown <= 0) {
                     travels.nextJumpAfterCooldown=0;
-                    warp();
+                    warp(MathUtils.random(1, inventorySystem.get(InventorySystem.Resource.THRUST)));
                 }
             }
         }

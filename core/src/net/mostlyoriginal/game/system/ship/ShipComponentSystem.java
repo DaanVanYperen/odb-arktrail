@@ -96,6 +96,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
                     break;
                 case ENGINE:
                     createEngineFlame(c.gridX - 3, c.gridY);
+                    inventorySystem.alter(InventorySystem.Resource.THRUST, 1);
                     break;
                 case RAMSCOOP:
                     break;
