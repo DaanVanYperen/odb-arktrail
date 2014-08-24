@@ -73,7 +73,7 @@ public class ConstructionSystem extends EntityProcessingSystem {
             }
 
         } else {
-            anim.color.a = shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION ? 0.5f : 1f;
+            anim.color.a = 1f;
         }
 
     }

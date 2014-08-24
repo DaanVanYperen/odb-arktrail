@@ -43,6 +43,7 @@ public class ShipComponent extends Component {
         public final int xOffset;
         public final boolean countsAsHull;
         public final int buildManYears;
+        public final String buildingAnimId;
 
         /**
          * @param animId
@@ -60,6 +61,7 @@ public class ShipComponent extends Component {
             this.countsAsHull = countsAsHull;
             this.buildManYears = buildManYears;
             this.placedAnimId = animId + "-placed";
+            this.buildingAnimId = animId + "-building";
             this.buildable = buildable;
         }
     }

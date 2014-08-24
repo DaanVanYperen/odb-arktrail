@@ -156,7 +156,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
         Anim anim = mAnim.get(e);
         anim.layer = shipComponent.type.layer;
         if (shipComponent.type.animId != null) {
-            anim.id = shipComponent.type.placedAnimId;
+            anim.id = shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION ? shipComponent.type.buildingAnimId : shipComponent.type.placedAnimId;
             anim.id2 = null;
         }
     }

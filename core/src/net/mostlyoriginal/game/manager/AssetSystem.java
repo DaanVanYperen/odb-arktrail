@@ -90,6 +90,14 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("c-ramscoop-placed",112,56, 16, 8, 1);
         add("c-chain-placed",64,40, 8, 8, 1);
 
+        add("c-bunks-building",184,24, 8, 8, 1);
+        add("c-medbay-building",176,16, 8, 8, 1);
+        add("c-hydroponics-building",168,40, 8, 8, 1);
+        add("c-storagepod-building",176,32, 8, 8, 1);
+        add("c-engine-building",176,40, 16, 8, 1);
+        add("c-ramscoop-building",176,48, 16, 8, 1);
+        add("c-chain-building",64,40, 8, 8, 1);
+
         add("hull-0",88, 32, 8, 8, 1); // top left
         add("hull-1",96, 32, 8, 8, 1); // top
         add("hull-2",120,32, 8, 8, 1); // top right
