@@ -45,6 +45,24 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("crew-1", 104 - 8,64, 8, 8, 1);
         add("crew-2", 104 - 8,64 + 8, 8, 8, 1);
 
+        add("btn-construct-up", 173,109, 17, 17, 1);
+        add("btn-construct-hover", 196, 108, 17, 17, 1);
+        add("btn-construct-down", 171,107, 17, 17, 1);
+
+        add("c-bunks",152,24, 8, 8, 1);
+        add("c-medbay",144,16, 8, 8, 1);
+        add("c-hydroponics",136,40, 8, 8, 1);
+        add("c-storagepod",144,32, 8, 8, 1);
+        add("c-engine",80,24, 8, 8, 1);
+        add("c-ramscoop",112+8,56, 8, 8, 1);
+
+        add("c-bunks-placed",152,24, 8, 8, 1);
+        add("c-medbay-placed",144,16, 8, 8, 1);
+        add("c-hydroponics-placed",136,40, 8, 8, 1);
+        add("c-storagepod-placed",144,32, 8, 8, 1);
+        add("c-engine-placed",80,24, 16, 8, 1);
+        add("c-ramscoop-placed",112,56, 16, 8, 1);
+
         loadSounds(new String[] {
         });
     }
