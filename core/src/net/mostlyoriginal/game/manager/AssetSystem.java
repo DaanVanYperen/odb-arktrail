@@ -104,6 +104,10 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("star-2-4",48,152, 7, 1, 1);
         add("star-2-5",80,152,15, 1, 1);
 
+        add("engine-0",64,16,16, 8, 1);
+        add("engine-1",64,16+8,16, 8, 1);
+        add("engine-2",64,16+16,16, 8, 1);
+
         loadSounds(new String[] {
         });
     }

@@ -104,6 +104,7 @@ public class MainScreen implements Screen {
 
         world.setSystem(new ColorAnimationSystem());
         world.setSystem(new AccelerationEffectSystem());
+        world.setSystem(new EngineEffectSystem());
 
         /** RENDER */
 

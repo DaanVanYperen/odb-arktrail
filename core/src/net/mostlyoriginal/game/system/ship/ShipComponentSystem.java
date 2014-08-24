@@ -9,6 +9,7 @@ import com.artemis.utils.EntityBuilder;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.game.component.ship.EngineFlame;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.Clickable;
 
@@ -57,14 +58,25 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     /**
      * attempts to create a component at coordinates. will fail if out of bounds or already one there.
      */
-    public Entity createComponent(int gridX, int gridY, ShipComponent.Type expansionSlot, ShipComponent.State state) {
+    public Entity createComponent(int gridX, int gridY, ShipComponent.Type type, ShipComponent.State state) {
         if (gridY < 0 || gridX < 0 || gridX >= MAX_X || gridY >= MAX_Y) return null;
         if (get(gridX, gridY) == null) {
-            Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(), new ShipComponent(expansionSlot, gridX, gridY, state), new Bounds(0, 0, 8, 8), new Clickable()).build();
+            Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(), new ShipComponent(type, gridX, gridY, state), new Bounds(0, 0, 8, 8), new Clickable()).build();
             set(gridX,gridY, entity);
+
+            switch(type)
+            {
+                case ENGINE:
+                    createEngineFlame(gridX-3, gridY);
+                    break;
+            }
             return entity;
         }
         return null;
+    }
+
+    private void createEngineFlame(int gridX, int gridY) {
+        Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(600), new EngineFlame(gridX, gridY)).build();
     }
 
     @Override
