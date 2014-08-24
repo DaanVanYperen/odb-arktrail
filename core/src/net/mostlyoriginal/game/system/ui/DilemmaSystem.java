@@ -103,9 +103,10 @@ public class DilemmaSystem extends EntityProcessingSystem {
     }
 
     public void tutorialDilemma() {
-        startDilemma(new Dilemma("Fresh out of space dock, ", "your ark is ready to embark.", "[Pedal to the medal!]",
+        startDilemma(new Dilemma("Fresh out of space dock, ", "you are ready for your biggest adventure yet!", "[Embark my very own Ark!]",
+                new ChainDilemma(new Dilemma("you have been tasked with transporting a gate,", "and activating it at a resource heavy planet!", "[Stop talking and hand me the keys!]",
                 new ChainDilemma(
-                        new Dilemma("You will have to finish it in transit.", "Here are some resources to bridge the gap.", "[Thanks!!]", new PayoutListener(
+                        new Dilemma("Ark construction was rushed,", "Finish it in transit, or perish!", "[Pedal to the medal!]", new PayoutListener(
                                 InventorySystem.Resource.FUEL,
                                 InventorySystem.Resource.FUEL,
                                 InventorySystem.Resource.FUEL,
@@ -116,7 +117,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
                                 InventorySystem.Resource.CREWMEMBER,
                                 InventorySystem.Resource.CREWMEMBER,
                                 InventorySystem.Resource.CREWMEMBER) )
-                ) ));
+                ) ))));
     }
 
     /** Spawn a random dilemma. */
