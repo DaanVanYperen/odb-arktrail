@@ -6,6 +6,8 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.game.G;
@@ -63,7 +65,7 @@ public class ConstructionSystem extends EntityProcessingSystem {
             if ( clickable.state == Clickable.ClickState.CLICKED )
             {
                 startConstruction(e, selected);
-                stopConstructionmode();
+                if ( !Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT ) && !Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT ) ) stopConstructionmode();
             }
 
         } else {

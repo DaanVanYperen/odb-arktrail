@@ -21,7 +21,7 @@ import net.mostlyoriginal.game.component.ui.Clickable;
 public class ShipComponentSystem extends EntityProcessingSystem {
 
     public static final int MARGIN_TOP = 32;
-    public static final int MARGIN_LEFT = 32;
+    public static final int MARGIN_LEFT = 16;
     protected ComponentMapper<Pos> mPos;
     protected ComponentMapper<Anim> mAnim;
     private HullSystem hullSystem;
@@ -32,8 +32,8 @@ public class ShipComponentSystem extends EntityProcessingSystem {
 
     protected ComponentMapper<ShipComponent> mc;
 
-    public static final int MAX_X = 30;
-    public static final int MAX_Y = 30;
+    public static final int MAX_X = 32;
+    public static final int MAX_Y = 13;
 
     Entity emap[][] = new Entity[MAX_Y][MAX_X];
 
@@ -41,12 +41,15 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     protected void initialize() {
         super.initialize();
 
+        int shipCenterX = 8;
+        int shipCenterY = 8;
+
         // initialize basic ship.
         // create test expansion slot.
-        //createComponent(5, 5, ShipComponent.Type.ENGINE, ShipComponent.State.CONSTRUCTED);
-        createComponent(6, 5, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
-        //createComponent(6, 4, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
-        //createComponent(6, 6, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX -1, shipCenterY, ShipComponent.Type.ENGINE, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX, shipCenterY, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX, shipCenterY - 1, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX, shipCenterY + 1, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
         hullSystem.dirty();
     }
 
@@ -54,7 +57,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
      * attempts to create a component at coordinates. will fail if out of bounds or already one there.
      */
     public Entity createComponent(int gridX, int gridY, ShipComponent.Type expansionSlot, ShipComponent.State state) {
-        if (gridY < 0 || gridX < 0 || gridY >= MAX_X || gridX >= MAX_Y) return null;
+        if (gridY < 0 || gridX < 0 || gridX >= MAX_X || gridY >= MAX_Y) return null;
         if (get(gridX, gridY) == null) {
             Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(), new ShipComponent(expansionSlot, gridX, gridY, state), new Bounds(0, 0, 8, 8), new Clickable()).build();
             set(gridX,gridY, entity);
@@ -106,6 +109,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
         anim.layer = shipComponent.type.layer;
         if (shipComponent.type.animId != null) {
             anim.id = shipComponent.type.placedAnimId;
+            anim.id2 = null;
         }
     }
 }
