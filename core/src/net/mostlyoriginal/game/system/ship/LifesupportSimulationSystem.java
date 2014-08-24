@@ -61,6 +61,10 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
             inventorySystem.alter(InventorySystem.Resource.FOOD, -(int) MathUtils.random(crewThatAte / CREW_FED_PER_FOOD, crewThatAte / CREW_FED_PER_FOOD + 1f));
         }
 
+        checkBrainslugDomination();
+    }
+
+    private void checkBrainslugDomination() {
         int infect    = crewSystem.countOf(CrewMember.Ability.INFECT);
         int notInfect = crewSystem.countNotOf(CrewMember.Ability.INFECT);
         if ( infect > 0 && notInfect == 0 )
@@ -126,6 +130,11 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
         CrewMember crewMember = mCrewMember.get(e);
         if ( crewMember != null  ) {
             crewMember.effect = newEffect;
+        }
+
+        if ( newEffect == CrewMember.Effect.BRAINSLUG )
+        {
+            checkBrainslugDomination();
         }
     }
 }
