@@ -19,6 +19,7 @@ import net.mostlyoriginal.game.component.ship.Star;
 @Wire
 public class AccelerationEffectSystem extends EntityProcessingSystem {
 
+    public static final int BIGGEST_STAR_WIDTH = 100;
     protected TravelSimulationSystem travelSimulationSystem;
 
     /**
@@ -40,8 +41,8 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
     protected void initialize() {
         super.initialize();
 
-        for (int i = 0; i < 20; i++) {
-            spawnStar(MathUtils.random(0, G.SCREEN_WIDTH), randomStarY(), MathUtils.random(100) < 10 ? 0 : MathUtils.random(100) < 15 ? 1 : 2);
+        for (int i = 0; i < 60; i++) {
+            spawnStar(MathUtils.random(0, G.SCREEN_WIDTH + BIGGEST_STAR_WIDTH), randomStarY(), MathUtils.random(100) < 20 ? 1 : MathUtils.random(100) < 20 ? 0 : 2);
         }
 
     }
@@ -52,7 +53,12 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
     }
 
     private void spawnStar(int x, int y, int kind) {
-        new EntityBuilder(world).with(new Pos(x, y), new Star(kind), new Anim(-50)).build();
+        Anim anim = new Anim(-50);
+        anim.color.r = MathUtils.random(0.6f,1f);
+        anim.color.g = MathUtils.random(0.6f,1f);
+        anim.color.b = MathUtils.random(0.6f,1f);
+        anim.color.a = MathUtils.random(kind == 0 ? 0.1f : 0.5f,0.9f);
+        new EntityBuilder(world).with(new Pos(x, y), new Star(kind), anim).build();
     }
 
 
@@ -104,8 +110,8 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
         Pos pos = mPos.get(e);
 
         // move star to the left, and randomize location to give the appearance of more stars.
-        pos.x -= ((5f + (speedFactor * 1000f)) * world.delta * star.speedFactor);
-        if (pos.x < -100) {
+        pos.x -= ((8f + (speedFactor * 1000f)) * world.delta * star.speedFactor);
+        if (pos.x < -BIGGEST_STAR_WIDTH) {
             pos.x = G.SCREEN_WIDTH;
             pos.y = randomStarY();
         }
