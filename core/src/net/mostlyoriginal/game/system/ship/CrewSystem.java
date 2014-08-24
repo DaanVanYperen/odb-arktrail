@@ -13,12 +13,16 @@ import com.artemis.utils.EntityBuilder;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.utils.SafeEntityReference;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.NameRolodex;
 import net.mostlyoriginal.game.component.ship.CrewMember;
+import net.mostlyoriginal.game.component.ui.Button;
+import net.mostlyoriginal.game.component.ui.ButtonListener;
+import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Label;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 
@@ -40,6 +44,8 @@ public class CrewSystem extends EntitySystem {
     public static final int MARGIN_LEFT = 2;
     private ComponentMapper<CrewMember> mCrew;
 
+    protected InventorySystem inventorySystem;
+    protected LifesupportSimulationSystem lifesupportSimulationSystem;
     protected ComponentMapper<CrewMember> mCrewMember;
     protected ComponentMapper<Pos> mPos;
     protected ComponentMapper<Anim> mAnim;
@@ -72,7 +78,7 @@ public class CrewSystem extends EntitySystem {
     protected void initialize() {
         super.initialize();
 
-        createCrew("The Captain", "crew-0", CrewMember.Effect.HEALTHY);
+        createCrew("The Captain", "crew-0", CrewMember.Effect.ELDERLY);
     }
 
     @Override
@@ -106,7 +112,7 @@ public class CrewSystem extends EntitySystem {
     protected void process(Entity e) {
         final CrewMember crewMember = mCrewMember.get(e);
 
-        populateTransients(crewMember);
+        populateTransients(crewMember, e);
 
         int offsetX = G.SCREEN_WIDTH - 8 - MARGIN_LEFT;
         int offsetY = MARGIN_BOTTOM + crewIndex * ROW_HEIGHT;
@@ -119,7 +125,7 @@ public class CrewSystem extends EntitySystem {
                 pos.x = offsetX;
                 pos.y = offsetY;
 
-                offsetX -= 4;
+                offsetX -= 8;
             }
             if ( mAnim.has(e2))
             {
@@ -128,8 +134,22 @@ public class CrewSystem extends EntitySystem {
             }
         }
 
+        if ( crewMember.biogelButton.isActive() )
+        {
+            if ( inventorySystem.get(InventorySystem.Resource.BIOGEL) > 0 && crewMember.effect.can(CrewMember.Ability.BIOGELLABLE) ) {
+                Entity e2 = crewMember.biogelButton.get();
+                if (mPos.has(e2)) {
+                    Pos pos = mPos.get(e2);
+                    pos.x = offsetX;
+                    pos.y = offsetY - 1;
+                    offsetX -= 6;
+                }
+            }
+        }
+
         // fonts are typically offset in the wrong dir.
         offsetY += 6;
+        offsetX += 5;
 
         // move label to right location.
         if ( crewMember.labelName.isActive() )
@@ -218,9 +238,17 @@ public class CrewSystem extends EntitySystem {
         return count;
     }
 
-    private void populateTransients(CrewMember crewMember) {
+    private void populateTransients(CrewMember crewMember, Entity e) {
         if ( crewMember.icon == null ) {
             crewMember.icon = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), new Anim(crewMember.animId)).build());
+        }
+
+        if ( crewMember.biogelButton == null ) {
+            Button btn = new Button("btn-heal", new HealButton(crewMember, e), "Heal the crewmember.");
+            crewMember.biogelButton = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), new Bounds(-2,-2,10, 8), new Clickable(), new Anim(),
+                    btn).build());
+            btn.hideIfDisabled=true;
+
         }
 
         if ( crewMember.labelName == null ) {
@@ -233,7 +261,6 @@ public class CrewSystem extends EntitySystem {
             label.align = Label.Align.RIGHT;
             crewMember.labelStatus = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), label).build());
         }
-
     }
 
     @Override
@@ -266,6 +293,9 @@ public class CrewSystem extends EntitySystem {
             if (crewMember.labelStatus != null && !crewMember.labelStatus.isActive()) {
                 crewMember.labelStatus.get().deleteFromWorld();
             }
+            if (crewMember.biogelButton != null && !crewMember.biogelButton.isActive()) {
+                crewMember.biogelButton.get().deleteFromWorld();
+            }
         }
     }
 
@@ -287,4 +317,25 @@ public class CrewSystem extends EntitySystem {
         return entity != null ? mCrewMember.get(entity) : null;
     }
 
+    private class HealButton extends ButtonListener {
+        private final CrewMember crewMember;
+        public Entity e;
+
+        public HealButton(CrewMember crewMember, Entity e) {
+            this.crewMember = crewMember;
+            this.e=e;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            lifesupportSimulationSystem.changeState(e, CrewMember.Effect.HEALTHY);
+            inventorySystem.alter(InventorySystem.Resource.BIOGEL,-1);
+        }
+
+        @Override
+        public boolean enabled() {
+            return inventorySystem.get(InventorySystem.Resource.BIOGEL) > 0 && crewMember.effect.can(CrewMember.Ability.BIOGELLABLE);
+        }
+    }
 }

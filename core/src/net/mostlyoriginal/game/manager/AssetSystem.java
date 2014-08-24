@@ -68,6 +68,10 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("btn-scan-hover", 165, 180, 31, 17, 1);
         add("btn-scan-down",  165, 178, 31, 17, 1);
 
+        add("btn-heal-up",     81, 169, 6, 8, 1);
+        add("btn-heal-hover",  81, 168, 6, 8, 1);
+        add("btn-heal-down",   81, 167, 6, 8, 1);
+
         add("c-indicator",112,72, 8, 8, 1);
 
         add("c-bunks",152,24, 8, 8, 1);

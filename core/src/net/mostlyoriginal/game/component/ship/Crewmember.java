@@ -17,6 +17,7 @@ public class CrewMember extends Component {
     public transient EntityReference icon;
     public transient EntityReference labelName;
     public transient EntityReference labelStatus;
+    public transient EntityReference biogelButton;
 
     public CrewMember(String name, String animId, Effect effect) {
         this.name = name;
@@ -25,7 +26,7 @@ public class CrewMember extends Component {
     }
 
     public static enum Ability {
-        EAT, PILOT, GIVE_BIRTH, BUILD, INFECTABLE, AGE, INFECT
+        EAT, PILOT, GIVE_BIRTH, BUILD, INFECTABLE, AGE, INFECT, BIOGELLABLE
     }
 
 
@@ -41,10 +42,10 @@ public class CrewMember extends Component {
         STARVING("Starving", null, Color.valueOf("A9301B"), Ability.PILOT, Ability.EAT, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE),
 
         /** Nothing wrong. */
-        BRAINSLUG("Brainslug", "state-slug", Color.valueOf("42FA29"), Ability.PILOT, Ability.BUILD, Ability.INFECT),
+        BRAINSLUG("Brainslug", "state-slug", Color.valueOf("42FA29"), Ability.PILOT, Ability.BUILD, Ability.INFECT, Ability.BIOGELLABLE),
 
         /** Elderly */
-        ELDERLY("Elderly", null, Color.valueOf("2C4142"), Ability.INFECTABLE),
+        ELDERLY("Elderly", null, Color.valueOf("2C4142"), Ability.INFECTABLE, Ability.BIOGELLABLE),
 
         /** NOOOOOOOOO TIMMYYYYYYYYY (crewmember dead) */
         DEAD("Dead", "state-dead", Color.valueOf("4C3448"));
