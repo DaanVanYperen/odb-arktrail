@@ -24,6 +24,7 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         super();
 
         // @todo GAME SPECIFIC, split into library and game specific logic.
+        add("cursor", 1, 1 , 1, 1, 1);
 
         add("progress-bubble-0", 56, 112, 8, 8, 1);
         add("progress-bubble-1", 56, 120, 8, 8, 1);

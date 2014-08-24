@@ -100,6 +100,9 @@ public class ConstructionSystem extends EntityProcessingSystem {
     /** Activate shipcomponent! */
     private void startConstruction(Entity e, ShipComponent.Type selected) {
         if ( selected != null && e != null && mAnim.has(e) && mShipComponent.has(e) ) {
+
+            //e.addComponent(new ColorAnimation( Color.CLEAR, new Color(1f,1f,1f,0.5f), Interpolation.linear, 2f, 0.4f )).changedInWorld();
+
             final ShipComponent shipComponent = mShipComponent.get(e);
             shipComponent.type = selected;
             shipComponent.state = ShipComponent.State.UNDER_CONSTRUCTION;

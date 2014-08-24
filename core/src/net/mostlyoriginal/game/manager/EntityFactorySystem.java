@@ -27,7 +27,6 @@ import net.mostlyoriginal.game.component.agent.PlayerControlled;
 import net.mostlyoriginal.game.component.agent.Slumberer;
 import net.mostlyoriginal.game.component.environment.RouteIndicator;
 import net.mostlyoriginal.game.component.environment.RouteNode;
-import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.Inventory;
 import net.mostlyoriginal.game.component.ship.Travels;
 import net.mostlyoriginal.game.component.ui.Bar;
@@ -244,7 +243,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
     }
 
     private Entity createMousecursor() {
-        return new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(-1, -1, 1, 1), new Anim("progress-indicator", MOUSE_CURSOR_LAYER)).tag("cursor").build();
+        return new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(0,0,0,0), new Anim("cursor", MOUSE_CURSOR_LAYER)).tag("cursor").build();
 
     }
 }

@@ -7,12 +7,17 @@ import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.graphics.ColorAnimation;
 import net.mostlyoriginal.api.component.physics.Clamped;
+import net.mostlyoriginal.api.component.physics.Homing;
 import net.mostlyoriginal.api.component.physics.Physics;
+import net.mostlyoriginal.api.utils.SafeEntityReference;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
@@ -102,22 +107,28 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     }
 
     public void spawnCollectible(float x, float y, InventorySystem.Resource resource) {
+        final Entity cursor = tagManager.getEntity("cursor");
 
         CollectCollectible listener = new CollectCollectible(resource);
         Button button = new Button(listener);
         button.autoclick = true;
-        button.autoclickCooldown = 1.5f;
+        button.autoclickCooldown = 0.8f;
         Physics physics = new Physics();
-        physics.vx = MathUtils.random(-10f, 10f);
-        physics.vy = MathUtils.random(-10f, 10f);
+        physics.vx = MathUtils.random(-15f, 15f);
+        physics.vy = MathUtils.random(-15f, 15f);
+        Homing homing = new Homing(new SafeEntityReference(cursor));
+        homing.maxDistance = 20;
+        homing.speedFactor = 1f;
         listener.entity =
                 new EntityBuilder(world).
                         with(
                                 new Pos(x, y),
                                 physics,
                                 new Clickable(),
+                                new ColorAnimation( Color.CLEAR, Color.WHITE, Interpolation.linear, 1f, 1f ),
+                                homing,
                                 new Clamped(0,0, G.SCREEN_WIDTH, G.SCREEN_HEIGHT),
-                                new Anim(resource.pickupAnimId, 10000), new Bounds(0, 0, 8, 6), button).build();
+                                new Anim(resource.pickupAnimId, 10000), new Bounds(0 - 4, 0 - 4, 8 + 4, 6 + 4), button).build();
 
 
     }
