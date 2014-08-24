@@ -103,6 +103,7 @@ public class MainScreen implements Screen {
         /** PRE-RENDER */
 
         world.setSystem(new ColorAnimationSystem());
+        world.setSystem(new AccelerationEffectSystem());
 
         /** RENDER */
 

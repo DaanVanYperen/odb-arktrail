@@ -25,6 +25,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     protected ComponentMapper<Pos> mPos;
     protected ComponentMapper<Anim> mAnim;
     private HullSystem hullSystem;
+    private AccelerationEffectSystem accelerationEffectSystem;
 
     public ShipComponentSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class, Pos.class, Anim.class));
@@ -99,10 +100,16 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     }
 
     @Override
+    protected void begin() {
+        super.begin();
+    }
+
+    @Override
     protected void process(Entity e) {
+
         Pos pos = mPos.get(e);
         ShipComponent shipComponent = mc.get(e);
-        pos.x = shipComponent.gridX * 8 + MARGIN_LEFT + shipComponent.type.xOffset;
+        pos.x = shipComponent.gridX * 8 + MARGIN_LEFT + shipComponent.type.xOffset + 10f * accelerationEffectSystem.speedFactor;
         pos.y = shipComponent.gridY * 8 + MARGIN_TOP;
 
         Anim anim = mAnim.get(e);
