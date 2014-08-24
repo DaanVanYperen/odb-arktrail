@@ -18,7 +18,7 @@ import net.mostlyoriginal.game.system.ui.RouteSystem;
 @Wire
 public class TravelSimulationSystem extends EntityProcessingSystem {
 
-    public static final int WARP_COOLDOWN = 3;
+    public static final int WARP_COOLDOWN = 5;
     protected RouteSystem routeSystem;
     protected ComponentMapper<Travels> mTravels;
     protected ComponentMapper<RouteNode> mRouteNode;

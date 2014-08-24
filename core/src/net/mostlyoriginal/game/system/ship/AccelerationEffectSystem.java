@@ -32,11 +32,11 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
         {
             timer += world.delta * 0.25f;
             timer = MathUtils.clamp(timer, 0f, 1f);
-            speedFactor = Interpolation.exp5.apply(timer);
+            speedFactor = Interpolation.exp5.apply(timer * 0.95f);
         } else {
             timer -= world.delta * 0.25f;
             timer = MathUtils.clamp(timer, 0f, 1f);
-            speedFactor = Interpolation.exp5.apply(timer);
+            speedFactor = Interpolation.exp5.apply(timer * 0.95f);
         }
 
     }
