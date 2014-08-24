@@ -25,6 +25,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     public static final String DILEMMA_GROUP = "dilemma";
     public static final int ROW_HEIGHT = 9;
+    public static final String GIVE_UP = "Give up";
     EntityFactorySystem efs;
 
     public static final Color COLOR_DILEMMA = Color.valueOf("6AD7ED");
@@ -114,15 +115,28 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     /** Victory! :D */
     public void victoryDilemma() {
-        startDilemma(new Dilemma("[VICTORY CONDITION REACHED. YAY.]", "Restart", new RestartListener() ));
+        startDilemma(new Dilemma("[VICTORY CONDITION REACHED. YAY.]", GIVE_UP, new RestartListener() ));
     }
 
     /** Out of gas. :( */
     public void outOfGasDilemma() {
-        startDilemma(new Dilemma("[OUT OF GAS. BOO.]", "Restart", new RestartListener() ));
+        startDilemma(new Dilemma("[OUT OF GAS. BOO.]", GIVE_UP, new RestartListener() ));
     }
 
-    private class RestartListener extends ButtonListener {
+    /** No pilots remain. :( */
+    public void noPilotsDilemma() {
+        startDilemma(new Dilemma("[Nobody left to pilot the ship!]", "Ok", new CloseDilemmaListener(), GIVE_UP, new RestartListener() ));
+    }
+
+    /** Just closes dilemma, no action */
+    private class CloseDilemmaListener extends ButtonListener {
+        @Override
+        public void run() {
+            stopDilemma();
+        }
+    }
+
+    private static class RestartListener extends ButtonListener {
         @Override
         public void run() {
             MyGame.getInstance().restart();
@@ -150,6 +164,14 @@ public class DilemmaSystem extends EntityProcessingSystem {
             this.text2 = text2;
             this.option1 = option1;
             this.listener1 = listener1;
+        }
+
+        public Dilemma(String text2, String option1, ButtonListener listener1, String option2, ButtonListener listener2) {
+            this.text2 = text2;
+            this.option1 = option1;
+            this.listener1 = listener1;
+            this.option2 = option2;
+            this.listener2 = listener2;
         }
 
         public String getText1() {

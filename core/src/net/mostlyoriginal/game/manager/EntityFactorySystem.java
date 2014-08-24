@@ -57,10 +57,10 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
         createSpaceshipMetadata();
 
-        createCrew("Daan", "crew-0", CrewMember.Effect.HEALTHY);
+        //createCrew("Daan", "crew-0", CrewMember.Effect.HEALTHY);
         createCrew("Rellik", "crew-1", CrewMember.Effect.DEAD);
-        createCrew("Flaterectomy", "crew-2", CrewMember.Effect.HEALTHY);
-        createCrew("Troop", "crew-1", CrewMember.Effect.HEALTHY);
+//        createCrew("Flaterectomy", "crew-2", CrewMember.Effect.HEALTHY);
+//        createCrew("Troop", "crew-1", CrewMember.Effect.HEALTHY);
 
 
         createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);

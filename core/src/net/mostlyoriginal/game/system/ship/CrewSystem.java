@@ -146,6 +146,23 @@ public class CrewSystem extends EntitySystem {
         }
     }
 
+    /** return count of crew with given ability. */
+    public int countOf(CrewMember.Ability ability)
+    {
+        int count=0;
+        for (Entity e : sortedEntities) {
+            final CrewMember crewMember = mCrewMember.get(e);
+            if ( crewMember != null )
+            {
+                if ( crewMember.effect.can( ability ) )
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     private void populateTransients(CrewMember crewMember) {
         if ( crewMember.icon == null ) {
             crewMember.icon = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), new Anim(crewMember.animId)).build());

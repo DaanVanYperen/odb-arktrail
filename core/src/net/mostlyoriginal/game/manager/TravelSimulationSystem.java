@@ -7,7 +7,9 @@ import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
 import net.mostlyoriginal.game.component.environment.RouteNode;
+import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.Travels;
+import net.mostlyoriginal.game.system.ship.CrewSystem;
 import net.mostlyoriginal.game.system.ship.InventorySystem;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 import net.mostlyoriginal.game.system.ui.RouteSystem;
@@ -26,6 +28,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     private boolean traveling;
     private DilemmaSystem dilemmaSystem;
     private InventorySystem inventorySystem;
+    private CrewSystem crewSystem;
 
     public TravelSimulationSystem() {
         super(Aspect.getAspectForAll(Travels.class));
@@ -36,6 +39,8 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     {
         // cost to travel to next warp point.
         final int fuelcost = 1;
+
+        if (handleNoPilotsLeft()) return;
 
         if ( inventorySystem.get(InventorySystem.Resource.FUEL) < fuelcost )
         {
@@ -63,8 +68,20 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
         }
     }
 
+    private boolean handleNoPilotsLeft() {
+        if ( crewSystem.countOf(CrewMember.Ability.PILOT) <= 0 )
+        {
+            dilemmaSystem.noPilotsDilemma();
+            return true;
+        }
+        return false;
+    }
+
     /** schedule a warp! */
     public void planWarp() {
+
+        if (handleNoPilotsLeft()) return;
+
         Entity shipMetadata = getShipMetadata();
         if ( shipMetadata != null )
         {

@@ -23,20 +23,37 @@ public class CrewMember extends Component {
         this.effect = effect;
     }
 
-    public enum Effect {
+    public static enum Ability {
+        PILOT
+    }
+
+
+    public static enum Effect {
 
         /** Nothing wrong. */
-        HEALTHY("Healthy", Color.valueOf("2C4142")),
+        HEALTHY("Healthy", Color.valueOf("2C4142"), Ability.PILOT),
 
         /** NOOOOOOOOO TIMMYYYYYYYYY (crewmember dead) */
         DEAD("Dead", Color.valueOf("4C3448"));
 
         public final String label;
         public final Color color;
+        private final Ability[] abilities;
 
-        Effect(String label, Color color ) {
+        /** Does the crewmember have specified ability? */
+        public boolean can( Ability ability )
+        {
+            for (Ability ability1 : abilities) {
+                if ( ability1 == ability )
+                     return true;
+            }
+            return false;
+        }
+
+        Effect(String label, Color color, Ability ... abilities ) {
             this.label = label;
             this.color = color;
+            this.abilities = abilities;
         }
 
 
