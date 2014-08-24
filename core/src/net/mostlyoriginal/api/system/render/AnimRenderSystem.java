@@ -17,6 +17,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.manager.AbstractAssetSystem;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
+import net.mostlyoriginal.game.MainScreen;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 import net.mostlyoriginal.game.system.render.BarRenderSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
@@ -140,8 +141,8 @@ public class AnimRenderSystem extends EntitySystem {
         {
             // mirror
             batch.draw(frame.getTexture(),
-                    (int)position.x,
-                    (int)position.y,
+                    roundToPixels(position.x),
+                    roundToPixels(position.y),
                     angle.ox == Angle.ORIGIN_AUTO ? frame.getRegionWidth() * animation.scale * 0.5f : angle.ox,
                     angle.oy == Angle.ORIGIN_AUTO ? frame.getRegionHeight() * animation.scale * 0.5f : angle.oy,
                     frame.getRegionWidth() * animation.scale,
@@ -159,8 +160,8 @@ public class AnimRenderSystem extends EntitySystem {
         } else if ( angle.rotation != 0 )
         {
             batch.draw(frame,
-                    (int)position.x,
-                    (int)position.y,
+                    roundToPixels(position.x),
+                    roundToPixels(position.y),
                     angle.ox == Angle.ORIGIN_AUTO ? frame.getRegionWidth() * animation.scale * 0.5f : angle.ox,
                     angle.oy == Angle.ORIGIN_AUTO ? frame.getRegionHeight() * animation.scale * 0.5f : angle.oy,
                     frame.getRegionWidth() * animation.scale,
@@ -168,11 +169,16 @@ public class AnimRenderSystem extends EntitySystem {
                     angle.rotation);
         } else {
             batch.draw(frame,
-                    (int)position.x,
-                    (int)position.y,
+                    roundToPixels(position.x),
+                    roundToPixels(position.y),
                     frame.getRegionWidth() * animation.scale,
                     frame.getRegionHeight() * animation.scale);
         }
+    }
+
+    private float roundToPixels(final float val) {
+        // since we use camera zoom rounding to integers doesn't work properly.
+        return ((int)(val * MainScreen.CAMERA_ZOOM_FACTOR)) / (float)MainScreen.CAMERA_ZOOM_FACTOR;
     }
 
     @Override
