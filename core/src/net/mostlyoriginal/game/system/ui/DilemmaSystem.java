@@ -25,7 +25,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     public static final String DILEMMA_GROUP = "dilemma";
     public static final int ROW_HEIGHT = 9;
-    public static final String GIVE_UP = "Give up";
+    public static final String GIVE_UP = "[Give up, restart!]";
     EntityFactorySystem efs;
 
     public static final Color COLOR_DILEMMA = Color.valueOf("6AD7ED");
@@ -115,17 +115,17 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     /** Victory! :D */
     public void victoryDilemma() {
-        startDilemma(new Dilemma("[VICTORY CONDITION REACHED. YAY.]", GIVE_UP, new RestartListener() ));
+        startDilemma(new Dilemma("VICTORY CONDITION REACHED. YAY.", GIVE_UP, new RestartListener() ));
     }
 
     /** Out of gas. :( */
     public void outOfGasDilemma() {
-        startDilemma(new Dilemma("[OUT OF GAS. BOO.]", GIVE_UP, new RestartListener() ));
+        startDilemma(new Dilemma("OUT OF GAS. BOO.", "Ok", new CloseDilemmaListener(),GIVE_UP, new RestartListener() ));
     }
 
     /** No pilots remain. :( */
     public void noPilotsDilemma() {
-        startDilemma(new Dilemma("[Nobody left to pilot the ship!]", "Ok", new CloseDilemmaListener(), GIVE_UP, new RestartListener() ));
+        startDilemma(new Dilemma("Nobody left to pilot the ship!", "Ok", new CloseDilemmaListener(), GIVE_UP, new RestartListener() ));
     }
 
     /** Just closes dilemma, no action */
