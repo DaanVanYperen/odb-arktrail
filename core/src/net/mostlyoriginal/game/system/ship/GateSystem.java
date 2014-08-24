@@ -47,6 +47,6 @@ public class GateSystem extends EntityProcessingSystem {
         Anim anim = mAnim.get(e);
         Pos pos = mPos.get(e);
         pos.x = 30 + 9f * accelerationEffectSystem.speedFactor + 2;
-        pos.y = 80 + MathUtils.sin(bobTimer * 0.5f) * 1f;
+        pos.y = 80 - 8 + MathUtils.sin(bobTimer * 0.5f) * 1f;
     }
 }

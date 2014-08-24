@@ -50,15 +50,15 @@ public class ShipComponentSystem extends EntityProcessingSystem {
 
         // initialize basic ship.
         // create test expansion slot.
-        createComponent(shipCenterX -1, shipCenterY, ShipComponent.Type.ENGINE, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX -1, shipCenterY+1, ShipComponent.Type.ENGINE, ShipComponent.State.CONSTRUCTED);
         createComponent(shipCenterX, shipCenterY, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
         createComponent(shipCenterX, shipCenterY - 1, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
         createComponent(shipCenterX, shipCenterY + 1, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
         createComponent(shipCenterX+1, shipCenterY, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
 
-        createComponent(shipCenterX-2, shipCenterY+1, ShipComponent.Type.CHAIN, ShipComponent.State.CONSTRUCTED);
-        createComponent(shipCenterX-3, shipCenterY+1, ShipComponent.Type.CHAIN, ShipComponent.State.CONSTRUCTED);
-        createComponent(shipCenterX-4, shipCenterY+1, ShipComponent.Type.CHAIN, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX-2, shipCenterY, ShipComponent.Type.CHAIN, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX-3, shipCenterY, ShipComponent.Type.CHAIN, ShipComponent.State.CONSTRUCTED);
+        createComponent(shipCenterX-4, shipCenterY, ShipComponent.Type.CHAIN, ShipComponent.State.CONSTRUCTED);
         hullSystem.dirty();
     }
 
