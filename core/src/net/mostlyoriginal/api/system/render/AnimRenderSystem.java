@@ -113,7 +113,8 @@ public class AnimRenderSystem extends EntitySystem {
         }
 
         batch.setColor( anim.color );
-        drawAnimation(anim, angle, pos, anim.id);
+        if ( anim.id != null ) drawAnimation(anim, angle, pos, anim.id);
+        if ( anim.id2 != null ) drawAnimation(anim, angle, pos, anim.id2);
     }
 
     private void renderLabels() {

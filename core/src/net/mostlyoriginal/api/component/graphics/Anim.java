@@ -36,6 +36,7 @@ public class Anim extends Component {
     /** Animation identifier. */
     /** write asset resolver */
     public String id;
+    public String id2; // @todo quick hack to allow overlapping sprites easily.
 
     public Anim(String id) {
         this.id = id;

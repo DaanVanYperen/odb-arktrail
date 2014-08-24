@@ -53,7 +53,9 @@ public class ConstructionSystem extends EntityProcessingSystem {
         if ( shipComponent.type == ShipComponent.Type.HULL)
         {
             // show building indicator while placing.
-            //anim.id = selected != null ? "c-indicator" : null;
+            boolean validLocale = getLocaleValidity(anim);
+
+            anim.id2 = validLocale ? "c-indicator" : null;
             anim.color.a = 1;
 
             // start construction when clicked.
@@ -61,12 +63,28 @@ public class ConstructionSystem extends EntityProcessingSystem {
             if ( clickable.state == Clickable.ClickState.CLICKED )
             {
                 startConstruction(e, selected);
+                stopConstructionmode();
             }
 
         } else {
             anim.color.a = shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION ? 0.5f : 1f;
         }
 
+    }
+
+    /** Return if locale is valid. */
+    private boolean getLocaleValidity(Anim anim) {
+        boolean validLocale = selected != null;
+
+        // only allow engine on left facing hull.
+        if ( selected == ShipComponent.Type.ENGINE && !"hull-3".equals(anim.id) ) validLocale = false;
+        // only allow ramscoop on right facing hull.
+        if ( selected == ShipComponent.Type.RAMSCOOP && !"hull-4".equals(anim.id) ) validLocale = false;
+        return validLocale;
+    }
+
+    private void stopConstructionmode() {
+        selected=null;
     }
 
     /** Activate shipcomponent! */

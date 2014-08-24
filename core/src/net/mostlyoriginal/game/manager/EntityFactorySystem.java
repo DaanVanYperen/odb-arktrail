@@ -253,7 +253,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
     }
 
     private Entity createMousecursor() {
-        return new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(-5, -5, -5, -5), new Anim("progress-indicator", MOUSE_CURSOR_LAYER)).tag("cursor").build();
+        return new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(-1, -1, 1, 1), new Anim("progress-indicator", MOUSE_CURSOR_LAYER)).tag("cursor").build();
 
     }
 }
