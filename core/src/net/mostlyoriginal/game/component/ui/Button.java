@@ -16,6 +16,7 @@ public class Button extends Component {
     public String animClicked;
     public String animHover;
     public float cooldown=0;
+    public String hint=null;
 
     public Button(String animDefault, String animHover, String animClicked, ButtonListener listener) {
         this.animHover = animHover;
@@ -24,9 +25,10 @@ public class Button extends Component {
         this.listener = listener;
     }
 
-    public Button(String animPrefix, ButtonListener listener) {
+    public Button(String animPrefix, ButtonListener listener, String hint) {
         this.animPrefix = animPrefix;
         this.listener = listener;
+        this.hint = hint;
         this.animDefault = animPrefix + "-up";
         this.animHover = animPrefix + "-hover";
         this.animClicked = animPrefix + "-down";

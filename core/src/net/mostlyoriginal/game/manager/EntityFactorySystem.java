@@ -78,7 +78,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 // we don't want to allow engaging while busy!.
                 return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive();
             }
-        });
+        }, "warp to next landmark.");
 
         createMousecursor();
     }
@@ -221,13 +221,13 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 .addComponent(new Physics());
     }
 
-    public Entity createButton(int x, int y, int width, int height, String animPrefix, ButtonListener listener)
+    public Entity createButton(int x, int y, int width, int height, String animPrefix, ButtonListener listener, String hint)
     {
         return new EntityBuilder(world)
                 .with(new Pos(x, y),
                         new Bounds(0, 0, width, height),
                         new Anim(1100),
-                        new Button(animPrefix, listener),
+                        new Button(animPrefix, listener, hint),
                         new Clickable()).build();
     }
 

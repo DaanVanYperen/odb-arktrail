@@ -25,17 +25,18 @@ public class ShipComponent extends Component {
     }
 
     public enum Type {
-        HULL(null, false, 500, 0, true),
-        BUNKS("c-bunks", true, 500, 0, false),
-        MEDBAY("c-medbay", true, 500, 0, false),
-        HYDROPONICS("c-hydroponics", true, 500, 0, false),
-        STORAGEPOD("c-storagepod", true, 500, 0, false),
-        ENGINE("c-engine", true, 550, -8, true),
-        RAMSCOOP("c-ramscoop", true, 550, 0, true);
+        HULL(null, null, false, 500, 0, true),
+        BUNKS("c-bunks", "Bunks: may produce birth each jump 'I'll be in my bunk!'.", true, 500, 0, false),
+        MEDBAY("c-medbay", "Auto-medic: May produce medigel each jump.", true, 500, 0, false),
+        HYDROPONICS("c-hydroponics", "Hydroponics: may produce food each jump.", true, 500, 0, false),
+        STORAGEPOD("c-storagepod", "Storage Pod: increases ship capacity for fuel, food and medigel.", true, 500, 0, false),
+        ENGINE("c-engine", "Engine: Faster travel, +fuel usage, -births, -food usage, +sanity.", true, 550, -8, true),
+        RAMSCOOP("c-ramscoop", "Ramscoop: May produce food each jump.", true, 550, 0, true);
 
         public final String animId;
         public final boolean buildable;
         public final String placedAnimId;
+        public final String label;
         public final int layer;
         public final int xOffset;
         public final boolean countsAsHull;
@@ -47,8 +48,9 @@ public class ShipComponent extends Component {
          * @param xOffset offset when placed on the ship (for engines).
          * @param countsAsHull
          */
-        Type(String animId, boolean buildable, int layer, int xOffset, boolean countsAsHull) {
+        Type(String animId, String label, boolean buildable, int layer, int xOffset, boolean countsAsHull) {
             this.animId = animId;
+            this.label = label;
             this.layer = layer;
             this.xOffset = xOffset;
             this.countsAsHull = countsAsHull;

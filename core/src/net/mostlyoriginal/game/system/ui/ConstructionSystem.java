@@ -12,6 +12,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
+import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
@@ -34,6 +35,7 @@ public class ConstructionSystem extends EntityProcessingSystem {
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<ShipComponent> mShipComponent;
     protected ComponentMapper<Clickable> mClickable;
+    protected ComponentMapper<Button> mButton;
     private HullSystem hullSystem;
 
     public ConstructionSystem() {
@@ -112,7 +114,9 @@ public class ConstructionSystem extends EntityProcessingSystem {
             if (structure.buildable) {
                 int x = G.SCREEN_WIDTH + MARGIN_RIGHT - (index + 1) * 18;
                 int y = 7;
-                efs.createButton(x, y, 15, 15, "btn-construct", new ToolSelectButton(structure));
+                Entity button = efs.createButton(x, y, 15, 15, "btn-construct", new ToolSelectButton(structure), null);
+                Button button1 = mButton.get(button);
+                button1.hint = structure.label;
                 // add icon over button. @todo merge with button logic.
                 new EntityBuilder(world).with(new Pos(x + 4, y + 5), new Anim(structure.animId, 4000)).build();
                 index++;
