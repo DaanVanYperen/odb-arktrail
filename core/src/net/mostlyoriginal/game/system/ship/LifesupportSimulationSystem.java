@@ -21,6 +21,7 @@ import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 public class LifesupportSimulationSystem extends EntityProcessingSystem {
 
     public static final float CREW_FED_PER_FOOD = 1.25f;
+    public static final int ELDERLY_AGE = 6;
     protected ComponentMapper<CrewMember> mCrewMember;
     public InventorySystem inventorySystem;
     protected CrewSystem crewSystem;
@@ -77,6 +78,15 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
     protected void process(Entity e) {
 
         CrewMember crewMember = mCrewMember.get(e);
+
+
+        crewMember.age++;
+        if ( crewMember.age >= ELDERLY_AGE && crewMember.effect.can(CrewMember.Ability.AGE) )
+        {
+            changeState(e, CrewMember.Effect.ELDERLY);
+            return;
+        }
+
         switch (crewMember.effect) {
             case HEALTHY:
                 attemptEat(e, CrewMember.Effect.HUNGRY);
@@ -90,11 +100,23 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
             case BRAINSLUG:
                 attemptInfect(e);
                 break;
+            case ELDERLY:
+                attemptHeartAttack(e);
+                break;
             case DEAD:
                 break;
         }
 
 
+    }
+
+    private void attemptHeartAttack(Entity e) {
+        if (MathUtils.random(0f, 0.99f) > foodFactor + 0.25f) {
+            crewThatAte++;
+        }
+        if (MathUtils.random(0f, 0.99f) < 0.65f) {
+            changeState(e, CrewMember.Effect.DEAD);
+        }
     }
 
     private void attemptInfect(Entity e) {
