@@ -118,7 +118,7 @@ public class BarRenderSystem extends EntitySystem {
         for ( int i =0; i< bar.value; i++)
         {
             batch.draw(frame,
-                    (int)pos.x + bounds.width + i * frame.getRegionWidth()+1,
+                    (int)pos.x + bounds.width + i * (frame.getRegionWidth()+1),
                     (int)pos.y - bounds.height,
                     frame.getRegionWidth(),
                     frame.getRegionHeight());
@@ -126,7 +126,7 @@ public class BarRenderSystem extends EntitySystem {
         for ( int i =0; i< emptyCount; i++)
         {
             batch.draw(frame2,
-                    (int)pos.x + bounds.width + (i+bar.value) * frame.getRegionWidth()+1,
+                    (int)pos.x + bounds.width + (i+bar.value) * (frame.getRegionWidth()+1),
                     (int)pos.y - bounds.height,
                     frame.getRegionWidth(),
                     frame.getRegionHeight());
