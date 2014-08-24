@@ -6,7 +6,6 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
-import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.game.G;
@@ -14,6 +13,7 @@ import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
+import net.mostlyoriginal.game.system.ship.HullSystem;
 import net.mostlyoriginal.game.system.ship.TravelSimulationSystem;
 
 /**
@@ -31,6 +31,7 @@ public class ConstructionSystem extends EntityProcessingSystem {
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<ShipComponent> mShipComponent;
     protected ComponentMapper<Clickable> mClickable;
+    private HullSystem hullSystem;
 
     public ConstructionSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class, Clickable.class, Anim.class));
@@ -49,17 +50,17 @@ public class ConstructionSystem extends EntityProcessingSystem {
         final Anim anim = mAnim.get(e);
         final ShipComponent shipComponent = mShipComponent.get(e);
 
-        if ( shipComponent.type == ShipComponent.Type.EXPANSION_SLOT )
+        if ( shipComponent.type == ShipComponent.Type.HULL)
         {
             // show building indicator while placing.
-            anim.id = selected != null ? "c-indicator" : null;
+            //anim.id = selected != null ? "c-indicator" : null;
             anim.color.a = 1;
 
             // start construction when clicked.
             Clickable clickable = mClickable.get(e);
             if ( clickable.state == Clickable.ClickState.CLICKED )
             {
-                setType(e, selected);
+                startConstruction(e, selected);
             }
 
         } else {
@@ -69,11 +70,14 @@ public class ConstructionSystem extends EntityProcessingSystem {
     }
 
     /** Activate shipcomponent! */
-    private void setType(Entity e, ShipComponent.Type selected) {
+    private void startConstruction(Entity e, ShipComponent.Type selected) {
         if ( selected != null && e != null && mAnim.has(e) && mShipComponent.has(e) ) {
             final ShipComponent shipComponent = mShipComponent.get(e);
             shipComponent.type = selected;
+            shipComponent.state = ShipComponent.State.UNDER_CONSTRUCTION;
             mAnim.get(e).id = selected.animId;
+
+            hullSystem.dirty();
         }
     }
 

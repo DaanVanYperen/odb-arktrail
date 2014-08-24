@@ -25,31 +25,33 @@ public class ShipComponent extends Component {
     }
 
     public enum Type {
-        EXPANSION_SLOT(null, false, 500, 0),
-        BUNKS("c-bunks", true, 500, 0),
-        MEDBAY("c-medbay", true, 500, 0),
-        HYDROPONICS("c-hydroponics", true, 500, 0),
-        STORAGEPOD("c-storagepod", true, 500, 0),
-        ENGINE("c-engine", true, 550, -8),
-        RAMSCOOP("c-ramscoop", true, 550, 0);
+        HULL(null, false, 500, 0, true),
+        BUNKS("c-bunks", true, 500, 0, false),
+        MEDBAY("c-medbay", true, 500, 0, false),
+        HYDROPONICS("c-hydroponics", true, 500, 0, false),
+        STORAGEPOD("c-storagepod", true, 500, 0, false),
+        ENGINE("c-engine", true, 550, -8, true),
+        RAMSCOOP("c-ramscoop", true, 550, 0, true);
 
         public final String animId;
         public final boolean buildable;
         public final String placedAnimId;
         public final int layer;
         public final int xOffset;
+        public final boolean countsAsHull;
 
         /**
-         *
          * @param animId
          * @param buildable
          * @param layer
          * @param xOffset offset when placed on the ship (for engines).
+         * @param countsAsHull
          */
-        Type(String animId, boolean buildable, int layer, int xOffset) {
+        Type(String animId, boolean buildable, int layer, int xOffset, boolean countsAsHull) {
             this.animId = animId;
             this.layer = layer;
             this.xOffset = xOffset;
+            this.countsAsHull = countsAsHull;
             this.placedAnimId = animId + "-placed";
             this.buildable = buildable;
         }

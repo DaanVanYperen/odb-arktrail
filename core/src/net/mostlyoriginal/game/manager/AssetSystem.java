@@ -65,6 +65,19 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("c-engine-placed",80,24, 16, 8, 1);
         add("c-ramscoop-placed",112,56, 16, 8, 1);
 
+        add("hull-0",88, 32, 8, 8, 1); // top left
+        add("hull-1",96, 32, 8, 8, 1); // top
+        add("hull-2",120,32, 8, 8, 1); // top right
+
+        add("hull-3",88, 40, 8, 8, 1); // left
+        add("hull-4",120, 40, 8, 8, 1); // right
+
+        add("hull-5",88, 48, 8, 8, 1); // bottom left
+        add("hull-6",96, 48, 8, 8, 1); // bottom
+        add("hull-7",120,48, 8, 8, 1); // bottom right
+
+        add("hull-missing",96,40, 8, 8, 1); // missing
+
         loadSounds(new String[] {
         });
     }

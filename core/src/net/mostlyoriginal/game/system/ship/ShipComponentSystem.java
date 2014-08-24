@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.manager;
+package net.mostlyoriginal.game.system.ship;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -24,6 +24,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     public static final int MARGIN_LEFT = 32;
     protected ComponentMapper<Pos> mPos;
     protected ComponentMapper<Anim> mAnim;
+    private HullSystem hullSystem;
 
     public ShipComponentSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class, Pos.class, Anim.class));
@@ -31,8 +32,8 @@ public class ShipComponentSystem extends EntityProcessingSystem {
 
     protected ComponentMapper<ShipComponent> mc;
 
-    public static final int MAX_X = 50;
-    public static final int MAX_Y = 50;
+    public static final int MAX_X = 30;
+    public static final int MAX_Y = 30;
 
     Entity emap[][] = new Entity[MAX_Y][MAX_X];
 
@@ -42,19 +43,22 @@ public class ShipComponentSystem extends EntityProcessingSystem {
 
         // initialize basic ship.
         // create test expansion slot.
-        createComponent(5, 5, ShipComponent.Type.ENGINE, ShipComponent.State.CONSTRUCTED);
+        //createComponent(5, 5, ShipComponent.Type.ENGINE, ShipComponent.State.CONSTRUCTED);
         createComponent(6, 5, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
-        createComponent(6, 4, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
-        createComponent(6, 6, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
+        //createComponent(6, 4, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
+        //createComponent(6, 6, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
+        hullSystem.dirty();
     }
 
     /**
      * attempts to create a component at coordinates. will fail if out of bounds or already one there.
      */
-    private Entity createComponent(int gridY, int gridX, ShipComponent.Type expansionSlot, ShipComponent.State state) {
+    public Entity createComponent(int gridX, int gridY, ShipComponent.Type expansionSlot, ShipComponent.State state) {
         if (gridY < 0 || gridX < 0 || gridY >= MAX_X || gridX >= MAX_Y) return null;
-        if (get(gridY, gridX) == null) {
-            return new EntityBuilder(world).with(new Pos(), new Anim(), new ShipComponent(expansionSlot, gridY, gridX, state), new Bounds(0, 0, 8, 8), new Clickable()).build();
+        if (get(gridX, gridY) == null) {
+            Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(), new ShipComponent(expansionSlot, gridX, gridY, state), new Bounds(0, 0, 8, 8), new Clickable()).build();
+            set(gridX,gridY, entity);
+            return entity;
         }
         return null;
     }
@@ -63,7 +67,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     protected void inserted(Entity e) {
         if (mc.has(e)) {
             ShipComponent shipComponent = mc.get(e);
-            if (emap[shipComponent.gridY][shipComponent.gridX] == null) {
+            if (get(shipComponent.gridX, shipComponent.gridY) == null) {
                 set(shipComponent.gridX, shipComponent.gridY, e);
             }
         }
@@ -84,7 +88,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     protected void removed(Entity e) {
         if (mc.has(e)) {
             ShipComponent shipComponent = mc.get(e);
-            if (emap[shipComponent.gridY][shipComponent.gridX] == e) {
+            if (get(shipComponent.gridX, shipComponent.gridY) == e) {
                 set(shipComponent.gridX, shipComponent.gridY, null);
             }
         }
