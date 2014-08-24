@@ -9,9 +9,13 @@ public class ShipComponent extends Component {
 
     public Type type;
     public State state = State.UNDER_CONSTRUCTION;
+    public int gridY;
+    public int gridX;
 
-    public ShipComponent(Type type) {
+    public ShipComponent(Type type, int gridX, int gridY) {
         this.type = type;
+        this.gridX = gridX;
+        this.gridY = gridY;
     }
 
     public enum State {

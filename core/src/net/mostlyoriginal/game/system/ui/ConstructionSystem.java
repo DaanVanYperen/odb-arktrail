@@ -40,9 +40,6 @@ public class ConstructionSystem extends EntityProcessingSystem {
     protected void initialize() {
         super.initialize();
 
-        // create test expansion slot.
-        new EntityBuilder(world).with(new Pos(50, 50), new Anim(), new ShipComponent(ShipComponent.Type.EXPANSION_SLOT), new Bounds(0,0,8,8), new Clickable()).build();
-
         // list all buildable structures.
         createConstructionButtons();
     }
