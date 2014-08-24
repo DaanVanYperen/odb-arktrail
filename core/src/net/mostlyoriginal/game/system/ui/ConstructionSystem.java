@@ -16,6 +16,7 @@ import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 import net.mostlyoriginal.game.system.ship.HullSystem;
+import net.mostlyoriginal.game.system.ship.ShipComponentSystem;
 import net.mostlyoriginal.game.system.ship.TravelSimulationSystem;
 
 /**
@@ -55,14 +56,14 @@ public class ConstructionSystem extends EntityProcessingSystem {
         if ( shipComponent.type == ShipComponent.Type.HULL)
         {
             // show building indicator while placing.
-            boolean validLocale = getLocaleValidity(anim);
+            boolean validLocale = getLocaleValidity(anim, shipComponent);
 
             anim.id2 = validLocale ? "c-indicator" : null;
             anim.color.a = 1;
 
             // start construction when clicked.
             Clickable clickable = mClickable.get(e);
-            if ( clickable.state == Clickable.ClickState.CLICKED )
+            if ( clickable.state == Clickable.ClickState.CLICKED && validLocale )
             {
                 startConstruction(e, selected);
                 if ( !Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT ) && !Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT ) ) stopConstructionmode();
@@ -75,8 +76,12 @@ public class ConstructionSystem extends EntityProcessingSystem {
     }
 
     /** Return if locale is valid. */
-    private boolean getLocaleValidity(Anim anim) {
+    private boolean getLocaleValidity(Anim anim, ShipComponent shipComponent) {
         boolean validLocale = selected != null;
+
+        // don't allow expanding at the borders so the hull doesn't break.
+        if ( shipComponent.gridX <= 0 ||shipComponent.gridY <= 0 || shipComponent.gridX >= ShipComponentSystem.MAX_X-1 || shipComponent.gridY >= ShipComponentSystem.MAX_Y -1 )
+            return false;
 
         // only allow engine on left facing hull.
         if ( selected == ShipComponent.Type.ENGINE && !"hull-3".equals(anim.id) ) validLocale = false;

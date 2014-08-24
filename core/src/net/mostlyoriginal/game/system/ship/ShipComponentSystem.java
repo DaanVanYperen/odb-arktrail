@@ -33,7 +33,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     protected ComponentMapper<ShipComponent> mc;
 
     public static final int MAX_X = 32;
-    public static final int MAX_Y = 13;
+    public static final int MAX_Y = 16;
 
     Entity emap[][] = new Entity[MAX_Y][MAX_X];
 
