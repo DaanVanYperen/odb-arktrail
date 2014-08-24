@@ -83,6 +83,18 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
 
         add("hull-missing",96,40, 8, 8, 1); // missing
 
+        add("star-0-0",40,136, 7, 4, 1);
+        add("star-0-1",48,136,26, 4, 1);
+        add("star-0-2",80,136,36, 4, 1);
+
+        add("star-1-0",40,144, 6, 2, 1);
+        add("star-1-1",48,144,12, 2, 1);
+        add("star-1-2",80,144,21, 2, 1);
+
+        add("star-2-0",40,152, 4, 1, 1);
+        add("star-2-1",48,152, 7, 1, 1);
+        add("star-2-2",80,152,15, 1, 1);
+
         loadSounds(new String[] {
         });
     }
