@@ -64,6 +64,10 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("btn-construct-hover", 196, 108, 17, 17, 1);
         add("btn-construct-down", 171,107, 17, 17, 1);
 
+        add("btn-scan-up",    165, 181, 31, 17, 1);
+        add("btn-scan-hover", 165, 180, 31, 17, 1);
+        add("btn-scan-down",  165, 178, 31, 17, 1);
+
         add("c-indicator",112,72, 8, 8, 1);
 
         add("c-bunks",152,24, 8, 8, 1);

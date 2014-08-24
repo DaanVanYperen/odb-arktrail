@@ -27,12 +27,14 @@ import net.mostlyoriginal.game.component.agent.PlayerControlled;
 import net.mostlyoriginal.game.component.agent.Slumberer;
 import net.mostlyoriginal.game.component.environment.RouteIndicator;
 import net.mostlyoriginal.game.component.environment.RouteNode;
+import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.Inventory;
 import net.mostlyoriginal.game.component.ship.Travels;
 import net.mostlyoriginal.game.component.ui.Bar;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.system.ship.CrewSystem;
 import net.mostlyoriginal.game.system.ship.TravelSimulationSystem;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 
@@ -50,6 +52,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
     private AbstractAssetSystem abstractAssetSystem;
     private TravelSimulationSystem travelSimulationSystem;
     private DilemmaSystem dilemmaSystem;
+    private CrewSystem crewSystem;
 
     @Override
     protected void initialize() {
@@ -73,6 +76,20 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive();
             }
         }, "warp to next landmark.");
+
+        // engage button.
+        createButton(G.SCREEN_WIDTH - 56 - 4 - 35, 7, 31, 15, "btn-scan", new ButtonListener() {
+            @Override
+            public void run() {
+                dilemmaSystem.scanDilemma();
+            }
+
+            @Override
+            public boolean enabled() {
+                // we don't want to allow engaging while busy!.
+                return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive() && crewSystem.countOf(CrewMember.Ability.BUILD) > 0;
+            }
+        }, "look for trouble!");
 
         createMousecursor();
     }

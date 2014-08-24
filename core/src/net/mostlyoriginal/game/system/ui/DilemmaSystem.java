@@ -133,19 +133,16 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     /** Spawn am even weighted random dilemma. */
     public void randomDilemma() {
-        startDilemma(brainslugOnPlanet());
-        return;
-/*
             if ( MathUtils.random(0, 99) < 50 ) {
                 randomPositiveDilemma();
             } else {
                 randomNegativeDilemma();
-            } */
+            }
     }
 
     /** player is look for a fight, the odds are against him! */
     public void scanDilemma() {
-            if ( MathUtils.random(0, 99) < 28 ) {
+            if ( MathUtils.random(0, 99) < 20 ) {
                 randomPositiveDilemma();
             } else {
                 randomNegativeDilemma();
@@ -178,9 +175,13 @@ public class DilemmaSystem extends EntityProcessingSystem {
         Dilemma dilemma = null;
         while ( dilemma  == null ) {
 
-            switch (MathUtils.random(0, 0)) {
+            switch (MathUtils.random(0, 2)) {
                 case 0: {
                     dilemma = birthInElevator();
+                    break;
+                }
+                case 1: {
+                    dilemma = brainslugOnPlanet();
                     break;
                 }
                 default:
@@ -225,7 +226,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
         Dilemma dilemma = null;
         while ( dilemma  == null ) {
 
-            switch (MathUtils.random(0, 0)) {
+            switch (MathUtils.random(0, 2)) {
                 case 0: {
                     dilemma = plasmaAccident();
                     break;

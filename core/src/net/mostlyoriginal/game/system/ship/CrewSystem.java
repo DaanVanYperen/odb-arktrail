@@ -72,7 +72,7 @@ public class CrewSystem extends EntitySystem {
     protected void initialize() {
         super.initialize();
 
-        createCrew("You", "crew-0", CrewMember.Effect.HEALTHY);
+        createCrew("The Captain", "crew-0", CrewMember.Effect.HEALTHY);
     }
 
     @Override
