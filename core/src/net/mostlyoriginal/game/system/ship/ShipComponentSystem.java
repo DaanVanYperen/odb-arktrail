@@ -73,7 +73,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
         return null;
     }
 
-    private void completeConstructionOf(Entity entity) {
+    public void completeConstructionOf(Entity entity) {
         final ShipComponent c = mShipComponent.get(entity);
         if ( c.state == ShipComponent.State.UNDER_CONSTRUCTION) {
             c.state = ShipComponent.State.CONSTRUCTED;

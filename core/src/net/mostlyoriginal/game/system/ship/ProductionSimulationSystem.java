@@ -11,6 +11,7 @@ import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.physics.Physics;
+import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
@@ -31,6 +32,9 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     protected ComponentMapper<ShipComponent> mShipComponent;
     protected ComponentMapper<Pos> mPos;
     public InventorySystem inventorySystem;
+    public CrewSystem crewSystem;
+    public int builders;
+    private ShipComponentSystem shipComponentSystem;
 
     public ProductionSimulationSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class));
@@ -40,6 +44,7 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     protected void begin() {
         super.begin();
 
+        builders = crewSystem.countOf(CrewMember.Ability.BUILD);
     }
 
     @Override
@@ -50,35 +55,45 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     @Override
     protected void process(Entity e) {
         ShipComponent shipComponent = mShipComponent.get(e);
-        switch ( shipComponent.type )
-        {
-            case HULL:
-                break;
-            case BUNKS:
-                randomlyProduce(e, InventorySystem.Resource.CREWMEMBER, 0.25f);
-                break;
-            case MEDBAY:
-                randomlyProduce(e, InventorySystem.Resource.BIOGEL, 0.25f);
-                break;
-            case HYDROPONICS:
-                randomlyProduce(e, InventorySystem.Resource.FOOD, 0.25f);
-                break;
-            case STORAGEPOD:
-                break;
-            case ENGINE:
-                inventorySystem.alter(InventorySystem.Resource.FUEL, -1);
-                break;
-            case RAMSCOOP:
-                randomlyProduce(e, InventorySystem.Resource.FUEL, 0.25f);
-                break;
-        }
+
+        if (shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION) {
+            if ( builders > 0 ) {
+                // attempt to assign as many builders as we have.
+                float cost = MathUtils.clamp(shipComponent.constructionManyearsRemaining, 0, builders);
+                shipComponent.constructionManyearsRemaining -= cost;
+                builders -= cost;
+                if (shipComponent.constructionManyearsRemaining <= 0) {
+                    shipComponentSystem.completeConstructionOf(e);
+                }
+            }
+        } else
+            switch (shipComponent.type) {
+                case HULL:
+                    break;
+                case BUNKS:
+                    randomlyProduce(e, InventorySystem.Resource.CREWMEMBER, 0.25f);
+                    break;
+                case MEDBAY:
+                    randomlyProduce(e, InventorySystem.Resource.BIOGEL, 0.25f);
+                    break;
+                case HYDROPONICS:
+                    randomlyProduce(e, InventorySystem.Resource.FOOD, 0.25f);
+                    break;
+                case STORAGEPOD:
+                    break;
+                case ENGINE:
+                    inventorySystem.alter(InventorySystem.Resource.FUEL, -1);
+                    break;
+                case RAMSCOOP:
+                    randomlyProduce(e, InventorySystem.Resource.FUEL, 0.25f);
+                    break;
+            }
     }
 
     private void randomlyProduce(Entity e, InventorySystem.Resource resource, float chance) {
-        if ( MathUtils.random(0f,1f) < chance )
-        {
+        if (MathUtils.random(0f, 1f) < chance) {
             Pos pos = mPos.get(e);
-            spawnCollectible(pos.x,pos.y, resource);
+            spawnCollectible(pos.x, pos.y, resource);
         }
     }
 
@@ -89,9 +104,9 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         button.autoclick = true;
         button.autoclickCooldown = 1.5f;
         Physics physics = new Physics();
-        physics.vx=MathUtils.random(-10f,10f);
-        physics.vy=MathUtils.random(-10f,10f);
-        listener.entity = new EntityBuilder(world).with(new Pos(x,y), physics, new Clickable(), new Anim(resource.pickupAnimId, 4000), new Bounds(0,0,8,6), button).build();
+        physics.vx = MathUtils.random(-10f, 10f);
+        physics.vy = MathUtils.random(-10f, 10f);
+        listener.entity = new EntityBuilder(world).with(new Pos(x, y), physics, new Clickable(), new Anim(resource.pickupAnimId, 4000), new Bounds(0, 0, 8, 6), button).build();
 
 
     }

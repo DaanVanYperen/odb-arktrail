@@ -11,6 +11,7 @@ public class ShipComponent extends Component {
     public State state = State.UNDER_CONSTRUCTION;
     public int gridY;
     public int gridX;
+    public float constructionManyearsRemaining;
 
     public ShipComponent(Type type, int gridX, int gridY, State state) {
         this.type = type;
@@ -25,13 +26,13 @@ public class ShipComponent extends Component {
     }
 
     public enum Type {
-        HULL(null, null, false, 500, 0, true),
-        BUNKS("c-bunks", "Bunks: may produce birth each jump 'I'll be in my bunk!'.", true, 500, 0, false),
-        MEDBAY("c-medbay", "Auto-medic: May produce medigel each jump.", true, 500, 0, false),
-        HYDROPONICS("c-hydroponics", "Hydroponics: may produce food each jump.", true, 500, 0, false),
-        STORAGEPOD("c-storagepod", "Storage Pod: increases ship capacity for fuel, food and medigel.", true, 500, 0, false),
-        ENGINE("c-engine", "Engine: Faster travel, +fuel usage, -births, -food usage, +sanity.", true, 550, -8, true),
-        RAMSCOOP("c-ramscoop", "Ramscoop: May produce food each jump.", true, 550, 0, true);
+        HULL(null, null, false, 500, 0, true, 1),
+        BUNKS("c-bunks", "Bunks: may produce birth each jump 'I'll be in my bunk!'.", true, 500, 0, false, 1),
+        MEDBAY("c-medbay", "Auto-medic: May produce medigel each jump.", true, 500, 0, false, 3),
+        HYDROPONICS("c-hydroponics", "Hydroponics: may produce food each jump.", true, 500, 0, false, 2),
+        STORAGEPOD("c-storagepod", "Storage Pod: increases ship capacity for fuel, food and medigel.", true, 500, 0, false, 1),
+        ENGINE("c-engine", "Engine: Faster travel, +fuel usage, -births, -food usage, +sanity.", true, 550, -8, true, 1),
+        RAMSCOOP("c-ramscoop", "Ramscoop: May produce food each jump.", true, 550, 0, true, 1);
 
         public final String animId;
         public final boolean buildable;
@@ -40,6 +41,7 @@ public class ShipComponent extends Component {
         public final int layer;
         public final int xOffset;
         public final boolean countsAsHull;
+        public final int buildManYears;
 
         /**
          * @param animId
@@ -47,13 +49,15 @@ public class ShipComponent extends Component {
          * @param layer
          * @param xOffset offset when placed on the ship (for engines).
          * @param countsAsHull
+         * @param buildManYears
          */
-        Type(String animId, String label, boolean buildable, int layer, int xOffset, boolean countsAsHull) {
+        Type(String animId, String label, boolean buildable, int layer, int xOffset, boolean countsAsHull, int buildManYears) {
             this.animId = animId;
             this.label = label;
             this.layer = layer;
             this.xOffset = xOffset;
             this.countsAsHull = countsAsHull;
+            this.buildManYears = buildManYears;
             this.placedAnimId = animId + "-placed";
             this.buildable = buildable;
         }

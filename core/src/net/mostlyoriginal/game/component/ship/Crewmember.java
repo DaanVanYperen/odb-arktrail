@@ -24,17 +24,17 @@ public class CrewMember extends Component {
     }
 
     public static enum Ability {
-        EAT, PILOT
+        EAT, PILOT, BUILD
     }
 
 
     public static enum Effect {
 
         /** Nothing wrong. */
-        HEALTHY("Healthy", Color.valueOf("2C4142"), Ability.PILOT, Ability.EAT),
+        HEALTHY("Healthy", Color.valueOf("2C4142"), Ability.PILOT, Ability.EAT, Ability.BUILD),
 
         /** Nothing wrong. */
-        HUNGRY("Hungry", Color.valueOf("46140B"), Ability.PILOT, Ability.EAT),
+        HUNGRY("Hungry", Color.valueOf("46140B"), Ability.PILOT, Ability.EAT, Ability.BUILD),
 
         /** Nothing wrong. */
         STARVING("Starving", Color.valueOf("A9301B"), Ability.PILOT, Ability.EAT),

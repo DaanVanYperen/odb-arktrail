@@ -102,6 +102,7 @@ public class ConstructionSystem extends EntityProcessingSystem {
             final ShipComponent shipComponent = mShipComponent.get(e);
             shipComponent.type = selected;
             shipComponent.state = ShipComponent.State.UNDER_CONSTRUCTION;
+            shipComponent.constructionManyearsRemaining = selected.buildManYears;
             mAnim.get(e).id = selected.animId;
 
             hullSystem.dirty();
