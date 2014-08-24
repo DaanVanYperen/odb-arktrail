@@ -58,7 +58,7 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
         super.end();
 
         if (crewThatAte > 0) {
-            inventorySystem.alter(InventorySystem.Resource.FOOD, -MathUtils.clamp((int)(crewThatAte / CREW_FED_PER_FOOD),0,99));
+            inventorySystem.alter(InventorySystem.Resource.FOOD, -MathUtils.clamp((int)((crewThatAte / CREW_FED_PER_FOOD)+MathUtils.random(0,0.5f)),0,99));
         }
 
         checkBrainslugDomination();
