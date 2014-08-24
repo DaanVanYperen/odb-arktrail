@@ -21,7 +21,9 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
 
     protected TravelSimulationSystem travelSimulationSystem;
 
-    /** speed factor of ship. */
+    /**
+     * speed factor of ship.
+     */
     private float timer;
     public float speedFactor;
 
@@ -38,7 +40,7 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
     protected void initialize() {
         super.initialize();
 
-        for ( int i = 0 ; i<20; i++) {
+        for (int i = 0; i < 20; i++) {
             spawnStar(MathUtils.random(0, G.SCREEN_WIDTH), randomStarY(), MathUtils.random(100) < 10 ? 0 : MathUtils.random(100) < 15 ? 1 : 2);
         }
 
@@ -50,15 +52,14 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
     }
 
     private void spawnStar(int x, int y, int kind) {
-        new EntityBuilder(world).with(new Pos(x,y), new Star(kind), new Anim(-50)).build();
+        new EntityBuilder(world).with(new Pos(x, y), new Star(kind), new Anim(-50)).build();
     }
 
 
     private void trustEffect() {
 
         // work towards full thrust.
-        if ( travelSimulationSystem.isTraveling() )
-        {
+        if (travelSimulationSystem.isTraveling()) {
             timer += world.delta * 0.25f;
             timer = MathUtils.clamp(timer, 0f, 1f);
             speedFactor = Interpolation.exp5.apply(timer * 0.95f);
@@ -75,15 +76,13 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
         super.begin();
         trustEffect();
 
-        animStage = 0;
-
-        if ( speedFactor > 0.6 )
-        {
+        if (speedFactor > 0.5) {
+            animStage = 3;
+        } else if (speedFactor > 0.25) {
             animStage = 2;
-        } else if ( speedFactor > 0.2 )
-        {
+        } else if (speedFactor > 0.05) {
             animStage = 1;
-        }
+        } else animStage = 0;
     }
 
     @Override
@@ -91,14 +90,22 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
 
         // match animation to speed.
         Star star = mStar.get(e);
-        mAnim.get(e).id = star.animId[animStage];
+        Anim anim = mAnim.get(e);
+
+        int id = 2 + animStage;
+        if (animStage == 0) {
+            // just blinking
+            id = (int) (star.blinkTimer % 3f);
+            star.blinkTimer += world.delta;
+        }
+
+        anim.id = star.animId[id];
 
         Pos pos = mPos.get(e);
 
         // move star to the left, and randomize location to give the appearance of more stars.
-        pos.x -= ( (5f + (speedFactor * 1000f)) * world.delta * star.speedFactor );
-        if ( pos.x < -100 )
-        {
+        pos.x -= ((5f + (speedFactor * 1000f)) * world.delta * star.speedFactor);
+        if (pos.x < -100) {
             pos.x = G.SCREEN_WIDTH;
             pos.y = randomStarY();
         }
