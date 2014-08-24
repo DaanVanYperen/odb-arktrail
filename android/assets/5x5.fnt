@@ -5,7 +5,7 @@ chars count=65
 char id=36   x=26    y=22    width=10    height=7     xoffset=0     yoffset=-1    xadvance=11    page=0  chnl=15
 char id=0    x=106   y=6     width=1     height=1     xoffset=0     yoffset=0     xadvance=0     page=0  chnl=15
 char id=13   x=104   y=6     width=1     height=1     xoffset=0     yoffset=0     xadvance=0     page=0  chnl=15
-char id=32   x=100   y=6     width=3     height=1     xoffset=-1    yoffset=4     xadvance=1     page=0  chnl=15
+char id=32   x=100   y=6     width=3     height=1     xoffset=-1    yoffset=4     xadvance=2     page=0  chnl=15
 char id=33   x=110   y=6     width=1     height=5     xoffset=0     yoffset=0     xadvance=3     page=0  chnl=15
 char id=40   x=118   y=6     width=2     height=5     xoffset=0     yoffset=0     xadvance=3     page=0  chnl=15
 char id=41   x=121   y=6     width=2     height=5     xoffset=0     yoffset=0     xadvance=3     page=0  chnl=15
