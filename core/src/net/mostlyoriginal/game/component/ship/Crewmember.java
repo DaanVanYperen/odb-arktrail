@@ -24,20 +24,20 @@ public class CrewMember extends Component {
     }
 
     public static enum Ability {
-        EAT, PILOT, BUILD
+        EAT, PILOT, GIVE_BIRTH, BUILD
     }
 
 
     public static enum Effect {
 
         /** Nothing wrong. */
-        HEALTHY("Healthy", Color.valueOf("2C4142"), Ability.PILOT, Ability.EAT, Ability.BUILD),
+        HEALTHY("Healthy", Color.valueOf("2C4142"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH),
 
         /** Nothing wrong. */
-        HUNGRY("Hungry", Color.valueOf("46140B"), Ability.PILOT, Ability.EAT, Ability.BUILD),
+        HUNGRY("Hungry", Color.valueOf("46140B"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH),
 
         /** Nothing wrong. */
-        STARVING("Starving", Color.valueOf("A9301B"), Ability.PILOT, Ability.EAT),
+        STARVING("Starving", Color.valueOf("A9301B"), Ability.PILOT, Ability.EAT, Ability.GIVE_BIRTH),
 
         /** NOOOOOOOOO TIMMYYYYYYYYY (crewmember dead) */
         DEAD("Dead", Color.valueOf("4C3448"));

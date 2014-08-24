@@ -155,6 +155,31 @@ public class CrewSystem extends EntitySystem {
         }
     }
 
+    /** return random crewmember with ability, or null if none. */
+    public Entity randomWith(CrewMember.Ability ability) {
+        Entity[] entities = getAllWith(ability);
+        return entities.length == 0 ? null : entities[MathUtils.random(0,entities.length-1)];
+    }
+
+    /** return all crewmembers with given agbility. */
+    public Entity[] getAllWith(CrewMember.Ability ability) {
+
+        final ArrayList<Entity> list = new ArrayList<>();
+
+        for (Entity e : sortedEntities) {
+            final CrewMember crewMember = mCrewMember.get(e);
+            if ( crewMember != null )
+            {
+                if ( crewMember.effect.can( ability ) )
+                {
+                    list.add(e);
+                }
+            }
+        }
+
+        return list.toArray(new Entity[list.size()]);
+    }
+
     /** return count of crew with given ability. */
     public int countOf(CrewMember.Ability ability)
     {
@@ -234,5 +259,10 @@ public class CrewSystem extends EntitySystem {
 
     public String getRandomName() {
         return NameRolodex.randomName();
+    }
+
+    public CrewMember randomWithAsCrew(CrewMember.Ability ability) {
+        Entity entity = randomWith(ability);
+        return entity != null ? mCrewMember.get(entity) : null;
     }
 }

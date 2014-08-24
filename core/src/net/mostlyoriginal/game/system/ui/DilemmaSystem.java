@@ -1,19 +1,24 @@
 package net.mostlyoriginal.game.system.ui;
 
 import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.GroupManager;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.EntityUtil;
 import net.mostlyoriginal.game.MyGame;
+import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ui.*;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
+import net.mostlyoriginal.game.system.ship.CrewSystem;
 import net.mostlyoriginal.game.system.ship.InventorySystem;
+import net.mostlyoriginal.game.system.ship.LifesupportSimulationSystem;
 import net.mostlyoriginal.game.system.ship.ProductionSimulationSystem;
 
 /**
@@ -37,6 +42,10 @@ public class DilemmaSystem extends EntityProcessingSystem {
     private GroupManager groupManager;
     private InventorySystem inventorySystem;
     private ProductionSimulationSystem productionSimulationSystem;
+
+    protected ComponentMapper<CrewMember> mCrewMember;
+    private CrewSystem crewSystem;
+    private LifesupportSimulationSystem lifesupportSimulationSystem;
 
 
     public DilemmaSystem() {
@@ -120,19 +129,22 @@ public class DilemmaSystem extends EntityProcessingSystem {
                 ) ))));
     }
 
-    /** Spawn a random dilemma. */
+    /** Spawn am even weighted random dilemma. */
     public void randomDilemma() {
-            startDilemma(new Dilemma("Captain, ensign Jovoc", "contracted a brainslug!", "[DUMP HIM OUT OF AIRLOCK]", new ButtonListener() {
-                @Override
-                public void run() {
-                    stopDilemma();
-                }
-            }, "[DO NOTHING]", new ButtonListener() {
-                @Override
-                public void run() {
-                    stopDilemma();
-                }
-            })) ;
+            if ( MathUtils.random(0, 99) < 50 ) {
+                randomPositiveDilemma();
+            } else {
+                randomNegativeDilemma();
+            }
+    }
+
+    /** player is look for a fight, the odds are against him! */
+    public void scanDilemma() {
+            if ( MathUtils.random(0, 99) < 28 ) {
+                randomPositiveDilemma();
+            } else {
+                randomNegativeDilemma();
+            }
     }
 
     /** Victory! :D */
@@ -149,6 +161,100 @@ public class DilemmaSystem extends EntityProcessingSystem {
     public void noPilotsDilemma() {
         startDilemma(new Dilemma("Nobody left to pilot the ship!", DONT_GIVE_UP, new CloseDilemmaListener(), GIVE_UP, new RestartListener() ));
     }
+
+    public void randomPositiveDilemma()
+    {
+        Dilemma dilemma = null;
+        while ( dilemma  == null ) {
+
+            switch (MathUtils.random(0, 0)) {
+                case 0: {
+                    dilemma = birthInElevator();
+                    break;
+                }
+                default:
+                    // nothing happens.
+                    dilemma = new Dilemma("Another year, another mile.", null, "[I wish something exploded]", new CloseDilemmaListener());
+                    break;
+            }
+
+        }
+
+        startDilemma(dilemma);
+
+        /*
+        startDilemma(new Dilemma("Captain, ensign Jovoc", "contracted a brainslug!", "[DUMP HIM OUT OF AIRLOCK]", new ButtonListener() {
+            @Override
+            public void run() {
+                stopDilemma();
+            }
+        }, "[DO NOTHING]", new ButtonListener() {
+            @Override
+            public void run() {
+                stopDilemma();
+            }
+        })); */
+
+    }
+
+    private Dilemma birthInElevator() {
+        CrewMember birther = crewSystem.randomWithAsCrew(CrewMember.Ability.GIVE_BIRTH);
+        if ( birther != null ) {
+            return createRewardDilemma("Stuck with " + birther.name + " in the turbolift,", "water starts dripping down their leg! so typical.", "[Deliver baby]", InventorySystem.Resource.CREWMEMBER);
+        }
+        return null;
+    }
+
+    private Dilemma createRewardDilemma(String text1, String text2, String option1, InventorySystem.Resource ... resources ) {
+        return new Dilemma(text1,text2,option1, new PayoutListener(resources));
+    }
+
+    public void randomNegativeDilemma()
+    {
+        Dilemma dilemma = null;
+        while ( dilemma  == null ) {
+
+            switch (MathUtils.random(0, 0)) {
+                case 0: {
+                    dilemma = plasmaAccident();
+                    break;
+                }
+                default:
+                    // nothing happens.
+                    dilemma = new Dilemma("Another year, another mile.", null, "[I wish something exploded]", new CloseDilemmaListener());
+                    break;
+            }
+
+        }
+
+        startDilemma(dilemma);
+
+        /*
+        startDilemma(new Dilemma("Captain, ensign Jovoc", "contracted a brainslug!", "[DUMP HIM OUT OF AIRLOCK]", new ButtonListener() {
+            @Override
+            public void run() {
+                stopDilemma();
+            }
+        }, "[DO NOTHING]", new ButtonListener() {
+            @Override
+            public void run() {
+                stopDilemma();
+            }
+        })); */
+
+    }
+
+    private Dilemma plasmaAccident() {
+        final Entity e = crewSystem.randomWith(CrewMember.Ability.BUILD);
+        if ( e != null ) {
+            final CrewMember member = mCrewMember.get(e);
+            if ( member != null ) {
+                return new Dilemma(member.name + " stuck his fingers", "in an active plasma conduit.", "[Scrape him off the walls]", new KillCrewmemberDilemma(e));
+            }
+        }
+        return null;
+    }
+
 
     /** Just closes dilemma, no action */
     private class CloseDilemmaListener extends ButtonListener {
@@ -243,6 +349,21 @@ public class DilemmaSystem extends EntityProcessingSystem {
             for (InventorySystem.Resource resource : resources) {
                 productionSimulationSystem.spawnCollectibleNearMouse(resource);
             }
+        }
+    }
+
+    private class KillCrewmemberDilemma extends CloseDilemmaListener {
+
+        private final Entity e;
+
+        private KillCrewmemberDilemma( Entity e ) {
+            this.e = e;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            lifesupportSimulationSystem.changeState(e, CrewMember.Effect.DEAD);
         }
     }
 

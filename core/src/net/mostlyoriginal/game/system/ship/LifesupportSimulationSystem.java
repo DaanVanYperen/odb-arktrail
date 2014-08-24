@@ -66,13 +66,13 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
         CrewMember crewMember = mCrewMember.get(e);
         switch (crewMember.effect) {
             case HEALTHY:
-                attemptEat(crewMember, CrewMember.Effect.HUNGRY);
+                attemptEat(e, CrewMember.Effect.HUNGRY);
                 break;
             case HUNGRY:
-                attemptEat(crewMember, CrewMember.Effect.STARVING);
+                attemptEat(e, CrewMember.Effect.STARVING);
                 break;
             case STARVING:
-                attemptEat(crewMember, CrewMember.Effect.DEAD);
+                attemptEat(e, CrewMember.Effect.DEAD);
                 break;
             case DEAD:
                 break;
@@ -84,18 +84,22 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
     /**
      * Crewmember attempts eating, or grows hungry, depending on food available.
      */
-    private void attemptEat(CrewMember crewMember, CrewMember.Effect newEffect) {
+    private void attemptEat(Entity e, CrewMember.Effect newEffect) {
 
         // progress to next state, there is a 25% chance of not needing food, to give the ship a chance.
         if (MathUtils.random(0f, 0.99f) > foodFactor + 0.25f) {
-            changeState(crewMember, newEffect);
+            changeState(e, newEffect);
         } else {
             crewThatAte++;
-            changeState(crewMember, CrewMember.Effect.HEALTHY);
+            changeState(e, CrewMember.Effect.HEALTHY);
         }
     }
 
-    private void changeState(CrewMember crewMember, CrewMember.Effect newEffect) {
-        crewMember.effect = newEffect;
+
+    public void changeState(Entity e, CrewMember.Effect newEffect) {
+        CrewMember crewMember = mCrewMember.get(e);
+        if ( crewMember != null  ) {
+            crewMember.effect = newEffect;
+        }
     }
 }
