@@ -91,6 +91,7 @@ public class MainScreen implements Screen {
         /** Physics systems that move the entity to an absolute location. */
         world.setSystem(new AttachmentSystem());
         world.setSystem(new InbetweenSystem());
+        world.setSystem(new GateSystem());
 
 
         /** apply velocity */
