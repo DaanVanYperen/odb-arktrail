@@ -133,7 +133,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     /** Spawn am even weighted random dilemma. */
     public void randomDilemma() {
-            if ( MathUtils.random(0, 99) < 50 ) {
+            if ( MathUtils.random(0, 99) < 60 ) {
                 randomPositiveDilemma();
             } else {
                 randomNegativeDilemma();
@@ -142,7 +142,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     /** player is look for a fight, the odds are against him! */
     public void scanDilemma() {
-            if ( MathUtils.random(0, 99) < 20 ) {
+            if ( MathUtils.random(0, 99) < 40 ) {
                 randomPositiveDilemma();
             } else {
                 randomNegativeDilemma();
@@ -175,13 +175,25 @@ public class DilemmaSystem extends EntityProcessingSystem {
         Dilemma dilemma = null;
         while ( dilemma  == null ) {
 
-            switch (MathUtils.random(0, 2)) {
+            switch (MathUtils.random(0, 4)) {
                 case 0: {
                     dilemma = birthInElevator();
                     break;
                 }
                 case 1: {
                     dilemma = brainslugOnPlanet();
+                    break;
+                }
+                case 2: {
+                    dilemma = abandonedFuelPlant();
+                    break;
+                }
+                case 3: {
+                    dilemma = gasGiant();
+                    break;
+                }
+                case 4: {
+                    dilemma = foodPlanet();
                     break;
                 }
                 default:
@@ -207,6 +219,30 @@ public class DilemmaSystem extends EntityProcessingSystem {
             }
         })); */
 
+    }
+
+    private Dilemma abandonedFuelPlant() {
+        CrewMember worker = crewSystem.randomWithAsCrew(CrewMember.Ability.BUILD);
+        if ( worker != null ) {
+            return createRewardDilemma("You come across an abandoned refueling station.", "There appears to be some fuel remaining.", "[Recover the fuel]", InventorySystem.Resource.FUEL);
+        }
+        return null;
+    }
+
+    private Dilemma gasGiant() {
+        CrewMember worker = crewSystem.randomWithAsCrew(CrewMember.Ability.BUILD);
+        if ( worker != null ) {
+            return createRewardDilemma("You discover a rogue gas giant.", "The gas can be converted to fuel.", "[Scoop it up!]", InventorySystem.Resource.FUEL, InventorySystem.Resource.FUEL, InventorySystem.Resource.FUEL);
+        }
+        return null;
+    }
+
+    private Dilemma foodPlanet() {
+        CrewMember worker = crewSystem.randomWithAsCrew(CrewMember.Ability.BUILD);
+        if ( worker != null ) {
+            return createRewardDilemma("A probe has discovered a planet lush with coconuts.", "Sentient coconuts...", "[Gather]", InventorySystem.Resource.FOOD, InventorySystem.Resource.FOOD, InventorySystem.Resource.FOOD);
+        }
+        return null;
     }
 
     private Dilemma birthInElevator() {
@@ -221,18 +257,26 @@ public class DilemmaSystem extends EntityProcessingSystem {
         return new Dilemma(text1,text2,option1, new PayoutListener(resources));
     }
 
+    private Dilemma createPenaltyDilemma(String text1, String text2, String option1, InventorySystem.Resource ... resources ) {
+        return new Dilemma(text1,text2,option1, new PenaltyListener(resources));
+    }
+
     public void randomNegativeDilemma()
     {
         Dilemma dilemma = null;
         while ( dilemma  == null ) {
 
-            switch (MathUtils.random(0, 2)) {
+            switch (MathUtils.random(0, 3)) {
                 case 0: {
                     dilemma = plasmaAccident();
                     break;
                 }
                 case 1: {
                     dilemma = brainslugOnPlanet();
+                    break;
+                }
+                case 2: {
+                    dilemma = foodSpoilage();
                     break;
                 }
                 default:
@@ -258,6 +302,10 @@ public class DilemmaSystem extends EntityProcessingSystem {
             }
         })); */
 
+    }
+
+    private Dilemma foodSpoilage() {
+        return createPenaltyDilemma("The away team brought back a pest,", "infested the food stores.", "[My spaceburgers!]", InventorySystem.Resource.FOOD, InventorySystem.Resource.FOOD);
     }
 
     private Dilemma plasmaAccident() {
@@ -376,6 +424,24 @@ public class DilemmaSystem extends EntityProcessingSystem {
             super.run();
             for (InventorySystem.Resource resource : resources) {
                 productionSimulationSystem.spawnCollectibleNearMouse(resource);
+            }
+        }
+    }
+
+    /** Spawn specified resources at mouse cursor when picking this option. */
+    private class PenaltyListener extends CloseDilemmaListener {
+        private final InventorySystem.Resource[] resources;
+
+        public PenaltyListener(InventorySystem.Resource ... resources )
+        {
+            this.resources = resources;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            for (InventorySystem.Resource resource : resources) {
+                inventorySystem.alter(resource,-1);
             }
         }
     }
