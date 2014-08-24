@@ -39,8 +39,15 @@ public class InventorySystem extends EntityProcessingSystem {
     }
 
     public enum Resource {
-        FUEL,
-        FOOD
+        FUEL("pickup-fuel"),
+        BIOGEL("pickup-biogel"),
+        CREWMEMBER("pickup-crew"),
+        FOOD("pickup-food");
+        public final String pickupAnimId;
+
+        Resource(String pickupAnimId) {
+            this.pickupAnimId = pickupAnimId;
+        }
     }
 
     public InventorySystem() {

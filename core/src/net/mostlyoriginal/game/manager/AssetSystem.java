@@ -37,9 +37,15 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("btn-engage-hover", 171, 84, 56, 20, 1);
         add("btn-engage-down", 171, 81, 56, 20, 1);
 
+        add("bar-fuel", 48,177, 8, 6, 1);
+        add("bar-food", 48,185, 8, 6, 1);
+        add("bar-biogel", 48,169, 8, 6, 1);
+        add("bar-crew", 48,160, 8, 8, 1);
 
-        add("bar-fuel", 40,177, 8, 6, 1);
-        add("bar-food", 40,185, 8, 6, 1);
+        add("pickup-fuel", 48,177, 8, 6, 1);
+        add("pickup-food", 48,185, 8, 6, 1);
+        add("pickup-biogel", 48,169, 8, 6, 1);
+        add("pickup-crew", 48,160, 8, 8, 1);
 
         add("crew-0", 104,64, 8, 8, 1);
         add("crew-1", 104 - 8,64, 8, 8, 1);

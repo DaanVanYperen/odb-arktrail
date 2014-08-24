@@ -55,16 +55,21 @@ public class ButtonSystem extends EntityProcessingSystem {
     private void updateAnim(Entity e) {
         final String id = getNewAnimId(e);
 
-        if (mAnim.has(e)) {
-            mAnim.get(e).id = id;
-        } else if (mLabel.has(e)) {
-            mLabel.get(e).color = Color.valueOf(id);
+        if (id != null) {
+            if (mAnim.has(e)) {
+                mAnim.get(e).id = id;
+            } else if (mLabel.has(e)) {
+                mLabel.get(e).color = Color.valueOf(id);
+            }
         }
     }
 
     private String getNewAnimId(Entity e) {
         final Clickable clickable = mClickable.get(e);
         final Button button = mButton.get(e);
+        if ( button.autoclick ) {
+            button.autoclickCooldown -= world.delta;
+        }
 
         // disable the button temporarily after use to avoid trouble.
         if (button.cooldown >= 0) {
@@ -79,22 +84,29 @@ public class ButtonSystem extends EntityProcessingSystem {
             anim.color.r = active ? 1f : 0.5f;
             anim.color.g = active ? 1f : 0.5f;
             anim.color.b = active ? 1f : 0.5f;
-            if ( !active ) {
+            if (!active) {
                 return button.animDefault;
             }
         }
 
         switch (clickable.state) {
             case HOVER:
+                if (button.autoclick && button.autoclickCooldown <= 0) {
+                    return click(button);
+                }
                 hintlabel.text = button.hint;
                 return button.animHover;
             case CLICKED:
-                button.cooldown = COOLDOWN_AFTER_BUTTON_CLICK;
-                triggerButton(button);
-                return button.animClicked;
+                return click(button);
             default:
                 return button.animDefault;
         }
+    }
+
+    private String click(Button button) {
+        button.cooldown = COOLDOWN_AFTER_BUTTON_CLICK;
+        triggerButton(button);
+        return button.animClicked;
     }
 
     private void triggerButton(Button button) {

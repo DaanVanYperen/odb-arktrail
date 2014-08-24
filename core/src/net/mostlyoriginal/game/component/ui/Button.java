@@ -17,6 +17,13 @@ public class Button extends Component {
     public String animHover;
     public float cooldown=0;
     public String hint=null;
+    public boolean autoclick = false;
+    public float autoclickCooldown;
+
+    /** create a button event handler without effects. */
+    public Button(ButtonListener listener) {
+        this.listener = listener;
+    }
 
     public Button(String animDefault, String animHover, String animClicked, ButtonListener listener) {
         this.animHover = animHover;

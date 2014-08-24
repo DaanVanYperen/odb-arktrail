@@ -60,6 +60,7 @@ public class MainScreen implements Screen {
         world.setSystem(new RouteSystem());
         world.setSystem(new TravelSimulationSystem());
         /* */ world.setSystem(new LifesupportSimulationSystem(),true);
+        /* */ world.setSystem(new ProductionSimulationSystem(),true);
         world.setSystem(new DilemmaSystem());
         world.setSystem(new InventorySystem());
         world.setSystem(new CrewSystem());

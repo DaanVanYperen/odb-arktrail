@@ -28,6 +28,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     private InventorySystem inventorySystem;
     private CrewSystem crewSystem;
     private LifesupportSimulationSystem lifesupportSimulationSystem;
+    private ProductionSimulationSystem productionSimulationSystem;
 
     public TravelSimulationSystem() {
         super(Aspect.getAspectForAll(Travels.class));
@@ -37,22 +38,20 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     public void warp()
     {
         // cost to travel to next warp point.
-        final int fuelcost = 1;
-
         if (handleNoPilotsLeft()) return;
 
-        if ( inventorySystem.get(InventorySystem.Resource.FUEL) < fuelcost )
+        if ( inventorySystem.get(InventorySystem.Resource.FUEL) < 1 )
         {
             dilemmaSystem.outOfGasDilemma();
             return;
         }
 
         // step the lifesupport system forward.
+        productionSimulationSystem.process();
         lifesupportSimulationSystem.process();
 
         final Entity entity = routeSystem.gotoNext();
         if ( entity != null && mRouteNode.has(entity) ) {
-            inventorySystem.alter(InventorySystem.Resource.FUEL, -fuelcost);
 
             switch ( mRouteNode.get(entity).action )
             {
