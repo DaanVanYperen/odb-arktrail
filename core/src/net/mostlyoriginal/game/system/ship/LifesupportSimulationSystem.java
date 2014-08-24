@@ -20,7 +20,7 @@ import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 @Wire
 public class LifesupportSimulationSystem extends EntityProcessingSystem {
 
-    public static final float CREW_FED_PER_FOOD = 1.25f;
+    public static final float CREW_FED_PER_FOOD = 4f;
     public static final int ELDERLY_AGE = 6;
     protected ComponentMapper<CrewMember> mCrewMember;
     public InventorySystem inventorySystem;
@@ -58,8 +58,7 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
         super.end();
 
         if (crewThatAte > 0) {
-            // two crew members eat 0.5 - 1.5 food.
-            inventorySystem.alter(InventorySystem.Resource.FOOD, -(int) MathUtils.random(crewThatAte / CREW_FED_PER_FOOD, crewThatAte / CREW_FED_PER_FOOD + 1f));
+            inventorySystem.alter(InventorySystem.Resource.FOOD, -MathUtils.clamp((int)(crewThatAte / CREW_FED_PER_FOOD),0,99));
         }
 
         checkBrainslugDomination();

@@ -77,7 +77,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 // we don't want to allow engaging while busy!.
                 return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive();
             }
-        }, "warp to next landmark.");
+        }, "Warp to next landmark. Plan ahead and build!");
 
         // engage button.
         createButton(G.SCREEN_WIDTH - 56 - 4 - 35, 7, 31, 15, "btn-scan", new ButtonListener() {
@@ -92,7 +92,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 // we don't want to allow engaging while busy!.
                 return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive() && crewSystem.countOf(CrewMember.Ability.BUILD) > 0;
             }
-        }, "look for trouble!");
+        }, "Stick around and look for trouble!");
 
         createMousecursor();
     }
