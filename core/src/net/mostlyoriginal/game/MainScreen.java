@@ -51,7 +51,7 @@ public class MainScreen implements Screen {
 
         //world.setSystem(new CollisionSystem());
         world.setSystem(new EntityFactorySystem());
-        world.setSystem(new ConstructionSystem(), true);
+        world.setSystem(new ConstructionSystem());
         //world.setSystem(new TiledMapSystem("level1.tmx"));
         world.setSystem(new AssetSystem());
         world.setSystem(new CameraSystem(CAMERA_ZOOM_FACTOR));

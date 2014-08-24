@@ -1,13 +1,18 @@
 package net.mostlyoriginal.game.system.ui;
 
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
+import com.artemis.Entity;
 import com.artemis.annotations.Wire;
-import com.artemis.systems.VoidEntitySystem;
+import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
+import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
+import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 import net.mostlyoriginal.game.system.ship.TravelSimulationSystem;
 
@@ -15,7 +20,7 @@ import net.mostlyoriginal.game.system.ship.TravelSimulationSystem;
  * @author Daan van Yperen
  */
 @Wire
-public class ConstructionSystem extends VoidEntitySystem {
+public class ConstructionSystem extends EntityProcessingSystem {
 
     public static final int MARGIN_RIGHT = -140;
     EntityFactorySystem efs;
@@ -23,26 +28,70 @@ public class ConstructionSystem extends VoidEntitySystem {
     private DilemmaSystem dilemmaSystem;
     private ShipComponent.Type selected;
 
+    protected ComponentMapper<Anim> mAnim;
+    protected ComponentMapper<ShipComponent> mShipComponent;
+    protected ComponentMapper<Clickable> mClickable;
+
+    public ConstructionSystem() {
+        super(Aspect.getAspectForAll(ShipComponent.class, Clickable.class, Anim.class));
+    }
+
     @Override
     protected void initialize() {
         super.initialize();
 
-        // engage button.
-        int index=0;
-        for (ShipComponent.Type structure : ShipComponent.Type.values()) {
-            int x = G.SCREEN_WIDTH + MARGIN_RIGHT - (index + 1) * 18;
-            int y = 7;
-            efs.createButton(x, y, 15, 15, "btn-construct", new ToolSelectButton(structure));
-            // add icon over button. @todo merge with button logic.
-            new EntityBuilder(world).with(new Pos(x + 4,y + 5 ), new Anim(structure.animId, 4000)).build();
-            index++;
+        // create test expansion slot.
+        new EntityBuilder(world).with(new Pos(50, 50), new Anim(), new ShipComponent(ShipComponent.Type.EXPANSION_SLOT), new Bounds(0,0,8,8), new Clickable()).build();
+
+        // list all buildable structures.
+        createConstructionButtons();
+    }
+
+    @Override
+    protected void process(Entity e) {
+        final Anim anim = mAnim.get(e);
+        final ShipComponent shipComponent = mShipComponent.get(e);
+
+        if ( shipComponent.type == ShipComponent.Type.EXPANSION_SLOT )
+        {
+            // show building indicator while placing.
+            anim.id = selected != null ? "c-indicator" : null;
+            anim.color.a = 1;
+
+            // start construction when clicked.
+            Clickable clickable = mClickable.get(e);
+            if ( clickable.state == Clickable.ClickState.CLICKED )
+            {
+                setType(e, selected);
+            }
+
+        } else {
+            anim.color.a = shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION ? 0.5f : 1f;
+        }
+
+    }
+
+    /** Activate shipcomponent! */
+    private void setType(Entity e, ShipComponent.Type selected) {
+        if ( selected != null && e != null && mAnim.has(e) && mShipComponent.has(e) ) {
+            final ShipComponent shipComponent = mShipComponent.get(e);
+            shipComponent.type = selected;
+            mAnim.get(e).id = selected.animId;
         }
     }
 
-
-    @Override
-    protected void processSystem() {
-
+    private void createConstructionButtons() {
+        int index = 0;
+        for (ShipComponent.Type structure : ShipComponent.Type.values()) {
+            if (structure.buildable) {
+                int x = G.SCREEN_WIDTH + MARGIN_RIGHT - (index + 1) * 18;
+                int y = 7;
+                efs.createButton(x, y, 15, 15, "btn-construct", new ToolSelectButton(structure));
+                // add icon over button. @todo merge with button logic.
+                new EntityBuilder(world).with(new Pos(x + 4, y + 5), new Anim(structure.animId, 4000)).build();
+                index++;
+            }
+        }
     }
 
     private void startPlacing(ShipComponent.Type selected) {
