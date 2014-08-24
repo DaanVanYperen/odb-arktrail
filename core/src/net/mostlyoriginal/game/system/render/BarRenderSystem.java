@@ -106,13 +106,24 @@ public class BarRenderSystem extends EntitySystem {
 
         final com.badlogic.gdx.graphics.g2d.Animation gdxanim = abstractAssetSystem.get(bar.animationId);
         if ( gdxanim == null) return;
+        final com.badlogic.gdx.graphics.g2d.Animation gdxanim2 = abstractAssetSystem.get(bar.animationIdEmpty);
+        if ( gdxanim2 == null) return;
 
         final TextureRegion frame = gdxanim.getKeyFrame(0,false);
+        final TextureRegion frame2 = gdxanim2.getKeyFrame(0,false);
 
         for ( int i =0; i< bar.value; i++)
         {
             batch.draw(frame,
                     (int)pos.x + bounds.width + i * frame.getRegionWidth()+1,
+                    (int)pos.y - bounds.height,
+                    frame.getRegionWidth(),
+                    frame.getRegionHeight());
+        }
+        for ( int i =0; i< bar.valueEmpty; i++)
+        {
+            batch.draw(frame2,
+                    (int)pos.x + bounds.width + (i+bar.value) * frame.getRegionWidth()+1,
                     (int)pos.y - bounds.height,
                     frame.getRegionWidth(),
                     frame.getRegionHeight());

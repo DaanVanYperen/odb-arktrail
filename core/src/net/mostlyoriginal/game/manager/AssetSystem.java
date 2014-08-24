@@ -40,7 +40,12 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("bar-fuel", 48,177, 8, 6, 1);
         add("bar-food", 48,185, 8, 6, 1);
         add("bar-biogel", 48,169, 8, 6, 1);
-        add("bar-crew", 48,160, 8, 8, 1);
+        //add("bar-crew", 48,160, 8, 8, 1);
+
+        add("bar-fuel-open", 48+8,177, 8, 6, 1);
+        add("bar-food-open", 48+8,185, 8, 6, 1);
+        add("bar-biogel-open", 48+8,169, 8, 6, 1);
+        //add("bar-crew-open", 48+8,160, 8, 8, 1);
 
         add("pickup-fuel", 48,177, 8, 6, 1);
         add("pickup-food", 48,185, 8, 6, 1);

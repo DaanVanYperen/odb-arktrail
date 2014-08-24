@@ -87,8 +87,8 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
         new EntityBuilder(world).with(new CrewMember(name, animId, effect)).build();
     }
 
-    public Entity createBar(int x, int y, String label, String icon, int value) {
-        return new EntityBuilder(world).with(new Pos(x,y), new Bar(label, icon, value)).build();
+    public Entity createBar(int x, int y, String label, String icon, String iconEmpty, int value, int valueEmpty) {
+        return new EntityBuilder(world).with(new Pos(x,y), new Bar(label, icon, value, iconEmpty, valueEmpty)).build();
     }
 
     private void createSpaceshipMetadata() {

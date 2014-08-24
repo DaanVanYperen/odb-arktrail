@@ -29,6 +29,7 @@ public class InventorySystem extends EntityProcessingSystem {
     protected ComponentMapper<Bar> mBar;
     private Inventory inventory;
     private TagManager tagManager;
+    private Entity biogelIndicator;
 
     public Inventory getInventory() {
         final Entity entity = tagManager.getEntity("travels");
@@ -60,10 +61,13 @@ public class InventorySystem extends EntityProcessingSystem {
         if ( inventory != null ) {
             switch (resource) {
                 case FUEL:
-                    inventory.fuel = MathUtils.clamp(inventory.fuel + amount, 0, 64);
+                    inventory.fuel = MathUtils.clamp(inventory.fuel + amount, 0, inventory.maxFuel);
                     break;
                 case FOOD:
-                    inventory.food = MathUtils.clamp(inventory.food + amount, 0, 64);
+                    inventory.food = MathUtils.clamp(inventory.food + amount, 0, inventory.maxFood);
+                    break;
+                case BIOGEL:
+                    inventory.biogel = MathUtils.clamp(inventory.biogel + amount, 0, inventory.maxBiogel);
                     break;
             }
         }
@@ -78,6 +82,8 @@ public class InventorySystem extends EntityProcessingSystem {
                     return inventory.fuel;
                 case FOOD:
                     return inventory.food;
+                case BIOGEL:
+                    return inventory.biogel;
             }
         }
         return 0;
@@ -87,19 +93,24 @@ public class InventorySystem extends EntityProcessingSystem {
     protected void initialize() {
         super.initialize();
 
-        fuelIndicator = efs.createBar(LEFT_BAR_MARGIN, G.SCREEN_HEIGHT - 16, "fuel", "bar-fuel", 5);
-        foodIndicator = efs.createBar(LEFT_BAR_MARGIN, G.SCREEN_HEIGHT - 16 - BAR_OFFSET_Y, "food", "bar-food", 5);
+        fuelIndicator = efs.createBar(LEFT_BAR_MARGIN, G.SCREEN_HEIGHT - 16, "fuel", "bar-fuel", "bar-fuel-open", 0 , 0 );
+        foodIndicator = efs.createBar(LEFT_BAR_MARGIN, G.SCREEN_HEIGHT - 16 - BAR_OFFSET_Y, "food", "bar-food", "bar-food-open",0, 0);
+        biogelIndicator = efs.createBar(LEFT_BAR_MARGIN, G.SCREEN_HEIGHT - 16 - BAR_OFFSET_Y*2, "biogel", "bar-biogel", "bar-biogel-open", 0, 0);
     }
 
     @Override
     protected void process(Entity e) {
 
         Inventory inventory = mInventory.get(e);
-        updateBar(fuelIndicator, inventory.fuel);
-        updateBar(foodIndicator, inventory.food);
+        updateBar(fuelIndicator, inventory.fuel, inventory.maxFuel);
+        updateBar(foodIndicator, inventory.food, inventory.maxFood);
+        updateBar(biogelIndicator, inventory.biogel, inventory.maxBiogel);
     }
 
-    private void updateBar(Entity indicator, int value) {
-        mBar.get(indicator).value = value;
+    private void updateBar(Entity indicator, int value, int emptyValue) {
+        Bar bar = mBar.get(indicator);
+        bar.value = value;
+        bar.valueEmpty = emptyValue;
+
     }
 }
