@@ -7,6 +7,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.game.component.ship.CrewMember;
+import net.mostlyoriginal.game.manager.AssetSystem;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 
 /**
@@ -34,6 +35,7 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
      */
     private float foodFactor;
     private DilemmaSystem dilemmaSystem;
+    private AssetSystem assetSystem;
 
     public LifesupportSimulationSystem() {
         super(Aspect.getAspectForAll(CrewMember.class));
@@ -151,6 +153,25 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
         CrewMember crewMember = mCrewMember.get(e);
         if ( crewMember != null  ) {
             crewMember.effect = newEffect;
+        }
+
+        switch ( newEffect )
+        {
+
+            case HEALTHY:
+                break;
+            case HUNGRY:
+                break;
+            case STARVING:
+                break;
+            case BRAINSLUG:
+                assetSystem.playSfx("snd-squish");
+                break;
+            case ELDERLY:
+                break;
+            case DEAD:
+                assetSystem.playSfx("snd-death");
+                break;
         }
 
         if ( newEffect == CrewMember.Effect.BRAINSLUG )

@@ -25,6 +25,7 @@ import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Label;
+import net.mostlyoriginal.game.manager.AssetSystem;
 
 /**
  * Production simulation of the ship modules.
@@ -47,6 +48,7 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     private ShipComponentSystem shipComponentSystem;
     private TagManager tagManager;
     public Entity labelEntity;
+    private AssetSystem assetSystem;
 
     public ProductionSimulationSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class));
@@ -129,6 +131,7 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     public void spawnCollectible(float x, float y, InventorySystem.Resource resource) {
         final Entity cursor = tagManager.getEntity("cursor");
 
+        assetSystem.playSfx("snd-squish");
         CollectCollectible listener = new CollectCollectible(resource);
         Button button = new Button(listener);
         button.autoclick = true;
@@ -175,6 +178,7 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         @Override
         public void run() {
             super.run();
+            assetSystem.playSfx("snd-slurp");
             inventorySystem.alter(resource, 1);
             entity.deleteFromWorld();
         }

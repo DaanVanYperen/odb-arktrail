@@ -12,6 +12,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.Star;
+import net.mostlyoriginal.game.manager.AssetSystem;
 
 /**
  * @author Daan van Yperen
@@ -32,6 +33,8 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<Pos> mPos;
     private int animStage;
+    private int playSoundState=0;
+    private AssetSystem assetSystem;
 
     public AccelerationEffectSystem() {
         super(Aspect.getAspectForAll(Star.class, Pos.class, Anim.class));
@@ -69,10 +72,21 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
             timer += world.delta * 0.25f;
             timer = MathUtils.clamp(timer, 0f, 1f);
             speedFactor = Interpolation.exp5.apply(timer * 0.95f);
+
+            if ( playSoundState == 0 )
+            {
+                playSoundState = 1;
+                assetSystem.playSfx("snd-speedup");
+            }
         } else {
             timer -= world.delta * 0.25f;
             timer = MathUtils.clamp(timer, 0f, 1f);
             speedFactor = Interpolation.exp5.apply(timer * 0.95f);
+            if ( playSoundState == 1 )
+            {
+                playSoundState = 0;
+                assetSystem.playSfx("snd-slowdown");
+            }
         }
 
     }

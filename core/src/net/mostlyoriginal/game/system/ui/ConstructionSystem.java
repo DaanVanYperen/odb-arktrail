@@ -16,6 +16,7 @@ import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.manager.AssetSystem;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 import net.mostlyoriginal.game.system.ship.HullSystem;
 import net.mostlyoriginal.game.system.ship.ShipComponentSystem;
@@ -38,6 +39,7 @@ public class ConstructionSystem extends EntityProcessingSystem {
     protected ComponentMapper<Clickable> mClickable;
     protected ComponentMapper<Button> mButton;
     private HullSystem hullSystem;
+    private AssetSystem assetSystem;
 
     public ConstructionSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class, Clickable.class, Anim.class));
@@ -102,6 +104,8 @@ public class ConstructionSystem extends EntityProcessingSystem {
         if ( selected != null && e != null && mAnim.has(e) && mShipComponent.has(e) ) {
 
             //e.addComponent(new ColorAnimation( Color.CLEAR, new Color(1f,1f,1f,0.5f), Interpolation.linear, 2f, 0.4f )).changedInWorld();
+
+            assetSystem.playSfx("snd-click");
 
             final ShipComponent shipComponent = mShipComponent.get(e);
             shipComponent.type = selected;

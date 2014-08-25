@@ -13,6 +13,7 @@ import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Label;
+import net.mostlyoriginal.game.manager.AssetSystem;
 
 /**
  * @author Daan van Yperen
@@ -28,6 +29,7 @@ public class ButtonSystem extends EntityProcessingSystem {
     protected ComponentMapper<Anim> mAnim;
     public Label hintlabel;
     public float globalButtonCooldown = 0;
+    private AssetSystem assetSystem;
 
     public ButtonSystem() {
         super(Aspect.getAspectForAll(Button.class, Clickable.class, Bounds.class).one(Anim.class, Label.class));
@@ -132,6 +134,7 @@ public class ButtonSystem extends EntityProcessingSystem {
     private void triggerButton(Button button) {
         if (button.listener.enabled() && globalButtonCooldown <= 0 ) {
 
+            if ( !button.autoclick) assetSystem.playSfx("snd-click");
             // prevent spamming by accident.
             if ( !button.autoclick ) globalButtonCooldown = 0.1f;
             button.listener.run();
