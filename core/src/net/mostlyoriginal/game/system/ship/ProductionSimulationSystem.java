@@ -72,9 +72,10 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
 
         Label buildSpeedLabel = mLabel.get(labelEntity);
 
-        if ( builders > 16 ) { buildSpeed = 4;  buildSpeedLabel.text = "buildspeed x4"; }
-        else if ( builders > 8 ){buildSpeed = 3;  buildSpeedLabel.text = "buildspeed x3"; }
-        else if ( builders > 4 ) {buildSpeed = 2; buildSpeedLabel.text = "buildspeed x2"; }
+        if ( builders > 10 ) { buildSpeed = 5;  buildSpeedLabel.text = "buildspeed x5"; }
+        else if ( builders >= 8 ) {buildSpeed = 4;  buildSpeedLabel.text = "buildspeed x4"; }
+        else if ( builders >= 5 ) {buildSpeed = 3; buildSpeedLabel.text = "buildspeed x3"; }
+        else if ( builders >= 3 ) {buildSpeed = 2; buildSpeedLabel.text = "buildspeed x2"; }
         else { buildSpeed = 1; buildSpeedLabel.text = "buildspeed x1"; }
     }
 
