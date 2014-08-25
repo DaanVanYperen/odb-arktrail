@@ -28,8 +28,8 @@ public class ShipComponent extends Component {
     public enum Type {
         HULL(null, null, false, 500, 0, true, 1),
         BUNKS("c-bunks", "Bunks: may produce birth each jump 'I'll be in my bunk!'.", true, 500, 0, false, 1),
-        MEDBAY("c-medbay", "Auto-medic: May produce medigel each jump.", true, 500, 0, false, 3),
-        HYDROPONICS("c-hydroponics", "Hydroponics: may produce food each jump.", true, 500, 0, false, 2),
+        MEDBAY("c-medbay", "Auto-medic: May produce medigel each jump.", true, 500, 0, false, 1),
+        HYDROPONICS("c-hydroponics", "Hydroponics: may produce food each jump.", true, 500, 0, false, 1),
         STORAGEPOD("c-storagepod", "Storage Pod: +overal ship storage capacity.", true, 500, 0, false, 1),
         ENGINE("c-engine", "Engine: Travel further in same amount of time.", true, 550, -8, true, 1),
         RAMSCOOP("c-ramscoop", "Ramscoop: May produce fuel each jump.", true, 550, 0, true, 1),

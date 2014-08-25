@@ -126,7 +126,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
                                 InventorySystem.Resource.FOOD,
                                 InventorySystem.Resource.CREWMEMBER,
                                 InventorySystem.Resource.CREWMEMBER,
-                                InventorySystem.Resource.CREWMEMBER,
                                 InventorySystem.Resource.CREWMEMBER) )
                 ) ))));
     }

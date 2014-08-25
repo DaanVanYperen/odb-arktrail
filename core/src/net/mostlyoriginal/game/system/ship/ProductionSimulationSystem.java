@@ -24,6 +24,7 @@ import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.component.ui.Label;
 
 /**
  * Production simulation of the ship modules.
@@ -42,19 +43,37 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     protected ComponentMapper<Pos> mPos;
     public InventorySystem inventorySystem;
     public CrewSystem crewSystem;
-    public int builders;
+    public float buildSpeed;
     private ShipComponentSystem shipComponentSystem;
     private TagManager tagManager;
+    public Entity labelEntity;
 
     public ProductionSimulationSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class));
+    }
+
+    protected ComponentMapper<Label> mLabel;
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+
+
+        labelEntity = new EntityBuilder(world).with(new Label(""), new Pos(4, G.SCREEN_HEIGHT - 42)).build();
     }
 
     @Override
     protected void begin() {
         super.begin();
 
-        builders = (int)(crewSystem.countOf(CrewMember.Ability.BUILD) * BUILDERS_BONUS_FACTOR);
+        int builders = (int)(crewSystem.countOf(CrewMember.Ability.BUILD) * BUILDERS_BONUS_FACTOR);
+
+        Label buildSpeedLabel = mLabel.get(labelEntity);
+
+        if ( builders > 16 ) { buildSpeed = 4;  buildSpeedLabel.text = "buildspeed x4"; }
+        else if ( builders > 8 ){buildSpeed = 3;  buildSpeedLabel.text = "buildspeed x3"; }
+        else if ( builders > 4 ) {buildSpeed = 2; buildSpeedLabel.text = "buildspeed x2"; }
+        else { buildSpeed = 1; buildSpeedLabel.text = "buildspeed x1"; }
     }
 
     @Override
@@ -67,11 +86,11 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         ShipComponent shipComponent = mShipComponent.get(e);
 
         if (shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION) {
-            if ( builders > 0 ) {
+            if ( buildSpeed > 0 ) {
                 // attempt to assign as many builders as we have.
-                float cost = MathUtils.clamp(shipComponent.constructionManyearsRemaining, 0, builders);
+                float cost = MathUtils.clamp(shipComponent.constructionManyearsRemaining, 0, buildSpeed);
                 shipComponent.constructionManyearsRemaining -= cost;
-                builders -= cost;
+                buildSpeed -= cost;
                 if (shipComponent.constructionManyearsRemaining <= 0) {
                     shipComponentSystem.completeConstructionOf(e);
                 }
