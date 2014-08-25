@@ -39,7 +39,7 @@ import net.mostlyoriginal.game.manager.AssetSystem;
 public class ProductionSimulationSystem extends EntityProcessingSystem {
 
     public static final float CREW_FED_PER_FOOD = 1.25f;
-    public static final float BUILDERS_BONUS_FACTOR = 2f;
+    public static final float BUILDERS_BONUS_FACTOR = 1f;
     protected ComponentMapper<ShipComponent> mShipComponent;
     protected ComponentMapper<Pos> mPos;
     public InventorySystem inventorySystem;
