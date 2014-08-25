@@ -78,7 +78,7 @@ public class CrewSystem extends EntitySystem {
     protected void initialize() {
         super.initialize();
 
-        createCrew("The Captain", "crew-0", CrewMember.Effect.ELDERLY);
+        createCrew("The Captain", "crew-0", CrewMember.Effect.HEALTHY);
     }
 
     @Override

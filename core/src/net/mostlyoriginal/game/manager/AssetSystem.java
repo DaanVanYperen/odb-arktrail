@@ -142,7 +142,6 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("engine-2",64,16+16,16, 8, 1);
 
         loadSounds(new String[] {
-                "snd-bzt",
                 "snd-click",
                 "snd-death",
                 "snd-flats",
