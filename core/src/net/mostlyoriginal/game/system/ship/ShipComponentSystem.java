@@ -160,4 +160,18 @@ public class ShipComponentSystem extends EntityProcessingSystem {
             anim.id2 = null;
         }
     }
+
+    public int shipValue() {
+
+        int count=0;
+        for (Entity entity : getActives()) {
+            if ( mc.has(entity) )
+            {
+                ShipComponent shipComponent = mc.get(entity);
+                count += shipComponent.type.pointValue;
+            }
+        }
+
+        return count;
+    }
 }

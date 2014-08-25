@@ -12,14 +12,12 @@ import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.EntityUtil;
+import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.MyGame;
 import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ui.*;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
-import net.mostlyoriginal.game.system.ship.CrewSystem;
-import net.mostlyoriginal.game.system.ship.InventorySystem;
-import net.mostlyoriginal.game.system.ship.LifesupportSimulationSystem;
-import net.mostlyoriginal.game.system.ship.ProductionSimulationSystem;
+import net.mostlyoriginal.game.system.ship.*;
 
 /**
  * Responsible for serving and processing dilemmas.
@@ -42,6 +40,8 @@ public class DilemmaSystem extends EntityProcessingSystem {
     private GroupManager groupManager;
     private InventorySystem inventorySystem;
     private ProductionSimulationSystem productionSimulationSystem;
+
+    protected ShipComponentSystem shipComponentSystem;
 
     protected ComponentMapper<CrewMember> mCrewMember;
     private CrewSystem crewSystem;
@@ -150,7 +150,15 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     /** Victory! :D */
     public void victoryDilemma() {
-        startDilemma(new Dilemma("You have succesfully reached your destination.", "[YAY! Play again.]", new RestartListener() ));
+        displayScore();
+        startDilemma(new Dilemma("You have successfully reached your destination!", "This gate will bring an wealth and prosperity to your world!", "[YAY! Play again.]", new RestartListener()));
+    }
+
+    private void displayScore() {
+        Label score = new Label("Scored "+shipComponentSystem.shipValue()+" points");
+        score.scale=2;
+        score.layer = 10000;
+        new EntityBuilder(world).with(new Pos(G.SCREEN_WIDTH/2 - 4*score.text.length(), G.SCREEN_HEIGHT/2), score).build();
     }
 
     /** Out of gas. :( */

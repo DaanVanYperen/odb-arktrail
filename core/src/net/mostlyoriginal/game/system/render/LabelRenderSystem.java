@@ -99,7 +99,13 @@ public class LabelRenderSystem extends EntitySystem {
             font.setColor(label.color);
             switch ( label.align) {
                 case LEFT:
-                    font.draw(batch, label.text, pos.x, pos.y);
+                    if ( label.scale == 2f ) {
+                        fontManager.bigFont.setColor(label.color);
+                        fontManager.bigFont.draw(batch, label.text, pos.x, pos.y);
+                    }
+                    else {
+                        font.draw(batch, label.text, pos.x, pos.y);
+                    }
                     break;
                 case RIGHT:
                     font.draw(batch, label.text, pos.x - font.getBounds(label.text).width, pos.y);

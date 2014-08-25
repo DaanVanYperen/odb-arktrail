@@ -14,6 +14,7 @@ public class Label extends Component {
 
     /** target layer, higher is in front, lower is behind. */
     public int layer = 0;
+    public float scale = 1f;
 
     public Label(String text) {
         this.text = text;

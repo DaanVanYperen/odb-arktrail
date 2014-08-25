@@ -10,11 +10,15 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 public class FontManager extends Manager {
 
     public BitmapFont font;
+    public BitmapFont bigFont;
 
     @Override
     protected void initialize() {
         super.initialize();
         font = new BitmapFont(Gdx.files.internal("5x5.fnt"), false);
         font.setColor(1f, 1f, 1f, 1f);
+        bigFont = new BitmapFont(Gdx.files.internal("5x5.fnt"), false);
+        bigFont.setColor(1f, 1f, 1f, 1f);
+        bigFont.setScale(2);
     }
 }
