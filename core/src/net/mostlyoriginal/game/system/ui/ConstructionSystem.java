@@ -89,9 +89,9 @@ public class ConstructionSystem extends EntityProcessingSystem {
             return false;
 
         // only allow engine on left facing hull.
-        if ( selected == ShipComponent.Type.ENGINE && !"hull-3".equals(anim.id) ) validLocale = false;
+        if ( selected == ShipComponent.Type.ENGINE && (!"hull-3".equals(anim.id) && !"hull-3-building".equals(anim.id)) ) validLocale = false;
         // only allow ramscoop on right facing hull.
-        if ( selected == ShipComponent.Type.RAMSCOOP && !"hull-4".equals(anim.id) ) validLocale = false;
+        if ( selected == ShipComponent.Type.RAMSCOOP && (!"hull-4".equals(anim.id) && !"hull-4-building".equals(anim.id)) ) validLocale = false;
         return validLocale;
     }
 
