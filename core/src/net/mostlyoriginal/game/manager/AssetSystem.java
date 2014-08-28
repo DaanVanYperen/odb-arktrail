@@ -4,10 +4,18 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
+import com.artemis.utils.EntityBuilder;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
+import net.mostlyoriginal.api.component.graphics.ColorAnimation;
 import net.mostlyoriginal.api.utils.EntityUtil;
+import net.mostlyoriginal.game.G;
+import net.mostlyoriginal.game.component.ui.Label;
 
 /**
  * @todo Split game logic and library logic.
@@ -150,8 +158,19 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
                 "snd-speedup",
                 "snd-squish",
         });
+
+        Music music = Gdx.audio.newMusic(Gdx.files.internal("sfx/music-arctrail002b.mp3"));
+        music.play();
+        music.setPan(0,0.4f);
     }
 
+    @Override
+    protected void initialize() {
+        super.initialize();
+        final Label label = new Label(G.version);
+        label.align = Label.Align.RIGHT;
+        new EntityBuilder(world).with(new Pos(G.SCREEN_WIDTH - 2,G.SCREEN_HEIGHT - 2), label, new ColorAnimation(Color.WHITE, Color.valueOf("333333"), Interpolation.exp5, 1f/ 2f, 2f)).build();
+    }
 
     public void playSfx(String name, Entity origin) {
         if (sfxVolume > 0 )
