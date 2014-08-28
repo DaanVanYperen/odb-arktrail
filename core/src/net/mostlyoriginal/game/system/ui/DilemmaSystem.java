@@ -130,7 +130,8 @@ public class DilemmaSystem extends EntityProcessingSystem {
     public void afterTutorialDilemma() {
         startDilemma(
                 new Dilemma("The space dock rushes ark construction.","Complete further construction in transit!","[What, that thing is a deathtrap!]",
-                new ChainDilemma(new Dilemma("Place a couple of planned upgrades now.", "Scoop up your crew and resources, and engage!", "[Pedal to the metal!]", new PayoutListener(
+                new ChainDilemma(new Dilemma("Place a couple of planned upgrades now.", "Scoop up your crew and resources, and engage!",
+                        "[ Normal - Full crew, full resources. ]", new PayoutListener(
                                     InventorySystem.Resource.FUEL,
                                     InventorySystem.Resource.FUEL,
                                     InventorySystem.Resource.FUEL,
@@ -146,7 +147,21 @@ public class DilemmaSystem extends EntityProcessingSystem {
                 efs.createEngageButton();
                 efs.createScanButton();
             }
-        }))));
+        },
+                        "[ Hard - Small crew, less resources. ]", new PayoutListener(
+                                           InventorySystem.Resource.FUEL,
+                                           InventorySystem.Resource.FUEL,
+                                           InventorySystem.Resource.FOOD,
+                                           InventorySystem.Resource.CREWMEMBER,
+                                           InventorySystem.Resource.CREWMEMBER) {
+                   @Override
+                   public void run() {
+                       super.run();
+                       efs.createEngageButton();
+                       efs.createScanButton();
+                   }
+               }
+                ))));
     }
 
     /** Spawn am even weighted random dilemma. */
