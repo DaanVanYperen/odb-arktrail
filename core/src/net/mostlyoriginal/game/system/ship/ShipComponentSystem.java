@@ -54,13 +54,15 @@ public class ShipComponentSystem extends EntityProcessingSystem {
         // create test expansion slot.
         final ShipComponent.State constructed = ShipComponent.State.UNDER_CONSTRUCTION;
         //createComponent(shipCenterX -1, shipCenterY+1, ShipComponent.Type.ENGINE, constructed);
-        createComponent(shipCenterX, shipCenterY, ShipComponent.Type.STORAGEPOD, constructed);
-        createComponent(shipCenterX, shipCenterY - 1, ShipComponent.Type.STORAGEPOD, constructed);
-        createComponent(shipCenterX, shipCenterY + 1, ShipComponent.Type.STORAGEPOD, constructed);
-        createComponent(shipCenterX+1, shipCenterY, ShipComponent.Type.BUNKS, constructed);
 
-        createComponent(shipCenterX-2, shipCenterY, ShipComponent.Type.CHAIN, constructed);
-        createComponent(shipCenterX-3, shipCenterY, ShipComponent.Type.CHAIN, constructed);
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -2; y <= 2; y++) {
+                createComponent(shipCenterX+x, shipCenterY+y, ShipComponent.Type.HULL, constructed);
+            }
+        }
+
+        createComponent(shipCenterX - 2, shipCenterY, ShipComponent.Type.CHAIN, constructed);
+        createComponent(shipCenterX - 3, shipCenterY, ShipComponent.Type.CHAIN, constructed);
         createComponent(shipCenterX - 4, shipCenterY, ShipComponent.Type.CHAIN, constructed);
 
         hullSystem.dirty();
@@ -73,9 +75,9 @@ public class ShipComponentSystem extends EntityProcessingSystem {
         if (gridY < 0 || gridX < 0 || gridX >= MAX_X || gridY >= MAX_Y) return null;
         if (get(gridX, gridY) == null) {
             Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(), new ShipComponent(type, gridX, gridY, ShipComponent.State.UNDER_CONSTRUCTION), new Bounds(0, 0, 8, 8), new Clickable()).build();
-            set(gridX,gridY, entity);
+            set(gridX, gridY, entity);
 
-            if ( state == ShipComponent.State.CONSTRUCTED ) {
+            if (state == ShipComponent.State.CONSTRUCTED) {
                 completeConstructionOf(entity);
             }
             return entity;
@@ -85,7 +87,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
 
     public void completeConstructionOf(Entity entity) {
         final ShipComponent c = mShipComponent.get(entity);
-        if ( c.state == ShipComponent.State.UNDER_CONSTRUCTION) {
+        if (c.state == ShipComponent.State.UNDER_CONSTRUCTION) {
             c.state = ShipComponent.State.CONSTRUCTED;
             switch (c.type) {
                 case HULL:
@@ -169,10 +171,9 @@ public class ShipComponentSystem extends EntityProcessingSystem {
 
     public int shipValue() {
 
-        int count=0;
+        int count = 0;
         for (Entity entity : getActives()) {
-            if ( mc.has(entity) )
-            {
+            if (mc.has(entity)) {
                 ShipComponent shipComponent = mc.get(entity);
                 count += shipComponent.type.pointValue;
             }
@@ -181,9 +182,11 @@ public class ShipComponentSystem extends EntityProcessingSystem {
         return count;
     }
 
-    /** Fetch random ship part. */
+    /**
+     * Fetch random ship part.
+     */
     public Entity getRandomPart() {
         final ImmutableBag<Entity> actives = getActives();
-        return actives.isEmpty() ? null : actives.get(MathUtils.random(0,actives.size()-1));
+        return actives.isEmpty() ? null : actives.get(MathUtils.random(0, actives.size() - 1));
     }
 }

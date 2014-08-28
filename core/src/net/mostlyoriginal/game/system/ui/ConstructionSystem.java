@@ -22,6 +22,9 @@ import net.mostlyoriginal.game.manager.EntityFactorySystem;
 import net.mostlyoriginal.game.system.ship.HullSystem;
 import net.mostlyoriginal.game.system.ship.ShipComponentSystem;
 import net.mostlyoriginal.game.system.ship.TravelSimulationSystem;
+import net.mostlyoriginal.game.system.tutorial.TutorialSystem;
+
+import java.util.HashMap;
 
 /**
  * @author Daan van Yperen
@@ -41,6 +44,8 @@ public class ConstructionSystem extends EntityProcessingSystem {
     protected ComponentMapper<Button> mButton;
     private HullSystem hullSystem;
     private AssetSystem assetSystem;
+    private TutorialSystem tutorialSystem;
+    public final HashMap<ShipComponent.Type, Entity> constructionButton = new HashMap<>();
 
     public ConstructionSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class, Clickable.class, Anim.class));
@@ -115,6 +120,9 @@ public class ConstructionSystem extends EntityProcessingSystem {
             mAnim.get(e).id = selected.animId;
 
             hullSystem.dirty();
+
+            if ( selected == ShipComponent.Type.ENGINE ) tutorialSystem.complete(TutorialSystem.Step.PLACE_ENGINE);
+            if ( selected == ShipComponent.Type.STORAGEPOD ) tutorialSystem.complete(TutorialSystem.Step.PLACE_STORAGEPOD);
         }
     }
 
@@ -124,7 +132,8 @@ public class ConstructionSystem extends EntityProcessingSystem {
             if (structure.buildable) {
                 int x = G.SCREEN_WIDTH + MARGIN_RIGHT - (index + 1) * 18;
                 int y = 7;
-                Entity button = efs.createButton(x, y, 15, 15, "btn-construct", new ToolSelectButton(structure), null);
+                final Entity button = efs.createButton(x, y, 15, 15, "btn-construct", new ToolSelectButton(structure), null);
+                constructionButton.put(structure, button);
                 Button button1 = mButton.get(button);
                 button1.color = Color.WHITE;
                 button1.hint = structure.label;
@@ -139,6 +148,9 @@ public class ConstructionSystem extends EntityProcessingSystem {
 
     private void startPlacing(ShipComponent.Type selected) {
         this.selected = selected;
+
+        if ( selected == ShipComponent.Type.ENGINE ) tutorialSystem.complete(TutorialSystem.Step.SELECT_ENGINE);
+        if ( selected == ShipComponent.Type.STORAGEPOD ) tutorialSystem.complete(TutorialSystem.Step.SELECT_STORAGEPOD);
     }
 
     private class ToolSelectButton extends ButtonListener {

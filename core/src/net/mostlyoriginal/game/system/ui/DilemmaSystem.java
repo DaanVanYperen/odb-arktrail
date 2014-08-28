@@ -18,6 +18,7 @@ import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ui.*;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 import net.mostlyoriginal.game.system.ship.*;
+import net.mostlyoriginal.game.system.tutorial.TutorialSystem;
 
 /**
  * Responsible for serving and processing dilemmas.
@@ -46,6 +47,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
     protected ComponentMapper<CrewMember> mCrewMember;
     private CrewSystem crewSystem;
     private LifesupportSimulationSystem lifesupportSimulationSystem;
+    private TutorialSystem tutorialSystem;
 
 
     public DilemmaSystem() {
@@ -114,20 +116,37 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     public void tutorialDilemma() {
 
-        startDilemma(new Dilemma("Fresh out of space dock, ", "you are ready for your biggest adventure yet!", "[Embark my very own Ark!]",
+        startDilemma(new Dilemma("Preparing in space dock, ", "you are ready for your biggest adventure yet!", "[Embark my very own Ark!]",
                 new ChainDilemma(new Dilemma("you have been tasked with transporting a gate,", "and activating it at a resource heavy planet!", "[Stop talking and hand me the keys!]",
-                new ChainDilemma(
-                        new Dilemma("Ark construction was rushed,", "Finish it in transit, or perish!", "[Pedal to the medal!]", new PayoutListener(
-                                InventorySystem.Resource.FUEL,
-                                InventorySystem.Resource.FUEL,
-                                InventorySystem.Resource.FUEL,
-                                InventorySystem.Resource.FOOD,
-                                InventorySystem.Resource.FOOD,
-                                InventorySystem.Resource.FOOD,
-                                InventorySystem.Resource.CREWMEMBER,
-                                InventorySystem.Resource.CREWMEMBER,
-                                InventorySystem.Resource.CREWMEMBER) )
-                ) ))));
+                new CloseDilemmaListener() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        tutorialSystem.activateNextStep();
+                    }
+                }))));
+    }
+
+    public void afterTutorialDilemma() {
+        startDilemma(
+                new Dilemma("The space dock rushes ark construction.","Complete further construction in transit!","[What, that thing is a deathtrap!]",
+                new ChainDilemma(new Dilemma("Place a couple of planned upgrades now.", "Scoop up your crew and resources, and engage!", "[Pedal to the metal!]", new PayoutListener(
+                                    InventorySystem.Resource.FUEL,
+                                    InventorySystem.Resource.FUEL,
+                                    InventorySystem.Resource.FUEL,
+                                    InventorySystem.Resource.FOOD,
+                                    InventorySystem.Resource.FOOD,
+                                    InventorySystem.Resource.FOOD,
+                                    InventorySystem.Resource.CREWMEMBER,
+                                    InventorySystem.Resource.CREWMEMBER,
+                                    InventorySystem.Resource.CREWMEMBER) {
+            @Override
+            public void run() {
+                super.run();
+                efs.createEngageButton();
+                efs.createScanButton();
+            }
+        }))));
     }
 
     /** Spawn am even weighted random dilemma. */
@@ -167,14 +186,14 @@ public class DilemmaSystem extends EntityProcessingSystem {
     }
 
     public void brainslugTakeoverDilemma() {
-        startDilemma(new Dilemma("Brainslugs have taken over!", "None of your crew remains.", GIVE_UP, new RestartListener() ));
+        startDilemma(new Dilemma("Brainslugs have taken over!", "None of your crew remains.", GIVE_UP, new RestartListener()));
     }
 
 
 
     /** No pilots remain. :( */
     public void noPilotsDilemma() {
-        startDilemma(new Dilemma("Nobody left to pilot the ship!", DONT_GIVE_UP, new CloseDilemmaListener(), GIVE_UP, new RestartListener() ));
+        startDilemma(new Dilemma("Nobody left to pilot the ship!", DONT_GIVE_UP, new CloseDilemmaListener(), GIVE_UP, new RestartListener()));
     }
 
     public void randomPositiveDilemma()

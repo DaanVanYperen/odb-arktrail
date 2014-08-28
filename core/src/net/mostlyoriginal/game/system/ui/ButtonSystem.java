@@ -61,8 +61,8 @@ public class ButtonSystem extends EntityProcessingSystem {
 
         if (id != null) {
             final Button button = mButton.get(e);
-            boolean disabled = button.hideIfDisabled && !button.listener.enabled();
-            if (disabled) {
+            boolean automaticDisable = button.hideIfDisabled && !button.listener.enabled();
+            if (automaticDisable) {
                 id = null;
             }
 
@@ -70,9 +70,9 @@ public class ButtonSystem extends EntityProcessingSystem {
             if ( button.transientIcon != null  ) {
                 if (button.transientIcon.isActive()) {
                     Entity bute = button.transientIcon.get();
-                    if (disabled && bute.isEnabled())
+                    if (automaticDisable && bute.isEnabled())
                         bute.disable();
-                    if (!disabled && !bute.isEnabled()) {
+                    if (!automaticDisable && !bute.isEnabled()) {
                         bute.enable();
                     }
                 }
@@ -100,7 +100,7 @@ public class ButtonSystem extends EntityProcessingSystem {
         }
 
         // gray out disabled items. @todo separate.
-        boolean active = button.listener.enabled();
+        boolean active = button.listener.enabled() && !button.manualDisable;
         if (mAnim.has(e)) {
             Anim anim = mAnim.get(e);
             anim.color.r = button.color.r * (active ? 1f : 0.5f);
@@ -141,7 +141,7 @@ public class ButtonSystem extends EntityProcessingSystem {
     }
 
     private void triggerButton(Button button) {
-        if (button.listener.enabled() && globalButtonCooldown <= 0 ) {
+        if (button.listener.enabled() && globalButtonCooldown <= 0 && !button.manualDisable ) {
 
             if ( !button.autoclick) assetSystem.playSfx("snd-click");
             // prevent spamming by accident.

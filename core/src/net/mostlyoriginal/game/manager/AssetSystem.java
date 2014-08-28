@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
@@ -133,6 +134,9 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("hull-inny-2-building", 144,70, 8, 8, 1); // top-right-inny
         add("hull-inny-3-building", 152,70, 8, 8, 1); // top-left-inny
         add("hull-missing-building",96,40, 8, 8, 1); // missing
+
+        final Animation arrow = add("arrow", 136, 56, 8, 8, 3);// missing
+        arrow.setFrameDuration(1/15f);
 
         add("star-0-0",32,136, 4, 4, 1);
         add("star-0-1",32-4,136, 4, 4, 1);

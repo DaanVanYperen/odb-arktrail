@@ -65,20 +65,10 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
         createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);
 
-        // engage button.
-        createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage", new ButtonListener() {
-            @Override
-            public void run() {
-                travelSimulationSystem.planWarp();
-            }
+        createMousecursor();
+    }
 
-            @Override
-            public boolean enabled() {
-                // we don't want to allow engaging while busy!.
-                return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive();
-            }
-        }, "Warp to next landmark. Plan ahead and build!");
-
+    public void createScanButton() {
         // engage button.
         createButton(G.SCREEN_WIDTH - 56 - 4 - 35, 7, 31, 15, "btn-scan", new ButtonListener() {
             @Override
@@ -93,8 +83,22 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive() && crewSystem.countOf(CrewMember.Ability.BUILD) > 0;
             }
         }, "Stick around and look for trouble!");
+    }
 
-        createMousecursor();
+    public void createEngageButton() {
+        // engage button.
+        createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage", new ButtonListener() {
+            @Override
+            public void run() {
+                travelSimulationSystem.planWarp();
+            }
+
+            @Override
+            public boolean enabled() {
+                // we don't want to allow engaging while busy!.
+                return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive();
+            }
+        }, "Warp to next landmark. Plan ahead and build!");
     }
 
     public Entity createBar(int x, int y, String label, String icon, String iconEmpty, int value, int valueEmpty) {

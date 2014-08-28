@@ -24,6 +24,7 @@ public class Button extends Component {
     public boolean hideIfDisabled = false;
     public EntityReference transientIcon;
     public Color color = new Color(Color.WHITE);
+    public boolean manualDisable = false;
 
     /** create a button event handler without effects. */
     public Button(ButtonListener listener) {

@@ -104,6 +104,21 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         }
     }
 
+    /** Finish the whole ship at once. */
+    public void finishAllConstruction()
+    {
+        for (Entity e : getActives()) {
+            if ( e != null ) {
+                ShipComponent shipComponent = mShipComponent.get(e);
+                if ( shipComponent != null && shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION ) {
+                    shipComponentSystem.completeConstructionOf(e);
+                }
+            }
+        }
+
+
+    }
+
     @Override
     protected void process(Entity e) {
         ShipComponent shipComponent = mShipComponent.get(e);

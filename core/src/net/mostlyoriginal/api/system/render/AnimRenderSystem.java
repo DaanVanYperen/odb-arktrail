@@ -99,6 +99,9 @@ public class AnimRenderSystem extends EntitySystem {
 
     protected void process(final Entity entity) {
 
+        if ( !entity.isEnabled())
+            return;
+
         final Anim anim = sm.get(entity);
         final Pos pos = pm.get(entity);
         final Angle angle = rm.has(entity) ? rm.get(entity) : Angle.NONE;

@@ -24,6 +24,7 @@ import net.mostlyoriginal.game.system.ship.ShipComponentSystem;
 import net.mostlyoriginal.game.system.render.BarRenderSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 import net.mostlyoriginal.game.system.ship.*;
+import net.mostlyoriginal.game.system.tutorial.TutorialSystem;
 import net.mostlyoriginal.game.system.ui.*;
 
 /**
@@ -79,6 +80,7 @@ public class MainScreen implements Screen {
         world.setSystem(new MouseCursorSystem());
         world.setSystem(new MouseClickSystem());
         world.setSystem(new ButtonSystem());
+        world.setSystem(new TutorialSystem());
 
         /** SIMULATE */
 
