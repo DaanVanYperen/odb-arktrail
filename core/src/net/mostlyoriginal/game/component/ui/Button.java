@@ -1,6 +1,7 @@
 package net.mostlyoriginal.game.component.ui;
 
 import com.artemis.Component;
+import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.utils.EntityReference;
 
 /**
@@ -22,6 +23,7 @@ public class Button extends Component {
     public float autoclickCooldown;
     public boolean hideIfDisabled = false;
     public EntityReference transientIcon;
+    public Color color = new Color(Color.WHITE);
 
     /** create a button event handler without effects. */
     public Button(ButtonListener listener) {

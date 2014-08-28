@@ -8,6 +8,7 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.utils.SafeEntityReference;
@@ -125,6 +126,7 @@ public class ConstructionSystem extends EntityProcessingSystem {
                 int y = 7;
                 Entity button = efs.createButton(x, y, 15, 15, "btn-construct", new ToolSelectButton(structure), null);
                 Button button1 = mButton.get(button);
+                button1.color = Color.WHITE;
                 button1.hint = structure.label;
                 button1.hideIfDisabled  =true;
                 button1.transientIcon = new SafeEntityReference(new EntityBuilder(world).with(new Pos(x + 4, y + 5), new Anim(structure.animId, 4000)).build());

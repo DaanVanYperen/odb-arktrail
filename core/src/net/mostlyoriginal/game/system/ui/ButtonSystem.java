@@ -103,9 +103,18 @@ public class ButtonSystem extends EntityProcessingSystem {
         boolean active = button.listener.enabled();
         if (mAnim.has(e)) {
             Anim anim = mAnim.get(e);
-            anim.color.r = active ? 1f : 0.5f;
-            anim.color.g = active ? 1f : 0.5f;
-            anim.color.b = active ? 1f : 0.5f;
+            anim.color.r = button.color.r * (active ? 1f : 0.5f);
+            anim.color.g = button.color.g * (active ? 1f : 0.5f);
+            anim.color.b = button.color.b * (active ? 1f : 0.5f);
+            anim.color.a = button.color.a;
+
+            if ( button.transientIcon != null && button.transientIcon.isActive() )
+            {
+                final Entity entity = button.transientIcon.get();
+                Anim anim2 = mAnim.get(entity);
+                anim2.color.set(anim.color);
+            }
+
             if (!active) {
                 return button.animDefault;
             }
