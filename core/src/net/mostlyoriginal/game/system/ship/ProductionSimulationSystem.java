@@ -49,6 +49,8 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     private TagManager tagManager;
     public Entity labelEntity;
     private AssetSystem assetSystem;
+    private boolean hullBuilt;
+    private HullSystem hullSystem;
 
     public ProductionSimulationSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class));
@@ -68,20 +70,38 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     protected void begin() {
         super.begin();
 
-        int builders = (int)(crewSystem.countOf(CrewMember.Ability.BUILD) * BUILDERS_BONUS_FACTOR);
+        hullBuilt = false;
+
+        int builders = (int) (crewSystem.countOf(CrewMember.Ability.BUILD) * BUILDERS_BONUS_FACTOR);
 
         Label buildSpeedLabel = mLabel.get(labelEntity);
 
-        if ( builders > 10 ) { buildSpeed = 5;  buildSpeedLabel.text = "buildspeed x5"; }
-        else if ( builders >= 8 ) {buildSpeed = 4;  buildSpeedLabel.text = "buildspeed x4"; }
-        else if ( builders >= 5 ) {buildSpeed = 3; buildSpeedLabel.text = "buildspeed x3"; }
-        else if ( builders >= 3 ) {buildSpeed = 2; buildSpeedLabel.text = "buildspeed x2"; }
-        else { buildSpeed = 1; buildSpeedLabel.text = "buildspeed x1"; }
+        if (builders > 10) {
+            buildSpeed = 5;
+            buildSpeedLabel.text = "buildspeed x5";
+        } else if (builders >= 8) {
+            buildSpeed = 4;
+            buildSpeedLabel.text = "buildspeed x4";
+        } else if (builders >= 5) {
+            buildSpeed = 3;
+            buildSpeedLabel.text = "buildspeed x3";
+        } else if (builders >= 3) {
+            buildSpeed = 2;
+            buildSpeedLabel.text = "buildspeed x2";
+        } else {
+            buildSpeed = 1;
+            buildSpeedLabel.text = "buildspeed x1";
+        }
     }
 
     @Override
     protected void end() {
         super.end();
+        if ( hullBuilt )
+        {
+            // make sure the hull updates the sprites.
+            hullSystem.dirty();
+        }
     }
 
     @Override
@@ -89,13 +109,20 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         ShipComponent shipComponent = mShipComponent.get(e);
 
         if (shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION) {
-            if ( buildSpeed > 0 ) {
-                // attempt to assign as many builders as we have.
-                float cost = MathUtils.clamp(shipComponent.constructionManyearsRemaining, 0, buildSpeed);
-                shipComponent.constructionManyearsRemaining -= cost;
-                buildSpeed -= cost;
-                if (shipComponent.constructionManyearsRemaining <= 0) {
+            if (buildSpeed > 0) {
+                if (shipComponent.type != ShipComponent.Type.HULL) {
+
+                    // attempt to assign as many builders as we have.
+                    float cost = MathUtils.clamp(shipComponent.constructionManyearsRemaining, 0, buildSpeed);
+                    shipComponent.constructionManyearsRemaining -= cost;
+                    buildSpeed -= cost;
+                    if (shipComponent.constructionManyearsRemaining <= 0) {
+                        shipComponentSystem.completeConstructionOf(e);
+                    }
+                } else {
+                    // hull autobuilds.
                     shipComponentSystem.completeConstructionOf(e);
+                    hullBuilt = true;
                 }
             }
         } else
@@ -149,9 +176,9 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
                                 new Pos(x, y),
                                 physics,
                                 new Clickable(),
-                                new ColorAnimation( Color.CLEAR, Color.WHITE, Interpolation.linear, 1f, 1f ),
+                                new ColorAnimation(Color.CLEAR, Color.WHITE, Interpolation.linear, 1f, 1f),
                                 homing,
-                                new Clamped(0,0, G.SCREEN_WIDTH, G.SCREEN_HEIGHT),
+                                new Clamped(0, 0, G.SCREEN_WIDTH, G.SCREEN_HEIGHT),
                                 new Anim(resource.pickupAnimId, 10000), new Bounds(0 - 4, 0 - 4, 8 + 4, 6 + 4), button).build();
 
 
@@ -161,14 +188,14 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         Entity location = shipComponentSystem.getRandomPart();
 
         // revert to cursor location if none available.
-        if ( location == null ) {
+        if (location == null) {
             location = tagManager.getEntity("cursor");
         }
 
-        if ( location != null ) {
+        if (location != null) {
             Pos pos = mPos.get(location);
-            if ( pos != null ) {
-                spawnCollectible(pos.x + MathUtils.random(-4, 4),pos.y + MathUtils.random(-4, 4), resource);
+            if (pos != null) {
+                spawnCollectible(pos.x + MathUtils.random(-4, 4), pos.y + MathUtils.random(-4, 4), resource);
             }
         }
 

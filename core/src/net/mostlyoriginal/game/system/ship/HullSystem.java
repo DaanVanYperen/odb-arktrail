@@ -39,10 +39,12 @@ public class HullSystem extends EntityProcessingSystem {
     private static class Pattern {
         private final int[] layout;
         public final String animId;
+        public final String animIdBuilding;
 
         private Pattern( String animId, int ... layout ) {
             this.layout = layout;
             this.animId = animId;
+            this.animIdBuilding = animId + "-building";
         }
 
         public boolean matches(int[] pat) {
@@ -149,7 +151,11 @@ public class HullSystem extends EntityProcessingSystem {
                         for (Pattern pattern : patterns) {
                             if ( pattern.matches(pat))
                             {
-                                anim.id = pattern.animId;
+                                final String newId = shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION ? pattern.animIdBuilding : pattern.animId;
+
+                                if ( !newId.equals(anim.id) ) {
+                                    anim.id = newId;
+                                }
                                 break;
                             }
                         }
@@ -202,7 +208,7 @@ public class HullSystem extends EntityProcessingSystem {
         
         final Entity entity = shipComponentSystem.get(gridX, gridY);
         if ( entity == null ) {
-               shipComponentSystem.createComponent(gridX, gridY, ShipComponent.Type.HULL, ShipComponent.State.CONSTRUCTED);
+               shipComponentSystem.createComponent(gridX, gridY, ShipComponent.Type.HULL, ShipComponent.State.UNDER_CONSTRUCTION);
         }
     }
 

@@ -73,7 +73,9 @@ public class ShipComponentSystem extends EntityProcessingSystem {
             Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(), new ShipComponent(type, gridX, gridY, ShipComponent.State.UNDER_CONSTRUCTION), new Bounds(0, 0, 8, 8), new Clickable()).build();
             set(gridX,gridY, entity);
 
-            completeConstructionOf(entity);
+            if ( state == ShipComponent.State.CONSTRUCTED ) {
+                completeConstructionOf(entity);
+            }
             return entity;
         }
         return null;

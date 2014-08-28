@@ -109,20 +109,30 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("hull-0",88, 32, 8, 8, 1); // top left
         add("hull-1",96, 32, 8, 8, 1); // top
         add("hull-2",120,32, 8, 8, 1); // top right
-
         add("hull-3",88, 40, 8, 8, 1); // left
         add("hull-4",120, 40, 8, 8, 1); // right
-
         add("hull-5",88, 48, 8, 8, 1); // bottom left
         add("hull-6",96, 48, 8, 8, 1); // bottom
         add("hull-7",120,48, 8, 8, 1); // bottom right
-
         add("hull-inny-0", 112,16, 8, 8, 1); // bottom-right-inny.
         add("hull-inny-1", 120,16, 8, 8, 1); // bottom-left-inny
         add("hull-inny-2", 112,24, 8, 8, 1); // top-right-inny
         add("hull-inny-3", 120,24, 8, 8, 1); // top-left-inny
-
         add("hull-missing",96,40, 8, 8, 1); // missing
+
+        add("hull-0-building",128, 88, 8, 8, 1); // top left
+        add("hull-1-building",136, 88, 8, 8, 1); // top
+        add("hull-2-building",160,88, 8, 8, 1); // top right
+        add("hull-3-building",128, 96, 8, 8, 1); // left
+        add("hull-4-building",160, 96, 8, 8, 1); // right
+        add("hull-5-building",128,104, 8, 8, 1); // bottom left
+        add("hull-6-building",136,104, 8, 8, 1); // bottom
+        add("hull-7-building",160,104, 8, 8, 1); // bottom right
+        add("hull-inny-0-building", 144,64, 8, 8, 1); // bottom-right-inny.
+        add("hull-inny-1-building", 152,64, 8, 8, 1); // bottom-left-inny
+        add("hull-inny-2-building", 144,70, 8, 8, 1); // top-right-inny
+        add("hull-inny-3-building", 152,70, 8, 8, 1); // top-left-inny
+        add("hull-missing-building",96,40, 8, 8, 1); // missing
 
         add("star-0-0",32,136, 4, 4, 1);
         add("star-0-1",32-4,136, 4, 4, 1);
