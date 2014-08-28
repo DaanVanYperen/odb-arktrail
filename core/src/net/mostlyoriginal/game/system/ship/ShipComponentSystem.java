@@ -6,6 +6,8 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
+import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
@@ -173,5 +175,11 @@ public class ShipComponentSystem extends EntityProcessingSystem {
         }
 
         return count;
+    }
+
+    /** Fetch random ship part. */
+    public Entity getRandomPart() {
+        final ImmutableBag<Entity> actives = getActives();
+        return actives.isEmpty() ? null : actives.get(MathUtils.random(0,actives.size()-1));
     }
 }

@@ -141,8 +141,8 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         physics.vx = MathUtils.random(-15f, 15f);
         physics.vy = MathUtils.random(-15f, 15f);
         Homing homing = new Homing(new SafeEntityReference(cursor));
-        homing.maxDistance = 20;
-        homing.speedFactor = 1f;
+        homing.maxDistance = 40;
+        homing.speedFactor = 0.5f;
         listener.entity =
                 new EntityBuilder(world).
                         with(
@@ -157,12 +157,18 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
 
     }
 
-    public void spawnCollectibleNearMouse(InventorySystem.Resource resource) {
-        final Entity cursor = tagManager.getEntity("cursor");
-        if ( cursor != null ) {
-            Pos pos = mPos.get(cursor);
+    public void spawnCollectibleRandomlyOnShip(InventorySystem.Resource resource) {
+        Entity location = shipComponentSystem.getRandomPart();
+
+        // revert to cursor location if none available.
+        if ( location == null ) {
+            location = tagManager.getEntity("cursor");
+        }
+
+        if ( location != null ) {
+            Pos pos = mPos.get(location);
             if ( pos != null ) {
-                spawnCollectible(pos.x + MathUtils.random(-10, 10),pos.y + MathUtils.random(-10, 10), resource);
+                spawnCollectible(pos.x + MathUtils.random(-4, 4),pos.y + MathUtils.random(-4, 4), resource);
             }
         }
 

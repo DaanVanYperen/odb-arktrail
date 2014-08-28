@@ -430,7 +430,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
         public void run() {
             super.run();
             for (InventorySystem.Resource resource : resources) {
-                productionSimulationSystem.spawnCollectibleNearMouse(resource);
+                productionSimulationSystem.spawnCollectibleRandomlyOnShip(resource);
             }
         }
     }
