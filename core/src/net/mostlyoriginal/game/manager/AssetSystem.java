@@ -160,6 +160,7 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         });
 
         Music music = Gdx.audio.newMusic(Gdx.files.internal("sfx/music-arctrail002b.mp3"));
+        music.setLooping(true);
         music.play();
         music.setPan(0,0.4f);
     }

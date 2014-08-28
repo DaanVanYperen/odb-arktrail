@@ -32,6 +32,7 @@ import net.mostlyoriginal.game.system.ui.*;
 public class MainScreen implements Screen {
 
     public static final int CAMERA_ZOOM_FACTOR = 4;
+    public static final int UI_ZOOM_FACTOR = 4;
     private final World world;
 
     public MainScreen() {
@@ -55,7 +56,7 @@ public class MainScreen implements Screen {
         world.setSystem(new HullSystem());
         //world.setSystem(new TiledMapSystem("level1.tmx"));
         world.setSystem(new AssetSystem());
-        world.setSystem(new CameraSystem(CAMERA_ZOOM_FACTOR));
+        world.setSystem(new CameraSystem(CAMERA_ZOOM_FACTOR,UI_ZOOM_FACTOR));
 
         /** CONTROL */
         world.setSystem(new RouteSystem());

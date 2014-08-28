@@ -17,7 +17,7 @@ public class CameraSystem extends VoidEntitySystem {
     /**
      * @param zoom How much
      */
-    public CameraSystem( float zoom ) {
+    public CameraSystem( float zoom, float uiZoom ) {
 
         float zoomFactorInverter = 1f/zoom;
 
@@ -25,8 +25,10 @@ public class CameraSystem extends VoidEntitySystem {
         camera.setToOrtho(false, Gdx.graphics.getWidth() * zoomFactorInverter, Gdx.graphics.getHeight() * zoomFactorInverter);
         camera.update();
 
-        guiCamera = new OrthographicCamera(Gdx.graphics.getWidth() * zoomFactorInverter, Gdx.graphics.getHeight() * zoomFactorInverter);
-        guiCamera.setToOrtho(false, Gdx.graphics.getWidth() * zoomFactorInverter, Gdx.graphics.getHeight() * zoomFactorInverter);
+        float zoomFactorInverterUi = 1f/uiZoom;
+
+        guiCamera = new OrthographicCamera(Gdx.graphics.getWidth() * zoomFactorInverterUi, Gdx.graphics.getHeight() * zoomFactorInverterUi);
+        guiCamera.setToOrtho(false, Gdx.graphics.getWidth() * zoomFactorInverterUi, Gdx.graphics.getHeight() * zoomFactorInverterUi);
         guiCamera.update();
     }
 
