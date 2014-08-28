@@ -117,7 +117,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
                 travels.nextJumpAfterCooldown -= world.delta;
                 if (travels.nextJumpAfterCooldown <= 0) {
                     travels.nextJumpAfterCooldown=0;
-                    warp(MathUtils.random(1, inventorySystem.get(InventorySystem.Resource.THRUST)));
+                    warp(MathUtils.random(1, MathUtils.clamp(inventorySystem.get(InventorySystem.Resource.THRUST),0,99)));
                 }
             }
         }
