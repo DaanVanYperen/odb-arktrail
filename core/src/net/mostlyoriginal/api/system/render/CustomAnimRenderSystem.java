@@ -34,7 +34,7 @@ import java.util.List;
  * @see net.mostlyoriginal.api.component.graphics.Anim
  */
 @Wire
-public class AnimRenderSystem extends EntitySystem {
+public class CustomAnimRenderSystem extends EntitySystem {
 
     private ComponentMapper<Pos> pm;
     private ComponentMapper<Anim> sm;
@@ -59,7 +59,7 @@ public class AnimRenderSystem extends EntitySystem {
     private boolean labelsRendered;
     private BarRenderSystem barRenderSystem;
 
-    public AnimRenderSystem() {
+    public CustomAnimRenderSystem() {
         super(Aspect.getAspectForAll(Pos.class, Anim.class));
         batch  = new SpriteBatch(2000);
     }

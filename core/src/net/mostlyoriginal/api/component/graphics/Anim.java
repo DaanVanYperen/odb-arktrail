@@ -9,7 +9,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
  * Entity displays a depth sorted animation.
  *
  * @author Daan van Yperen
- * @see net.mostlyoriginal.api.system.render.AnimRenderSystem
+ * @see net.mostlyoriginal.api.system.render.CustomAnimRenderSystem
  */
 @Depends(Pos.class)
 public class Anim extends Component {

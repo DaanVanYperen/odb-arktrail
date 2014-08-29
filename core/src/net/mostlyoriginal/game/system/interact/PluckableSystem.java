@@ -15,7 +15,7 @@ import net.mostlyoriginal.api.component.physics.Frozen;
 import net.mostlyoriginal.api.component.physics.Physics;
 import net.mostlyoriginal.api.system.physics.CollisionSystem;
 import net.mostlyoriginal.api.system.physics.PhysicsSystem;
-import net.mostlyoriginal.api.system.render.AnimRenderSystem;
+import net.mostlyoriginal.api.system.render.CustomAnimRenderSystem;
 import net.mostlyoriginal.api.utils.TagEntityReference;
 import net.mostlyoriginal.game.component.interact.Pluckable;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
@@ -31,7 +31,7 @@ public class PluckableSystem extends EntityProcessingSystem {
 
     CollisionSystem collisionSystem;
     PhysicsSystem physicsSystem;
-    AnimRenderSystem animRenderSystem;
+    CustomAnimRenderSystem customAnimRenderSystem;
     TagManager tagManager;
 
     ComponentMapper<Pluckable> pm;
@@ -114,7 +114,7 @@ public class PluckableSystem extends EntityProcessingSystem {
                         Pluckable pluckable = pm.get(e);
                         pluckableAnim.id = pluckable.animPlucked;
                         pluckableAnim.layer = pluckable.layerAfterPlucked;
-                        animRenderSystem.sortedDirty=true;
+                        customAnimRenderSystem.sortedDirty=true;
                     }
 
                     pluckedCooldown = 0.4f;

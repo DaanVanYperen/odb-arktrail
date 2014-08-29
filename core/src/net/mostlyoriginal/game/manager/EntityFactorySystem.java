@@ -19,6 +19,7 @@ import net.mostlyoriginal.api.component.physics.*;
 import net.mostlyoriginal.api.component.script.Schedule;
 import net.mostlyoriginal.api.manager.AbstractAssetSystem;
 import net.mostlyoriginal.api.manager.AbstractEntityFactorySystem;
+import net.mostlyoriginal.api.utils.TextureRegionUtils;
 import net.mostlyoriginal.api.utils.SafeEntityReference;
 import net.mostlyoriginal.api.utils.TagEntityReference;
 import net.mostlyoriginal.game.G;
@@ -161,7 +162,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
         return basicCenteredParticle(x, y, animId, 1, 1)
                 .addComponent(new Schedule().wait(1f).deleteFromWorld())
                 .addComponent(physics)
-                .addComponent(new Bounds(frame))
+                .addComponent(TextureRegionUtils.boundsOf(frame))
                 .addComponent(new Gravity());
     }
 
