@@ -11,9 +11,9 @@ import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
-import net.mostlyoriginal.game.component.ship.EngineFlame;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.system.ui.ConstructionSystem;
 
 /**
  * Holds a spatial map of the ship.
@@ -31,6 +31,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     private HullSystem hullSystem;
     private AccelerationEffectSystem accelerationEffectSystem;
     private InventorySystem inventorySystem;
+    private ConstructionSystem constructionSystem;
 
     public ShipComponentSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class, Pos.class, Anim.class));
@@ -78,42 +79,11 @@ public class ShipComponentSystem extends EntityProcessingSystem {
             set(gridX, gridY, entity);
 
             if (state == ShipComponent.State.CONSTRUCTED) {
-                completeConstructionOf(entity);
+                constructionSystem.complete(entity);
             }
             return entity;
         }
         return null;
-    }
-
-    public void completeConstructionOf(Entity entity) {
-        final ShipComponent c = mShipComponent.get(entity);
-        if (c.state == ShipComponent.State.UNDER_CONSTRUCTION) {
-            c.state = ShipComponent.State.CONSTRUCTED;
-            switch (c.type) {
-                case HULL:
-                    break;
-                case BUNKS:
-                    break;
-                case MEDBAY:
-                    inventorySystem.alter(InventorySystem.Resource.BIOGEL_STORAGE, 1);
-                    break;
-                case HYDROPONICS:
-                    break;
-                case STORAGEPOD:
-                    inventorySystem.alter(InventorySystem.Resource.STORAGE, 1);
-                    break;
-                case ENGINE:
-                    createEngineFlame(c.gridX - 3, c.gridY);
-                    inventorySystem.alter(InventorySystem.Resource.THRUST, 1);
-                    break;
-                case RAMSCOOP:
-                    break;
-            }
-        }
-    }
-
-    private void createEngineFlame(int gridX, int gridY) {
-        Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(600), new EngineFlame(gridX, gridY)).build();
     }
 
     @Override

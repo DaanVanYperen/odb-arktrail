@@ -26,6 +26,7 @@ import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Label;
 import net.mostlyoriginal.game.manager.AssetSystem;
+import net.mostlyoriginal.game.system.ui.ConstructionSystem;
 
 /**
  * Production simulation of the ship modules.
@@ -51,6 +52,7 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     private AssetSystem assetSystem;
     private boolean hullBuilt;
     private HullSystem hullSystem;
+    private ConstructionSystem constructionSystem;
 
     public ProductionSimulationSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class));
@@ -111,7 +113,7 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
             if ( e != null ) {
                 ShipComponent shipComponent = mShipComponent.get(e);
                 if ( shipComponent != null && shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION ) {
-                    shipComponentSystem.completeConstructionOf(e);
+                    constructionSystem.complete(e);
                 }
             }
         }
@@ -132,11 +134,11 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
                     shipComponent.constructionManyearsRemaining -= cost;
                     buildSpeed -= cost;
                     if (shipComponent.constructionManyearsRemaining <= 0) {
-                        shipComponentSystem.completeConstructionOf(e);
+                        constructionSystem.complete(e);
                     }
                 } else {
                     // hull autobuilds.
-                    shipComponentSystem.completeConstructionOf(e);
+                    constructionSystem.complete(e);
                     hullBuilt = true;
                 }
             }
