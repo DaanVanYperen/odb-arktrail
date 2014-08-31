@@ -1,29 +1,20 @@
 package net.mostlyoriginal.game.system.render;
 
-/**
- * @author Daan van Yperen
- */
-
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
-import com.artemis.utils.ImmutableBag;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.mostlyoriginal.api.component.basic.Pos;
+import net.mostlyoriginal.api.component.graphics.Color;
 import net.mostlyoriginal.api.manager.AbstractAssetSystem;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
+import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
+import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 import net.mostlyoriginal.game.component.ui.Bar;
 import net.mostlyoriginal.game.manager.FontManager;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Render and progress animations.
@@ -32,36 +23,25 @@ import java.util.List;
  * @see net.mostlyoriginal.api.component.graphics.Anim
  */
 @Wire
-public class BarRenderSystem extends EntitySystem {
+public class BarRenderSystem extends DeferredEntityProcessingSystem {
 
     private ComponentMapper<Pos> pm;
+    protected ComponentMapper<Color> mColor;
     private ComponentMapper<Bar> mBar;
+
+    private AbstractAssetSystem abstractAssetSystem;
     private CameraSystem cameraSystem;
+    private FontManager fontManager;
 
     private SpriteBatch batch;
-    private final List<Entity> sortedEntities = new ArrayList<Entity>();
-    public boolean sortedDirty = false;
 
-    public Comparator<Entity> layerSortComperator = new Comparator<Entity>() {
-        @Override
-        public int compare(Entity e1, Entity e2) {
-            return mBar.get(e1).layer - mBar.get(e2).layer;
-        }
-    };
-
-    private float age;
-    private FontManager fontManager;
-    private AbstractAssetSystem abstractAssetSystem;
-
-    public BarRenderSystem() {
-        super(Aspect.getAspectForAll(Pos.class, Bar.class));
+    public BarRenderSystem(EntityProcessPrincipal principal) {
+        super(Aspect.getAspectForAll(Pos.class, Bar.class), principal);
         batch  = new SpriteBatch(1000);
     }
 
     @Override
     protected void begin() {
-
-        age += world.delta;
 
         batch.setProjectionMatrix(cameraSystem.camera.combined);
         batch.begin();
@@ -74,21 +54,14 @@ public class BarRenderSystem extends EntitySystem {
     }
 
     @Override
-    protected void processEntities(ImmutableBag<Entity> entities) {
-
-        if (sortedDirty) {
-            sortedDirty = false;
-            Collections.sort(sortedEntities, layerSortComperator);
-        }
-
-        for (Entity entity : sortedEntities) {
-            process(entity);
-        }
-    }
-
-    @Override
     protected boolean checkProcessing() {
         return true;
+    }
+
+    /** Pixel perfect aligning. */
+    private float roundToPixels(final float val) {
+        // since we use camera zoom rounding to integers doesn't work properly.
+        return ((int)(val * cameraSystem.zoom)) / (float)cameraSystem.zoom;
     }
 
     protected void process(final Entity entity) {
@@ -96,13 +69,19 @@ public class BarRenderSystem extends EntitySystem {
         final Bar bar = mBar.get(entity);
         final Pos pos = pm.get(entity);
 
-
         final BitmapFont font = fontManager.font;
-        font.setColor(bar.color);
-        font.draw(batch, bar.text, pos.x, pos.y);
+        if ( mColor.has(entity) ) {
+            final Color color = mColor.get(entity);
+            font.setColor(color.r, color.g, color.b, color.a);
+            batch.setColor(color.r, color.g, color.b, color.a);
+        } else {
+            font.setColor(1f,1f,1f,1f);
+            batch.setColor(1f,1f,1f,1f);
+        }
+
+        font.draw(batch, bar.text, roundToPixels(pos.x), roundToPixels(pos.y));
 
         BitmapFont.TextBounds bounds = font.getBounds(bar.text);
-        batch.setColor(Color.WHITE);
 
         final com.badlogic.gdx.graphics.g2d.Animation gdxanim = abstractAssetSystem.get(bar.animationId);
         if ( gdxanim == null) return;
@@ -125,29 +104,19 @@ public class BarRenderSystem extends EntitySystem {
         for ( int i =0; i< bar.value; i++)
         {
             batch.draw(frame,
-                    (int)pos.x + bounds.width + i * barWidth,
-                    (int)pos.y - bounds.height,
+                    roundToPixels(pos.x + bounds.width + i * barWidth),
+                    roundToPixels(pos.y - bounds.height),
                     frame.getRegionWidth(),
                     frame.getRegionHeight());
         }
         for ( int i =0; i< emptyCount; i++)
         {
             batch.draw(frame2,
-                    (int)pos.x + bounds.width + (i+bar.value) * barWidth,
-                    (int)pos.y - bounds.height,
+                    roundToPixels(pos.x + bounds.width + (i+bar.value) * barWidth),
+                    roundToPixels(pos.y - bounds.height),
                     frame.getRegionWidth(),
                     frame.getRegionHeight());
         }
     }
 
-    @Override
-    protected void inserted(Entity e) {
-        sortedEntities.add(e);
-        sortedDirty = true;
-    }
-
-    @Override
-    protected void removed(Entity e) {
-        sortedEntities.remove(e);
-    }
 }
