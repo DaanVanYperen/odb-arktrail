@@ -7,20 +7,17 @@ package net.mostlyoriginal.game.system.render;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
-import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.mostlyoriginal.api.component.basic.Pos;
+import net.mostlyoriginal.api.component.graphics.Color;
+import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
+import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
+import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 import net.mostlyoriginal.game.component.ui.Label;
-import net.mostlyoriginal.game.manager.FontManager;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import net.mostlyoriginal.game.manager.FontManager;import java.lang.Override;
 
 /**
  * Render and progress animations.
@@ -29,36 +26,24 @@ import java.util.List;
  * @see net.mostlyoriginal.api.component.graphics.Anim
  */
 @Wire
-public class LabelRenderSystem extends EntitySystem {
+public class LabelRenderSystem extends DeferredEntityProcessingSystem {
 
-    private ComponentMapper<Pos> pm;
-    private ComponentMapper<Label> mLabel;
-    private CameraSystem cameraSystem;
+    protected ComponentMapper<Pos> mPos;
+    protected ComponentMapper<Label> mLabel;
+    protected ComponentMapper<Color> mColor;
 
-    private SpriteBatch batch;
-    private final List<Entity> sortedEntities = new ArrayList<Entity>();
-    public boolean sortedDirty = false;
+    protected CameraSystem cameraSystem;
+    protected FontManager fontManager;
 
-    public Comparator<Entity> layerSortComperator = new Comparator<Entity>() {
-        @Override
-        public int compare(Entity e1, Entity e2) {
-            return mLabel.get(e1).layer - mLabel.get(e2).layer;
-        }
-    };
+    protected SpriteBatch batch;
 
-    private float age;
-    private FontManager fontManager;
-
-    public LabelRenderSystem() {
-        super(Aspect.getAspectForAll(Pos.class, Label.class));
+    public LabelRenderSystem(EntityProcessPrincipal principal) {
+        super(Aspect.getAspectForAll(Pos.class, Label.class, Renderable.class), principal);
         batch = new SpriteBatch(1000);
     }
 
     @Override
     protected void begin() {
-
-        age += world.delta;
-
         batch.setProjectionMatrix(cameraSystem.camera.combined);
         batch.begin();
         batch.setColor(1f, 1f, 1f, 1f);
@@ -70,19 +55,6 @@ public class LabelRenderSystem extends EntitySystem {
     }
 
     @Override
-    protected void processEntities(ImmutableBag<Entity> entities) {
-
-        if (sortedDirty) {
-            sortedDirty = false;
-            Collections.sort(sortedEntities, layerSortComperator);
-        }
-
-        for (Entity entity : sortedEntities) {
-            process(entity);
-        }
-    }
-
-    @Override
     protected boolean checkProcessing() {
         return true;
     }
@@ -90,38 +62,28 @@ public class LabelRenderSystem extends EntitySystem {
     protected void process(final Entity entity) {
 
         final Label label = mLabel.get(entity);
-        final Pos pos = pm.get(entity);
+        final Pos pos = mPos.get(entity);
 
         if (label.text != null) {
-            batch.setColor(label.color);
 
-            final BitmapFont font = fontManager.font;
-            font.setColor(label.color);
-            switch ( label.align) {
+            final BitmapFont font = label.scale == 2f ? fontManager.bigFont : fontManager.font;
+
+            if ( mColor.has(entity) )
+            {
+                final Color color = mColor.get(entity);
+                font.setColor(color.r, color.g, color.b, color.a);
+            } else {
+                font.setColor(1f,1f,1f,1f);
+            }
+
+            switch ( label.align ) {
                 case LEFT:
-                    if ( label.scale == 2f ) {
-                        fontManager.bigFont.setColor(label.color);
-                        fontManager.bigFont.draw(batch, label.text, pos.x, pos.y);
-                    }
-                    else {
-                        font.draw(batch, label.text, pos.x, pos.y);
-                    }
+                    font.draw(batch, label.text, pos.x, pos.y);
                     break;
                 case RIGHT:
                     font.draw(batch, label.text, pos.x - font.getBounds(label.text).width, pos.y);
                     break;
             }
         }
-    }
-
-    @Override
-    protected void inserted(Entity e) {
-        sortedEntities.add(e);
-        sortedDirty = true;
-    }
-
-    @Override
-    protected void removed(Entity e) {
-        sortedEntities.remove(e);
     }
 }
