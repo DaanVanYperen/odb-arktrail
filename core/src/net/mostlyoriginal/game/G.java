@@ -5,7 +5,7 @@ package net.mostlyoriginal.game;
  */
 public class G {
 
-    public static final String version = "'v2";
+    public static final String version = "'v3";
 
     public static final int CANVAS_WIDTH = 1280;
     public static final int CANVAS_HEIGHT = 720;
