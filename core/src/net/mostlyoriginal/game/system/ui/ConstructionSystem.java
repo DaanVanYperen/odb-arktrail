@@ -11,6 +11,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.utils.SafeEntityReference;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
@@ -172,7 +173,10 @@ public class ConstructionSystem extends EntityProcessingSystem {
                 button1.color = Color.WHITE;
                 button1.hint = structure.label;
                 button1.hideIfDisabled  =true;
-                button1.transientIcon = new SafeEntityReference(new EntityBuilder(world).with(new Pos(x + 4, y + 5), new Anim(structure.animId, 4000)).build());
+                button1.transientIcon = new SafeEntityReference(new EntityBuilder(world).with(
+                        new Pos(x + 4, y + 5),
+                        new Anim(structure.animId),
+                        new Renderable(4000)).build());
                 // add icon over button. @todo merge with button logic.
 
                 index++;

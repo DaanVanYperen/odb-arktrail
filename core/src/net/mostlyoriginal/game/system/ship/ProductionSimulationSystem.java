@@ -14,9 +14,11 @@ import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.ColorAnimation;
+import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.component.physics.Clamped;
 import net.mostlyoriginal.api.component.physics.Homing;
 import net.mostlyoriginal.api.component.physics.Physics;
+import net.mostlyoriginal.api.utils.GdxUtil;
 import net.mostlyoriginal.api.utils.SafeEntityReference;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.CrewMember;
@@ -65,7 +67,7 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         super.initialize();
 
 
-        labelEntity = new EntityBuilder(world).with(new Label(""), new Pos(4, G.SCREEN_HEIGHT - 42)).build();
+        labelEntity = new EntityBuilder(world).with(new Label(""),new Renderable(),  new Pos(4, G.SCREEN_HEIGHT - 42)).build();
     }
 
     @Override
@@ -193,10 +195,12 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
                                 new Pos(x, y),
                                 physics,
                                 new Clickable(),
-                                new ColorAnimation(Color.CLEAR, Color.WHITE, Interpolation.linear, 1f, 1f),
+                                new ColorAnimation(GdxUtil.convert(Color.CLEAR), GdxUtil.convert(Color.WHITE), GdxUtil.convert(Interpolation.linear), 1f, 1f),
                                 homing,
                                 new Clamped(0, 0, G.SCREEN_WIDTH, G.SCREEN_HEIGHT),
-                                new Anim(resource.pickupAnimId, 10000), new Bounds(0 - 4, 0 - 4, 8 + 4, 6 + 4), button).build();
+                                new Anim(resource.pickupAnimId),
+                                new Renderable(10000),
+                                new Bounds(0 - 4, 0 - 4, 8 + 4, 6 + 4), button).build();
 
 
     }

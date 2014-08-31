@@ -8,6 +8,7 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.tutorial.TutorialStep;
 import net.mostlyoriginal.game.component.ui.Button;
@@ -46,8 +47,7 @@ public class TutorialSystem extends EntityProcessingSystem {
     @Override
     protected void initialize() {
         super.initialize();
-        final Anim arrow1 = new Anim("arrow", 9000);
-        arrow = new EntityBuilder(world).with(new Pos(), arrow1).build();
+        arrow = new EntityBuilder(world).with(new Pos(), new Anim("arrow"), new Renderable(9000)).build();
         arrow.disable();
     }
 

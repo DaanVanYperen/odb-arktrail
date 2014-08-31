@@ -1,8 +1,9 @@
 package net.mostlyoriginal.game.component.ship;
 
 import com.artemis.Component;
-import com.badlogic.gdx.graphics.Color;
+import net.mostlyoriginal.api.component.graphics.Color;
 import net.mostlyoriginal.api.utils.EntityReference;
+import net.mostlyoriginal.api.utils.GdxUtil;
 
 /**
  * @author Daan van Yperen
@@ -33,22 +34,22 @@ public class CrewMember extends Component {
     public static enum Effect {
 
         /** Nothing wrong. */
-        HEALTHY("Healthy", null, Color.valueOf("2C4142"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE),
+        HEALTHY("Healthy", null, GdxUtil.asColor("2C4142"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE),
 
         /** Nothing wrong. */
-        HUNGRY("Hungry",  null,Color.valueOf("46140B"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE),
+        HUNGRY("Hungry",  null,GdxUtil.asColor("46140B"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE),
 
         /** Nothing wrong. */
-        STARVING("Starving", null, Color.valueOf("A9301B"), Ability.PILOT, Ability.EAT, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE),
+        STARVING("Starving", null, GdxUtil.asColor("A9301B"), Ability.PILOT, Ability.EAT, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE),
 
         /** Nothing wrong. */
-        BRAINSLUG("Brainslug", "state-slug", Color.valueOf("42FA29"), Ability.PILOT, Ability.BUILD, Ability.INFECT, Ability.BIOGELLABLE),
+        BRAINSLUG("Brainslug", "state-slug", GdxUtil.asColor("42FA29"), Ability.PILOT, Ability.BUILD, Ability.INFECT, Ability.BIOGELLABLE),
 
         /** Elderly */
-        ELDERLY("Elderly", null, Color.valueOf("2C4142"), Ability.INFECTABLE, Ability.BIOGELLABLE),
+        ELDERLY("Elderly", null, GdxUtil.asColor("2C4142"), Ability.INFECTABLE, Ability.BIOGELLABLE),
 
         /** NOOOOOOOOO TIMMYYYYYYYYY (crewmember dead) */
-        DEAD("Dead", "state-dead", Color.valueOf("4C3448"));
+        DEAD("Dead", "state-dead", GdxUtil.asColor("4C3448"));
 
         public final String label;
         public final String animStatusId;

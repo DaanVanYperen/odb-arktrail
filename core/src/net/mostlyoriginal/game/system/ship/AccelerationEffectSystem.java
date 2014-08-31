@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.graphics.Color;
+import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.Star;
 import net.mostlyoriginal.game.manager.AssetSystem;
@@ -56,12 +58,12 @@ public class AccelerationEffectSystem extends EntityProcessingSystem {
     }
 
     private void spawnStar(int x, int y, int kind) {
-        Anim anim = new Anim(-50);
-        anim.color.r = MathUtils.random(0.6f,1f);
-        anim.color.g = MathUtils.random(0.6f,1f);
-        anim.color.b = MathUtils.random(0.6f,1f);
-        anim.color.a = MathUtils.random(kind == 0 ? 0.1f : 0.5f,0.9f);
-        new EntityBuilder(world).with(new Pos(x, y), new Star(kind), anim).build();
+        new EntityBuilder(world).with(
+                new Pos(x, y),
+                new Star(kind),
+                new Anim(),
+                new Renderable(-50),
+                new Color(MathUtils.random(0.6f,1f),MathUtils.random(0.6f,1f),MathUtils.random(0.6f,1f),MathUtils.random(kind == 0 ? 0.1f : 0.5f,0.9f))).build();
     }
 
 

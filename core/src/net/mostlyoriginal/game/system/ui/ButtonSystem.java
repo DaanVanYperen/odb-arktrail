@@ -6,10 +6,12 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
-import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.graphics.Color;
+import net.mostlyoriginal.api.component.graphics.Renderable;
+import net.mostlyoriginal.api.utils.GdxUtil;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Label;
@@ -27,6 +29,7 @@ public class ButtonSystem extends EntityProcessingSystem {
     protected ComponentMapper<Label> mLabel;
     protected ComponentMapper<Button> mButton;
     protected ComponentMapper<Anim> mAnim;
+    protected ComponentMapper<Color> mColor;
     public Label hintlabel;
     public float globalButtonCooldown = 0;
     private AssetSystem assetSystem;
@@ -40,8 +43,7 @@ public class ButtonSystem extends EntityProcessingSystem {
         super.initialize();
 
         hintlabel = new Label("hintlabel");
-        hintlabel.color.set(Color.valueOf("004290"));
-        new EntityBuilder(world).with(new Pos(10, 6), hintlabel).build();
+        new EntityBuilder(world).with(new Renderable(), new Pos(10, 6), hintlabel, GdxUtil.asColor("004290")).build();
     }
 
     @Override
@@ -80,8 +82,9 @@ public class ButtonSystem extends EntityProcessingSystem {
 
             if (mAnim.has(e)) {
                 mAnim.get(e).id = id;
-            } else if (mLabel.has(e)) {
-                mLabel.get(e).color = Color.valueOf(id);
+            } else if (mColor.has(e)) {
+                // @todo fix this hack! XD
+                mColor.get(e).set(GdxUtil.asColor(id));
             }
         }
     }
@@ -101,18 +104,19 @@ public class ButtonSystem extends EntityProcessingSystem {
 
         // gray out disabled items. @todo separate.
         boolean active = button.listener.enabled() && !button.manualDisable;
-        if (mAnim.has(e)) {
-            Anim anim = mAnim.get(e);
-            anim.color.r = button.color.r * (active ? 1f : 0.5f);
-            anim.color.g = button.color.g * (active ? 1f : 0.5f);
-            anim.color.b = button.color.b * (active ? 1f : 0.5f);
-            anim.color.a = button.color.a;
+        if (mColor.has(e)) {
+            Color color = mColor.get(e);
+            color.r = button.color.r * (active ? 1f : 0.5f);
+            color.g = button.color.g * (active ? 1f : 0.5f);
+            color.b = button.color.b * (active ? 1f : 0.5f);
+            color.a = button.color.a;
 
             if ( button.transientIcon != null && button.transientIcon.isActive() )
             {
-                final Entity entity = button.transientIcon.get();
-                Anim anim2 = mAnim.get(entity);
-                anim2.color.set(anim.color);
+                final Entity iconEntity = button.transientIcon.get();
+                if ( mColor.has(iconEntity )) {
+                    mColor.get(iconEntity).set(color);
+                }
             }
 
             if (!active) {

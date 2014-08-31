@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.system.ui.ConstructionSystem;
@@ -28,6 +29,7 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     protected ComponentMapper<Pos> mPos;
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<ShipComponent> mShipComponent;
+    protected ComponentMapper<Renderable> mRenderable;
     private HullSystem hullSystem;
     private AccelerationEffectSystem accelerationEffectSystem;
     private InventorySystem inventorySystem;
@@ -75,7 +77,13 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     public Entity createComponent(int gridX, int gridY, ShipComponent.Type type, ShipComponent.State state) {
         if (gridY < 0 || gridX < 0 || gridX >= MAX_X || gridY >= MAX_Y) return null;
         if (get(gridX, gridY) == null) {
-            Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(), new ShipComponent(type, gridX, gridY, ShipComponent.State.UNDER_CONSTRUCTION), new Bounds(0, 0, 8, 8), new Clickable()).build();
+            Entity entity = new EntityBuilder(world).with(
+                    new Pos(),
+                    new Anim(),
+                    new Renderable(),
+                    new ShipComponent(type, gridX, gridY, ShipComponent.State.UNDER_CONSTRUCTION),
+                    new Bounds(0, 0, 8, 8),
+                    new Clickable()).build();
             set(gridX, gridY, entity);
 
             if (state == ShipComponent.State.CONSTRUCTED) {
@@ -131,9 +139,11 @@ public class ShipComponentSystem extends EntityProcessingSystem {
         pos.x = shipComponent.gridX * 8 + MARGIN_LEFT + shipComponent.type.xOffset + 10f * accelerationEffectSystem.speedFactor;
         pos.y = shipComponent.gridY * 8 + MARGIN_TOP;
 
-        Anim anim = mAnim.get(e);
-        anim.layer = shipComponent.type.layer;
+        final Renderable renderable = mRenderable.get(e);
+        renderable.layer = shipComponent.type.layer;
+
         if (shipComponent.type.animId != null) {
+            Anim anim = mAnim.get(e);
             anim.id = shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION ? shipComponent.type.buildingAnimId : shipComponent.type.placedAnimId;
             anim.id2 = null;
         }

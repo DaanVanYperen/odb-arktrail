@@ -11,7 +11,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
+import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.utils.EntityUtil;
+import net.mostlyoriginal.api.utils.GdxUtil;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.MyGame;
 import net.mostlyoriginal.game.component.ship.CrewMember;
@@ -57,7 +59,9 @@ public class DilemmaSystem extends EntityProcessingSystem {
     public Entity createLabel(int x, int y, Color color, String text) {
         return new EntityBuilder(world).with(
                 new Pos(x, y),
-                new Label(text, color)
+                new Renderable(),
+                new Label(text),
+                GdxUtil.convert(color)
         ).group(DILEMMA_GROUP).build();
     }
 
@@ -65,8 +69,10 @@ public class DilemmaSystem extends EntityProcessingSystem {
         return new EntityBuilder(world).with(
                 new Pos(x, y),
                 new Label(text),
+                new Renderable(),
                 new Bounds(0, -8, text.length() * 8, 0),
                 new Clickable(),
+                new net.mostlyoriginal.api.component.graphics.Color(),
                 new Button(COLOR_RAW_DIMMED, COLOR_RAW_BRIGHT, "FFFFFF", listener)
         )
                 .group(DILEMMA_GROUP).build();
@@ -191,8 +197,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
     private void displayScore() {
         Label score = new Label("Scored "+shipComponentSystem.shipValue()+" points");
         score.scale=2;
-        score.layer = 10000;
-        new EntityBuilder(world).with(new Pos(G.SCREEN_WIDTH/2 - 4*score.text.length(), G.SCREEN_HEIGHT/2), score).build();
+        new EntityBuilder(world).with(new Renderable(10000), new Pos(G.SCREEN_WIDTH/2 - 4*score.text.length(), G.SCREEN_HEIGHT/2), score).build();
     }
 
     /** Out of gas. :( */

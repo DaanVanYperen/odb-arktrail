@@ -14,7 +14,9 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.ColorAnimation;
+import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.utils.EntityUtil;
+import net.mostlyoriginal.api.utils.GdxUtil;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ui.Label;
 
@@ -184,7 +186,7 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         super.initialize();
         final Label label = new Label(G.version);
         label.align = Label.Align.RIGHT;
-        new EntityBuilder(world).with(new Pos(G.SCREEN_WIDTH - 2,G.SCREEN_HEIGHT - 2), label, new ColorAnimation(Color.WHITE, Color.valueOf("333333"), Interpolation.exp5, 1f/ 2f, 2f)).build();
+        new EntityBuilder(world).with(new Pos(G.SCREEN_WIDTH - 2,G.SCREEN_HEIGHT - 2), label, new Renderable(), new ColorAnimation(GdxUtil.convert(Color.WHITE), GdxUtil.convert(Color.valueOf("333333")), GdxUtil.convert(Interpolation.exp5), 1f/ 2f, 2f)).build();
     }
 
     public void playSfx(String name, Entity origin) {
