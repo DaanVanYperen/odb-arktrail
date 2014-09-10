@@ -141,12 +141,14 @@ public class TutorialSystem extends EntityProcessingSystem {
             case PLACE_ENGINE:
                 disableAllConstructButtons();
                 break;
+            case PLACE_STORAGEPOD:
+                requiredRepeats = 3;
+                break;
         }
     }
 
     /** called with a short delay after step becomes active. */
     private void delayedInitStep(Step step) {
-        requiredRepeats = 1;
         switch (step) {
             case SELECT_ENGINE:
                 disableAllConstructButtons();
@@ -158,7 +160,6 @@ public class TutorialSystem extends EntityProcessingSystem {
                 highlightConstructButton(ShipComponent.Type.STORAGEPOD);
                 break;
             case PLACE_STORAGEPOD:
-                requiredRepeats = 3;
                 highlightConstructButton(ShipComponent.Type.STORAGEPOD);
                 break;
             case FINISHED:
