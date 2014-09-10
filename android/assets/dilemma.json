@@ -8,7 +8,7 @@
                     "label": ["Never give up! never surrender!"]
                 },
                 {
-                    "label": ["Give up, Tow back to earth."],
+                    "label": ["Give up, Tow back to earth"],
                     "success": [ "RESTART" ]
                 }
             ]
@@ -18,7 +18,7 @@
             "text": [ "Brainslugs have taken over!", "None of your crew remains."],
             "choices": [
                 {
-                    "label": ["Lets try that again.."],
+                    "label": ["Lets try that again"],
                     "success": [ "RESTART" ]
                 }
             ]
@@ -31,7 +31,7 @@
                     "label": ["Never give up! never surrender!"]
                 },
                 {
-                    "label": ["Give up, Tow back to earth."],
+                    "label": ["Give up, Tow back to earth"],
                     "success": [ "RESTART" ]
                 }
             ]
@@ -41,7 +41,7 @@
             "text": [ "You have successfully reached your destination!", "This gate will bring wealth and prosperity to your world!" ],
             "choices": [
                 {
-                    "label": ["YAY! Play again."],
+                    "label": ["YAY! Play again"],
                     "success": [ "RESTART" ]
                 }
             ]
@@ -81,23 +81,22 @@
             "text": [ "Place a couple of planned upgrades now.", "Scoop up your crew and resources, and engage!" ],
             "choices": [
                 {
-                    "label": [ "Normal - Full crew, full resources." ],
+                    "label": [ "Normal - Full crew, full resources" ],
                     "success": [ "ENABLE_ENGAGE", "ENABLE_SCAN", "FUEL", "FUEL", "FUEL", "FOOD","FOOD","FOOD","CREW","CREW","CREW" ]
                 },
                 {
-                    "label": [ "[ Hard - Small crew, less resources. ]" ],
+                    "label": [ "Hard - Small crew, less resources" ],
                     "success": [ "ENABLE_ENGAGE", "ENABLE_SCAN", "FUEL", "FUEL", "FOOD", "CREW","CREW" ]
                 }
             ]
         },
 
         {
-            "id": "TEST",
             "text": [ "You come across an abandoned refueling station.", "Your scanners indicate some fuel remains."],
             "groups": [ "positive" ],
             "choices": [
                 {
-                    "label": [ "Attempt to recover the fuel." ],
+                    "label": [ "Attempt to recover the fuel" ],
                     "crew": "BUILD",
                     "success": [ "FUEL" ],
                     "failure": [ "ALIEN_EATS_REFUELING_VICTIM" ]
@@ -116,8 +115,30 @@
             "crew": "BUILD",
             "choices": [
                 {
-                    "label": [ "Turn off {HIS} audio feed to silence the screaming." ],
+                    "label": [ "Turn off {HIS} audio feed to silence the screaming" ],
                     "success": [ "KILL" ]
+                }
+            ]
+        },
+
+        {
+            "text": [ "{NAME} stuck {HIS} fingers","in an active plasma conduit."],
+            "groups": [ "negative" ],
+            "crew": "BUILD",
+            "choices": [
+                {
+                    "label": [ "Scrape {HIM} off the walls" ],
+                    "success": [ "KILL" ]
+                }
+            ]
+        },
+
+        {
+            "text": [ "Another uneventful year passes."],
+            "groups": [ "negative", "positive" ],
+            "choices": [
+                {
+                    "label": [ "I wish something exploded" ]
                 }
             ]
         }

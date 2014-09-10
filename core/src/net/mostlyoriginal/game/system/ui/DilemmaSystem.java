@@ -151,14 +151,17 @@ public class DilemmaSystem extends EntityProcessingSystem {
         startDilemma(dilemma);
     }
 
-    private void startDilemma(Dilemma dilemma) {
+    private Dilemma startDilemma(Dilemma dilemma) {
         if (!dilemma2Active)
         {
 
             int row = Math.max(4,dilemma.choices.length + dilemma.text.length);
 
+            final Entity globalCrewMember = dilemma.crew != null ? getCrewWithAbility(dilemma.crew) : null;
 
-            Entity globalCrewMember = dilemma.crew != null ? getCrewWithAbility(dilemma.crew) : null;
+            // abort if we lack required crew.
+            if ( dilemma.crew != null && globalCrewMember == null )
+                return null;
 
             dilemma2Active = true;
             for (String text : dilemma.text) {
@@ -168,7 +171,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
             for (Dilemma.Choice choice : dilemma.choices) {
 
-                Entity crewMember = choice.crew != null ? getCrewWithAbility(choice.crew) : globalCrewMember;
+                final Entity crewMember = choice.crew != null ? getCrewWithAbility(choice.crew) : globalCrewMember;
 
                 // random chance of succes, if no failure options defined, always failure.
                 final String[] choices = (choice.failure == null) || (MathUtils.random(0, 100) < 100-choice.risk) ? choice.success : choice.failure;
@@ -179,6 +182,8 @@ public class DilemmaSystem extends EntityProcessingSystem {
                 row--;
             }
         }
+
+        return dilemma;
     }
 
     private String replaceKeywords(String text, Entity crew) {
@@ -187,7 +192,8 @@ public class DilemmaSystem extends EntityProcessingSystem {
             CrewMember member = mCrewMember.get(crew);
             if ( member != null ) {
                 text = text.replaceAll("\\{NAME\\}", member.name)
-                        .replaceAll("\\{HIS\\}", "his");
+                        .replaceAll("\\{HIS\\}", "his")
+                        .replaceAll("\\{HIM\\}", "him");
             }
         }
 
@@ -294,10 +300,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
                     dilemma = brainslugOnPlanet();
                     break;
                 }
-                case 2: {
-                    dilemma = abandonedFuelPlant();
-                    break;
-                }
                 case 3: {
                     dilemma = gasGiant();
                     break;
@@ -323,16 +325,12 @@ public class DilemmaSystem extends EntityProcessingSystem {
         Dilemma dilemma = null;
         while ( dilemma == null ) {
             dilemma = dilemmas.get(MathUtils.random(0, dilemmas.size()-1));
-        }
-        startDilemma(dilemma);
-    }
 
-    private Dilemma2 abandonedFuelPlant() {
-        CrewMember worker = crewSystem.randomWithAsCrew(CrewMember.Ability.BUILD);
-        if ( worker != null ) {
-            return createRewardDilemma("You come across an abandoned refueling station.", "There appears to be some fuel remaining.", "[Recover the fuel]", InventorySystem.Resource.FUEL);
+            if ( dilemma != null ) {
+                dilemma = startDilemma(dilemma);
+                // if startdilemma fails, it returns NULL and we will search again.
+            }
         }
-        return null;
     }
 
     private Dilemma2 gasGiant() {
@@ -367,6 +365,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
         return new Dilemma2(text1,text2,option1, new PenaltyListener(resources));
     }
 
+    /** Trigger a mostly negative dilemma. */
     public void randomNegativeDilemma()
     {
         startRandomDilemmaFromGroup("negative");
