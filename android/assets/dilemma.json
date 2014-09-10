@@ -4,8 +4,46 @@
             "id": "OUT_OF_FUEL",
             "text": [ "You have run out of gas."],
             "choices": [
-                { "label": "Never give up! never surrender!" },
-                { "label": "Give up, Tow back to earth.", "actions" : [ "RESTART" ] }
+                {
+                    "label": ["Never give up! never surrender!"]
+                },
+                {
+                    "label": ["Give up, Tow back to earth."],
+                    "success": [ "RESTART" ]
+                }
+            ]
+        },
+        {
+            "id": "BRAINSLUGS_DOMINATE",
+            "text": [ "Brainslugs have taken over!", "None of your crew remains."],
+            "choices": [
+                {
+                    "label": ["Lets try that again.."],
+                    "success": [ "RESTART" ]
+                }
+            ]
+        },
+        {
+            "id": "NO_PILOTS_REMAIN",
+            "text": [ "Nobody left to pilot the ship!" ],
+            "choices": [
+                {
+                    "label": ["Never give up! never surrender!"]
+                },
+                {
+                    "label": ["Give up, Tow back to earth."],
+                    "success": [ "RESTART" ]
+                }
+            ]
+        },
+        {
+            "id": "VICTORY",
+            "text": [ "You have successfully reached your destination!", "This gate will bring wealth and prosperity to your world!" ],
+            "choices": [
+                {
+                    "label": ["[YAY! Play again.]"],
+                    "success": [ "RESTART" ]
+                }
             ]
         }
     ]

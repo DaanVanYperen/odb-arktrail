@@ -47,12 +47,10 @@ public class DilemmaSystem extends EntityProcessingSystem {
             }
             return null;
         }
-    };
+    }
 
     public static final String DILEMMA_GROUP = "dilemma";
     public static final int ROW_HEIGHT = 9;
-    public static final String GIVE_UP = "[Give up, Tow back to earth]";
-    public static final String DONT_GIVE_UP = "[Never give up! never surrender!]";
     EntityFactorySystem efs;
 
     public static final Color COLOR_DILEMMA = Color.valueOf("6AD7ED");
@@ -132,7 +130,11 @@ public class DilemmaSystem extends EntityProcessingSystem {
             }
 
             for (Dilemma.Choice choice : dilemma.choices) {
-                createOption(10, 10 + ROW_HEIGHT * row, "[" + choice.label + "]", new DilemmaListener(choice.actions));
+
+                // random chance of succes, if no failure options defined, always failure.
+                final String[] choices = choice.failure == null || (MathUtils.random(0,100) < choice.chance) ? choice.success : choice.failure;
+
+                createOption(10, 10 + ROW_HEIGHT * row, "[" + choice.label[MathUtils.random(0,choice.label.length-1)] + "]", new DilemmaListener(choices));
                 row--;
             }
         }
@@ -237,16 +239,17 @@ public class DilemmaSystem extends EntityProcessingSystem {
             }
     }
 
-    /** Victory! :D */
-    public void victoryDilemma() {
-        displayScore();
-        startDilemma(new Dilemma2("You have successfully reached your destination!", "This gate will bring an wealth and prosperity to your world!", "[YAY! Play again.]", new RestartListener()));
-    }
-
     private void displayScore() {
         Label score = new Label("Scored "+shipComponentSystem.shipValue()+" points");
         score.scale=2;
         new EntityBuilder(world).with(new Renderable(10000), new Pos(G.SCREEN_WIDTH/2 - 4*score.text.length(), G.SCREEN_HEIGHT/2), score).build();
+    }
+
+
+    /** Victory! :D */
+    public void victoryDilemma() {
+        displayScore();
+        startDilemma("VICTORY");
     }
 
     /** Out of gas. :( */
@@ -254,15 +257,15 @@ public class DilemmaSystem extends EntityProcessingSystem {
         startDilemma("OUT_OF_FUEL");
     }
 
+    /** Drats. Those brainslugs. */
     public void brainslugTakeoverDilemma() {
-        startDilemma(new Dilemma2("Brainslugs have taken over!", "None of your crew remains.", GIVE_UP, new RestartListener()));
+        startDilemma("BRAINSLUGS_DOMINATE");
     }
-
 
 
     /** No pilots remain. :( */
     public void noPilotsDilemma() {
-        startDilemma(new Dilemma2("Nobody left to pilot the ship!", DONT_GIVE_UP, new CloseDilemmaListener(), GIVE_UP, new RestartListener()));
+        startDilemma("NO_PILOTS_REMAIN");
     }
 
     public void randomPositiveDilemma()
@@ -300,20 +303,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
         }
 
         startDilemma(dilemma);
-
-        /*
-        startDilemma(new Dilemma2("Captain, ensign Jovoc", "contracted a brainslug!", "[DUMP HIM OUT OF AIRLOCK]", new ButtonListener() {
-            @Override
-            public void run() {
-                stopDilemma();
-            }
-        }, "[DO NOTHING]", new ButtonListener() {
-            @Override
-            public void run() {
-                stopDilemma();
-            }
-        })); */
-
     }
 
     private Dilemma2 abandonedFuelPlant() {
@@ -602,14 +591,14 @@ public class DilemmaSystem extends EntityProcessingSystem {
         public void run() {
             super.run();
 
-            // run all actions.
+            // run all success.
             for (String action : actions) {
                 triggerAction(action);
             }
         }
     }
 
-    /** Trigger action indicated by string. */
+    /** Trigger hardcodede action indicated by string. If not exists, assume we are starting a dilemma. */
     private void triggerAction(String action) {
         switch ( action )
         {
@@ -618,6 +607,9 @@ public class DilemmaSystem extends EntityProcessingSystem {
                 break;
             case "RESTART":
                 restartGame();
+                break;
+            default:
+                startDilemma(action);
                 break;
         }
     }

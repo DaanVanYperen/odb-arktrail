@@ -10,7 +10,11 @@ public class Dilemma {
     public Choice[] choices;
 
     public static class Choice {
-        public String label;
-        public String[] actions;
+        public String[] label;
+        public String[] success;
+        public String[] failure;
+
+        /** Chance of success. If no failure set, always success! */
+        public int chance = 50;
     }
 }
