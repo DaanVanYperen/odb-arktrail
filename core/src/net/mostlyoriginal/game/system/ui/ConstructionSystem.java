@@ -207,7 +207,7 @@ public class ConstructionSystem extends EntityProcessingSystem {
         @Override
         public boolean enabled() {
             // we don't want to allow building while busy!.
-            return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive();
+            return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemma2Active();
         }
     }
 

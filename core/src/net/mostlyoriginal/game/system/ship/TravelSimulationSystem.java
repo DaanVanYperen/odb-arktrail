@@ -43,7 +43,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
 
         if ( inventorySystem.get(InventorySystem.Resource.FUEL) < 1 )
         {
-            dilemmaSystem.outOfGasDilemma();
+            dilemmaSystem.outOfFuelDilemma();
             return;
         }
 

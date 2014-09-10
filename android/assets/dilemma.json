@@ -1,0 +1,12 @@
+{
+    "dilemmas": [
+        {
+            "id": "OUT_OF_FUEL",
+            "text": [ "You have run out of gas."],
+            "choices": [
+                { "label": "Never give up! never surrender!" },
+                { "label": "Give up, Tow back to earth.", "actions" : [ "RESTART" ] }
+            ]
+        }
+    ]
+}
