@@ -349,14 +349,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
         return null;
     }
 
-    private Dilemma2 birthInElevator() {
-        CrewMember birther = crewSystem.randomWithAsCrew(CrewMember.Ability.GIVE_BIRTH);
-        if ( birther != null ) {
-            return createRewardDilemma("Stuck with " + birther.name + " in the turbolift,", "water starts dripping down their leg! so typical.", "[Deliver baby]", InventorySystem.Resource.CREWMEMBER);
-        }
-        return null;
-    }
-
     private Dilemma2 createRewardDilemma(String text1, String text2, String option1, InventorySystem.Resource ... resources ) {
         return new Dilemma2(text1,text2,option1, new PayoutListener(resources));
     }
@@ -374,10 +366,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
         while ( dilemma  == null ) {
 
             switch (MathUtils.random(0, 3)) {
-                case 0: {
-                    dilemma = plasmaAccident();
-                    break;
-                }
                 case 1: {
                     dilemma = brainslugOnPlanet();
                     break;

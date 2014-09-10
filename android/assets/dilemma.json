@@ -122,6 +122,19 @@
         },
 
         {
+            "text": [ "Stuck with {NAME} in the turbolift,", "water starts dripping down {HIS} leg! so typical."],
+            "groups": [ "positive" ],
+            "crew": "GIVE_BIRTH",
+            "choices": [
+                {
+                    "label": [ "Deliver baby" ],
+                    "crew": "BUILD",
+                    "success": [ "CREW" ]
+                }
+            ]
+        },
+
+        {
             "text": [ "{NAME} stuck {HIS} fingers","in an active plasma conduit."],
             "groups": [ "negative" ],
             "crew": "BUILD",
