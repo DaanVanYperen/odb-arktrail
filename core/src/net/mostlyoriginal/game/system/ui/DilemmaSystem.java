@@ -171,43 +171,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
     protected void process(Entity e) {
     }
 
-    public void afterTutorialDilemma() {
-        startDilemma(
-                new Dilemma2("The space dock rushes ark construction.","Complete further construction in transit!","[What, that thing is a deathtrap!]",
-                new ChainDilemma(new Dilemma2("Place a couple of planned upgrades now.", "Scoop up your crew and resources, and engage!",
-                        "[ Normal - Full crew, full resources. ]", new PayoutListener(
-                                    InventorySystem.Resource.FUEL,
-                                    InventorySystem.Resource.FUEL,
-                                    InventorySystem.Resource.FUEL,
-                                    InventorySystem.Resource.FOOD,
-                                    InventorySystem.Resource.FOOD,
-                                    InventorySystem.Resource.FOOD,
-                                    InventorySystem.Resource.CREWMEMBER,
-                                    InventorySystem.Resource.CREWMEMBER,
-                                    InventorySystem.Resource.CREWMEMBER) {
-            @Override
-            public void run() {
-                super.run();
-                efs.createEngageButton();
-                efs.createScanButton();
-            }
-        },
-                        "[ Hard - Small crew, less resources. ]", new PayoutListener(
-                                           InventorySystem.Resource.FUEL,
-                                           InventorySystem.Resource.FUEL,
-                                           InventorySystem.Resource.FOOD,
-                                           InventorySystem.Resource.CREWMEMBER,
-                                           InventorySystem.Resource.CREWMEMBER) {
-                   @Override
-                   public void run() {
-                       super.run();
-                       efs.createEngageButton();
-                       efs.createScanButton();
-                   }
-               }
-                ))));
-    }
-
     /** Spawn am even weighted random dilemma. */
     public void randomDilemma() {
             if ( MathUtils.random(0, 99) < 60 ) {
@@ -253,6 +216,11 @@ public class DilemmaSystem extends EntityProcessingSystem {
     /** No pilots remain. :( */
     public void noPilotsDilemma() {
         startDilemma("NO_PILOTS_REMAIN");
+    }
+
+    /** Pick difficulty. */
+    public void afterTutorialDilemma() {
+        startDilemma("AFTER_TUTORIAL");
     }
 
     public void randomPositiveDilemma()
@@ -597,6 +565,24 @@ public class DilemmaSystem extends EntityProcessingSystem {
                 break;
             case "NEXT_TUTORIAL_STEP":
                 tutorialSystem.activateNextStep();
+                break;
+            case "FUEL":
+                productionSimulationSystem.spawnCollectibleRandomlyOnShip(InventorySystem.Resource.FUEL);
+                break;
+            case "FOOD":
+                productionSimulationSystem.spawnCollectibleRandomlyOnShip(InventorySystem.Resource.FOOD);
+                break;
+            case "CREW":
+                productionSimulationSystem.spawnCollectibleRandomlyOnShip(InventorySystem.Resource.CREWMEMBER);
+                break;
+            case "BIOGEL":
+                productionSimulationSystem.spawnCollectibleRandomlyOnShip(InventorySystem.Resource.BIOGEL);
+                break;
+            case "ENABLE_ENGAGE":
+                efs.createEngageButton();
+                break;
+            case "ENABLE_SCAN":
+                efs.createScanButton();
                 break;
             default:
                 startDilemma(action);

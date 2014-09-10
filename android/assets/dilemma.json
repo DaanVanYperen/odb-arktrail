@@ -65,6 +65,30 @@
                     "success": [ "NEXT_TUTORIAL_STEP" ]
                 }
             ]
+        },
+        {
+            "id": "AFTER_TUTORIAL",
+            "text": [ "The space dock rushes ark construction.","Complete further construction in transit!" ],
+            "choices": [
+                {
+                    "label": [ "What, that thing is a deathtrap!" ],
+                    "success": [ "PICK_DIFFICULTY" ]
+                }
+            ]
+        },
+        {
+            "id": "PICK_DIFFICULTY",
+            "text": [ "Place a couple of planned upgrades now.", "Scoop up your crew and resources, and engage!" ],
+            "choices": [
+                {
+                    "label": [ "Normal - Full crew, full resources." ],
+                    "success": [ "ENABLE_ENGAGE", "ENABLE_SCAN", "FUEL", "FUEL", "FUEL", "FOOD","FOOD","FOOD","CREW","CREW","CREW" ]
+                },
+                {
+                    "label": [ "[ Hard - Small crew, less resources. ]" ],
+                    "success": [ "ENABLE_ENGAGE", "ENABLE_SCAN", "FUEL", "FUEL", "FOOD", "CREW","CREW" ]
+                }
+            ]
         }
 
     ]
