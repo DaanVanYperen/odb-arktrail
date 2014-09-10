@@ -41,10 +41,31 @@
             "text": [ "You have successfully reached your destination!", "This gate will bring wealth and prosperity to your world!" ],
             "choices": [
                 {
-                    "label": ["[YAY! Play again.]"],
+                    "label": ["YAY! Play again."],
                     "success": [ "RESTART" ]
                 }
             ]
+        },
+        {
+            "id": "START_TUTORIAL",
+            "text": [ "Preparing in space dock, ", "you are ready for your biggest adventure yet!" ],
+            "choices": [
+                {
+                    "label": [ "Embark my very own Ark!"],
+                    "success": [ "TUTORIAL_2" ]
+                }
+            ]
+        },
+        {
+            "id": "TUTORIAL_2",
+            "text": [ "you have been tasked with transporting a gate,", "and activating it at a resource heavy planet!" ],
+            "choices": [
+                {
+                    "label": [ "Stop talking and hand me the keys!" ],
+                    "success": [ "NEXT_TUTORIAL_STEP" ]
+                }
+            ]
         }
+
     ]
 }

@@ -102,8 +102,8 @@ public class DilemmaSystem extends EntityProcessingSystem {
     @Override
     protected void initialize() {
         super.initialize();
-        tutorialDilemma();
         loadDilemmas();
+        startDilemma("START_TUTORIAL");
     }
 
     private void loadDilemmas() {
@@ -132,7 +132,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
             for (Dilemma.Choice choice : dilemma.choices) {
 
                 // random chance of succes, if no failure options defined, always failure.
-                final String[] choices = choice.failure == null || (MathUtils.random(0,100) < choice.chance) ? choice.success : choice.failure;
+                final String[] choices = (choice.failure == null) || (MathUtils.random(0,100) < choice.chance) ? choice.success : choice.failure;
 
                 createOption(10, 10 + ROW_HEIGHT * row, "[" + choice.label[MathUtils.random(0,choice.label.length-1)] + "]", new DilemmaListener(choices));
                 row--;
@@ -169,19 +169,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     @Override
     protected void process(Entity e) {
-    }
-
-    public void tutorialDilemma() {
-
-        startDilemma(new Dilemma2("Preparing in space dock, ", "you are ready for your biggest adventure yet!", "[Embark my very own Ark!]",
-                new ChainDilemma(new Dilemma2("you have been tasked with transporting a gate,", "and activating it at a resource heavy planet!", "[Stop talking and hand me the keys!]",
-                new CloseDilemmaListener() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        tutorialSystem.activateNextStep();
-                    }
-                }))));
     }
 
     public void afterTutorialDilemma() {
@@ -600,13 +587,16 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     /** Trigger hardcodede action indicated by string. If not exists, assume we are starting a dilemma. */
     private void triggerAction(String action) {
+        stopDilemma();
         switch ( action )
         {
             case "CLOSE" :
-                stopDilemma();
                 break;
             case "RESTART":
                 restartGame();
+                break;
+            case "NEXT_TUTORIAL_STEP":
+                tutorialSystem.activateNextStep();
                 break;
             default:
                 startDilemma(action);
