@@ -189,7 +189,6 @@
         },
 
         {
-            "id": "TEST",
             "text": [ "During a spacewalk, {NAME}'s", "spacesuit was breached." ],
             "groups": [ "negative", "positive" ],
             "crew": "INFECTABLE",

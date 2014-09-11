@@ -137,7 +137,7 @@ public class ConstructionSystem extends EntityProcessingSystem {
         return type != null;
     }
 
-    private void stopConstructionmode() {
+    public void stopConstructionmode() {
         selected=null;
     }
 

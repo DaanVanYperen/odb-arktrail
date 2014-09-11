@@ -36,6 +36,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     private DilemmaLibrary dilemmaLibrary;
 
+    /** Repository for all dilemma. */
     public static class DilemmaLibrary {
         public Dilemma[] dilemmas;
         private DilemmaLibrary() {
@@ -90,6 +91,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
     private GroupManager groupManager;
     private InventorySystem inventorySystem;
     private ProductionSimulationSystem productionSimulationSystem;
+    private ConstructionSystem constructionSystem;
 
     protected ShipComponentSystem shipComponentSystem;
 
@@ -155,6 +157,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
     private Dilemma startDilemma(Dilemma dilemma) {
         if (!dilemmaActive)
         {
+            constructionSystem.stopConstructionmode();
 
             int row = Math.max(4,dilemma.choices.length + dilemma.text.length);
 
