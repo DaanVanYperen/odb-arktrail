@@ -85,7 +85,8 @@ public class DilemmaSystem extends EntityProcessingSystem {
     public static final Color COLOR_DILEMMA = Color.valueOf("6AD7ED");
     public static final String COLOR_RAW_BRIGHT = "E7E045";
     public static final String COLOR_RAW_DIMMED = "FDF1AA";
-    private boolean dilemma2Active;
+    private boolean dilemmaActive;
+
     private GroupManager groupManager;
     private InventorySystem inventorySystem;
     private ProductionSimulationSystem productionSimulationSystem;
@@ -124,8 +125,8 @@ public class DilemmaSystem extends EntityProcessingSystem {
                 .group(DILEMMA_GROUP).build();
     }
 
-    public boolean isDilemma2Active() {
-        return dilemma2Active;
+    public boolean isDilemmaActive() {
+        return dilemmaActive;
     }
 
     @Override
@@ -152,7 +153,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
     }
 
     private Dilemma startDilemma(Dilemma dilemma) {
-        if (!dilemma2Active)
+        if (!dilemmaActive)
         {
 
             int row = Math.max(4,dilemma.choices.length + dilemma.text.length);
@@ -163,7 +164,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
             if ( dilemma.crew != null && globalCrewMember == null )
                 return null;
 
-            dilemma2Active = true;
+            dilemmaActive = true;
             for (String text : dilemma.text) {
                 createLabel(10, 10 + ROW_HEIGHT * row, COLOR_DILEMMA, replaceKeywords(text, globalCrewMember));
                 row--;
@@ -207,8 +208,8 @@ public class DilemmaSystem extends EntityProcessingSystem {
 
     private void startDilemma(Dilemma2 dilemma) {
         if ( dilemma == null ) return;
-        if ( !dilemma2Active) {
-            dilemma2Active = true;
+        if ( !dilemmaActive) {
+            dilemmaActive = true;
             if (dilemma.getText1() != null) {
                 createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, dilemma.getText1());
             }
@@ -227,7 +228,7 @@ public class DilemmaSystem extends EntityProcessingSystem {
     /** Remove active dilemma from screen. */
     private void stopDilemma() {
         EntityUtil.safeDeleteAll(groupManager.getEntities(DILEMMA_GROUP));
-        dilemma2Active = false;
+        dilemmaActive = false;
     }
 
 
@@ -235,22 +236,22 @@ public class DilemmaSystem extends EntityProcessingSystem {
     protected void process(Entity e) {
     }
 
-    /** Spawn am even weighted random dilemma. */
+    /** Spawn a dilemma, with a bias towards positive dilemmas. */
     public void randomDilemma() {
-            if ( MathUtils.random(0, 99) < 60 ) {
-                randomPositiveDilemma();
-            } else {
-                randomNegativeDilemma();
-            }
+        randomDilemma(60);
+    }
+
+    private void randomDilemma(int positiveChance) {
+        if ( MathUtils.random(0, 99) < positiveChance) {
+            startRandomDilemmaFromGroup("positive");
+        } else {
+            startRandomDilemmaFromGroup("negative");
+        }
     }
 
     /** player is look for a fight, the odds are against him! */
     public void scanDilemma() {
-            if ( MathUtils.random(0, 99) < 40 ) {
-                randomPositiveDilemma();
-            } else {
-                randomNegativeDilemma();
-            }
+        randomDilemma(40);
     }
 
     private void displayScore() {
@@ -287,38 +288,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
         startDilemma("AFTER_TUTORIAL");
     }
 
-    public void randomPositiveDilemma()
-    {
-        /*
-
-            switch (MathUtils.random(0, 4)) {
-                case 0: {
-                    dilemma = birthInElevator();
-                    break;
-                }
-                case 1: {
-                    dilemma = brainslugOnPlanet();
-                    break;
-                }
-                case 3: {
-                    dilemma = gasGiant();
-                    break;
-                }
-                case 4: {
-                    dilemma = foodPlanet();
-                    break;
-                }
-                default:
-                    // nothing happens.
-                    dilemma = new Dilemma2("Another year, another mile.", null, "[I wish something exploded]", new CloseDilemmaListener());
-                    break;
-            }
-
-        }*/
-
-        startRandomDilemmaFromGroup("positive");
-    }
-
     private void startRandomDilemmaFromGroup(String group) {
         List<Dilemma> dilemmas = dilemmaLibrary.getGroup(group);
 
@@ -333,6 +302,14 @@ public class DilemmaSystem extends EntityProcessingSystem {
         }
     }
 
+    private Dilemma2 createRewardDilemma(String text1, String text2, String option1, InventorySystem.Resource ... resources ) {
+        return new Dilemma2(text1,text2,option1, new PayoutListener(resources));
+    }
+
+    private Dilemma2 createPenaltyDilemma(String text1, String text2, String option1, InventorySystem.Resource ... resources ) {
+        return new Dilemma2(text1,text2,option1, new PenaltyListener(resources));
+    }
+
     private Dilemma2 gasGiant() {
         CrewMember worker = crewSystem.randomWithAsCrew(CrewMember.Ability.BUILD);
         if ( worker != null ) {
@@ -345,57 +322,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
         CrewMember worker = crewSystem.randomWithAsCrew(CrewMember.Ability.BUILD);
         if ( worker != null ) {
             return createRewardDilemma("A probe has discovered a planet lush with coconuts.", "Sentient coconuts...", "[Gather]", InventorySystem.Resource.FOOD, InventorySystem.Resource.FOOD, InventorySystem.Resource.FOOD);
-        }
-        return null;
-    }
-
-    private Dilemma2 createRewardDilemma(String text1, String text2, String option1, InventorySystem.Resource ... resources ) {
-        return new Dilemma2(text1,text2,option1, new PayoutListener(resources));
-    }
-
-    private Dilemma2 createPenaltyDilemma(String text1, String text2, String option1, InventorySystem.Resource ... resources ) {
-        return new Dilemma2(text1,text2,option1, new PenaltyListener(resources));
-    }
-
-    /** Trigger a mostly negative dilemma. */
-    public void randomNegativeDilemma()
-    {
-        startRandomDilemmaFromGroup("negative");
-        /*
-        Dilemma2 dilemma = null;
-        while ( dilemma  == null ) {
-
-            switch (MathUtils.random(0, 3)) {
-                case 1: {
-                    dilemma = brainslugOnPlanet();
-                    break;
-                }
-                case 2: {
-                    dilemma = foodSpoilage();
-                    break;
-                }
-                default:
-                    // nothing happens.
-                    dilemma = new Dilemma2("Another year, another mile.", null, "[I wish something exploded]", new CloseDilemmaListener());
-                    break;
-            }
-
-        }
-
-        startDilemma(dilemma);*/
-    }
-
-    private Dilemma2 foodSpoilage() {
-        return createPenaltyDilemma("The away team brought back a pest,", "infested the food stores.", "[My spaceburgers!]", InventorySystem.Resource.FOOD, InventorySystem.Resource.FOOD);
-    }
-
-    private Dilemma2 plasmaAccident() {
-        final Entity e = crewSystem.randomWith(CrewMember.Ability.BUILD);
-        if ( e != null ) {
-            final CrewMember member = mCrewMember.get(e);
-            if ( member != null ) {
-                return new Dilemma2(member.name + " stuck his fingers", "in an active plasma conduit.", "[Scrape him off the walls]", new KillCrewmemberDilemma(e));
-            }
         }
         return null;
     }
@@ -418,13 +344,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
         @Override
         public void run() {
             stopDilemma();
-        }
-    }
-
-    private static class RestartListener extends ButtonListener {
-        @Override
-        public void run() {
-            restartGame();
         }
     }
 
@@ -632,6 +551,22 @@ public class DilemmaSystem extends EntityProcessingSystem {
             case "BIOGEL":
                 // spawn biogel
                 productionSimulationSystem.spawnCollectibleRandomlyOnShip(InventorySystem.Resource.BIOGEL);
+                break;
+            case "-FUEL":
+                // subtract fuel
+                inventorySystem.alter(InventorySystem.Resource.FUEL,-1);
+                break;
+            case "-FOOD":
+                // subtract food
+                inventorySystem.alter(InventorySystem.Resource.FOOD,-1);
+                break;
+            case "-CREW":
+                // subtract crew
+                inventorySystem.alter(InventorySystem.Resource.CREWMEMBER,-1);
+                break;
+            case "-BIOGEL":
+                // subtract biogel
+                inventorySystem.alter(InventorySystem.Resource.BIOGEL,-1);
                 break;
             case "ENABLE_ENGAGE":
                 efs.createEngageButton();

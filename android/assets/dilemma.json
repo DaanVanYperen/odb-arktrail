@@ -92,6 +92,22 @@
         },
 
         {
+            "id": "TEST",
+            "text": [ "You discover a rogue gas giant.", "The gas can be converted to fuel."],
+            "groups": [ "positive" ],
+            "choices": [
+                {
+                    "label": [ "Scoop it up!" ],
+                    "crew": "BUILD",
+                    "success": [ "FUEL","FUEL","FUEL" ]
+                },
+                {
+                    "label": [ "Pass it by, can't spare the crew!" ]
+                }
+            ]
+        },
+
+        {
             "text": [ "You come across an abandoned refueling station.", "Your scanners indicate some fuel remains."],
             "groups": [ "positive" ],
             "choices": [
@@ -142,6 +158,18 @@
                 {
                     "label": [ "Scrape {HIM} off the walls" ],
                     "success": [ "KILL" ]
+                }
+            ]
+        },
+
+        {
+            "id": "TEST",
+            "text": [ "The away team brought back a pest,", "infested the food stores." ],
+            "groups": [ "negative" ],
+            "choices": [
+                {
+                    "label": [ "My spaceburgers!" ],
+                    "success": [ "-FOOD", "-FOOD" ]
                 }
             ]
         },

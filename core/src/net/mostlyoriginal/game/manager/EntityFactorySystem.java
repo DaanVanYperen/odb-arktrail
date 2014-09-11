@@ -80,7 +80,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
             @Override
             public boolean enabled() {
                 // we don't want to allow engaging while busy!.
-                return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemma2Active() && crewSystem.countOf(CrewMember.Ability.BUILD) > 0;
+                return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive() && crewSystem.countOf(CrewMember.Ability.BUILD) > 0;
             }
         }, "Stick around and look for trouble!");
     }
@@ -96,7 +96,7 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
             @Override
             public boolean enabled() {
                 // we don't want to allow engaging while busy!.
-                return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemma2Active();
+                return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive();
             }
         }, "Warp to next landmark. Plan ahead and build!");
     }
