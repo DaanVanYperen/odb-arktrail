@@ -67,7 +67,7 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         super.initialize();
 
 
-        labelEntity = new EntityBuilder(world).with(new Label(""),new Renderable(),  new Pos(4, G.SCREEN_HEIGHT - 42)).build();
+        labelEntity = new EntityBuilder(world).with(new Label(""), new Renderable(), new Pos(4, G.SCREEN_HEIGHT - 42)).build();
     }
 
     @Override
@@ -101,26 +101,25 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
     @Override
     protected void end() {
         super.end();
-        if ( hullBuilt )
-        {
+        if (hullBuilt) {
             // make sure the hull updates the sprites.
             hullSystem.dirty();
         }
     }
 
-    /** Finish the whole ship at once. */
-    public void finishAllConstruction()
-    {
+    /**
+     * Finish the whole ship at once.
+     */
+    public void finishAllConstruction() {
         for (Entity e : getActives()) {
-            if ( e != null ) {
+            if (e != null) {
                 ShipComponent shipComponent = mShipComponent.get(e);
-                if ( shipComponent != null && shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION ) {
+                if (shipComponent != null && shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION) {
                     constructionSystem.complete(e);
                 }
             }
         }
-
-
+        hullSystem.dirty();
     }
 
     @Override
@@ -128,8 +127,9 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
         ShipComponent shipComponent = mShipComponent.get(e);
 
         if (shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION) {
-            if (buildSpeed > 0) {
-                if (shipComponent.type != ShipComponent.Type.HULL) {
+
+            if (shipComponent.type != ShipComponent.Type.HULL) {
+                if (buildSpeed > 0) {
 
                     // attempt to assign as many builders as we have.
                     float cost = MathUtils.clamp(shipComponent.constructionManyearsRemaining, 0, buildSpeed);
@@ -138,11 +138,11 @@ public class ProductionSimulationSystem extends EntityProcessingSystem {
                     if (shipComponent.constructionManyearsRemaining <= 0) {
                         constructionSystem.complete(e);
                     }
-                } else {
-                    // hull autobuilds.
-                    constructionSystem.complete(e);
-                    hullBuilt = true;
                 }
+            } else {
+                // hull autobuilds.
+                constructionSystem.complete(e);
+                hullBuilt = true;
             }
         } else
             switch (shipComponent.type) {
