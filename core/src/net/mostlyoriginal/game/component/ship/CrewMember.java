@@ -27,26 +27,28 @@ public class CrewMember extends Component {
     }
 
     public static enum Ability {
-        EAT, PILOT, GIVE_BIRTH, BUILD, INFECTABLE, AGE, INFECT, BIOGELLABLE
+        EAT, PILOT, GIVE_BIRTH, BUILD, INFECTABLE, AGE, INFECT,
+        /** Offsets infected crewmembers. */
+        COUNTER_INFECTED, BIOGELLABLE
     }
 
 
     public static enum Effect {
 
         /** Nothing wrong. */
-        HEALTHY("Healthy", null, GdxUtil.asColor("2C4142"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE),
+        HEALTHY("Healthy", null, GdxUtil.asColor("2C4142"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE, Ability.COUNTER_INFECTED),
 
         /** Nothing wrong. */
-        HUNGRY("Hungry",  null,GdxUtil.asColor("46140B"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE),
+        HUNGRY("Hungry",  null,GdxUtil.asColor("46140B"), Ability.PILOT, Ability.EAT, Ability.BUILD, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE, Ability.COUNTER_INFECTED),
 
         /** Nothing wrong. */
-        STARVING("Starving", null, GdxUtil.asColor("A9301B"), Ability.PILOT, Ability.EAT, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE),
+        STARVING("Starving", null, GdxUtil.asColor("A9301B"), Ability.PILOT, Ability.EAT, Ability.GIVE_BIRTH, Ability.INFECTABLE, Ability.AGE, Ability.COUNTER_INFECTED),
 
         /** Nothing wrong. */
         BRAINSLUG("Brainslug", "state-slug", GdxUtil.asColor("42FA29"), Ability.PILOT, Ability.BUILD, Ability.INFECT, Ability.BIOGELLABLE),
 
         /** Elderly */
-        ELDERLY("Elderly", null, GdxUtil.asColor("2C4142"), Ability.INFECTABLE, Ability.BIOGELLABLE),
+        ELDERLY("Elderly", null, GdxUtil.asColor("2C4142"), Ability.INFECTABLE, Ability.BIOGELLABLE, Ability.COUNTER_INFECTED),
 
         /** NOOOOOOOOO TIMMYYYYYYYYY (crewmember dead) */
         DEAD("Dead", "state-dead", GdxUtil.asColor("4C3448"));
