@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.game.component.environment.RouteNode;
 import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.Travels;
+import net.mostlyoriginal.game.system.ui.ConstructionSystem;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 import net.mostlyoriginal.game.system.ui.RouteSystem;
 
@@ -30,6 +31,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     private CrewSystem crewSystem;
     private LifesupportSimulationSystem lifesupportSimulationSystem;
     private ProductionSimulationSystem productionSimulationSystem;
+    private ConstructionSystem constructionSystem;
 
     public TravelSimulationSystem() {
         super(Aspect.getAspectForAll(Travels.class));
@@ -93,6 +95,8 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
 
         if (handleNoPilotsLeft()) return;
 
+
+        constructionSystem.stopConstructionmode();
         Entity shipMetadata = getShipMetadata();
         if ( shipMetadata != null )
         {
