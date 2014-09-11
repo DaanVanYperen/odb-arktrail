@@ -205,26 +205,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
         return crewSystem.randomWith(CrewMember.Ability.valueOf(ability));
     }
 
-
-    private void startDilemma(Dilemma2 dilemma) {
-        if ( dilemma == null ) return;
-        if ( !dilemmaActive) {
-            dilemmaActive = true;
-            if (dilemma.getText1() != null) {
-                createLabel(10, 10 + ROW_HEIGHT * 4, COLOR_DILEMMA, dilemma.getText1());
-            }
-            if (dilemma.getText2() != null) {
-                createLabel(10, 10 + ROW_HEIGHT * 3, COLOR_DILEMMA, dilemma.getText2());
-            }
-            if (dilemma.getOption1() != null) {
-                createOption(10, 10 + ROW_HEIGHT * 2, dilemma.getOption1(), dilemma.getListener1());
-            }
-            if (dilemma.getOption2() != null) {
-                createOption(10, 10 + ROW_HEIGHT, dilemma.getOption2(), dilemma.getListener2());
-            }
-        }
-    }
-
     /** Remove active dilemma from screen. */
     private void stopDilemma() {
         EntityUtil.safeDeleteAll(groupManager.getEntities(DILEMMA_GROUP));
@@ -302,186 +282,11 @@ public class DilemmaSystem extends EntityProcessingSystem {
         }
     }
 
-    private Dilemma2 createRewardDilemma(String text1, String text2, String option1, InventorySystem.Resource ... resources ) {
-        return new Dilemma2(text1,text2,option1, new PayoutListener(resources));
-    }
-
-    private Dilemma2 createPenaltyDilemma(String text1, String text2, String option1, InventorySystem.Resource ... resources ) {
-        return new Dilemma2(text1,text2,option1, new PenaltyListener(resources));
-    }
-
-    private Dilemma2 foodPlanet() {
-        CrewMember worker = crewSystem.randomWithAsCrew(CrewMember.Ability.BUILD);
-        if ( worker != null ) {
-            return createRewardDilemma("A probe has discovered a planet lush with coconuts.", "Sentient coconuts...", "[Gather]", InventorySystem.Resource.FOOD, InventorySystem.Resource.FOOD, InventorySystem.Resource.FOOD);
-        }
-        return null;
-    }
-
-    private Dilemma2 brainslugOnPlanet() {
-        final Entity e = crewSystem.randomWith(CrewMember.Ability.INFECTABLE);
-        if ( e != null ) {
-            final CrewMember member = mCrewMember.get(e);
-            if ( member != null ) {
-                return new Dilemma2("During a spacewalk, " + member.name,  "suit was breached.",
-                        "[I wonder if that slug on his head is dangerous!]", new InfectCrewmemberDilemma(e),
-                        "[Throw him out the airlock]", new KillCrewmemberDilemma(e));
-            }
-        }
-        return null;
-    }
-
     /** Just closes dilemma, no action */
     private class CloseDilemmaListener extends ButtonListener {
         @Override
         public void run() {
             stopDilemma();
-        }
-    }
-
-    private static class Dilemma2 {
-        private String text1;
-        private String text2;
-        private final String option1;
-        private final ButtonListener listener1;
-        private String option2;
-        private ButtonListener listener2;
-
-        public Dilemma2(String text1, String text2, String option1, ButtonListener listener1, String option2, ButtonListener listener2) {
-            this.text1 = text1;
-            this.text2 = text2;
-            this.option1 = option1;
-            this.listener1 = listener1;
-            this.option2 = option2;
-            this.listener2 = listener2;
-        }
-
-        public Dilemma2(String text2, String option1, ButtonListener listener1) {
-            this.text2 = text2;
-            this.option1 = option1;
-            this.listener1 = listener1;
-        }
-
-        public Dilemma2(String text2, String option1, ButtonListener listener1, String option2, ButtonListener listener2) {
-            this.text2 = text2;
-            this.option1 = option1;
-            this.listener1 = listener1;
-            this.option2 = option2;
-            this.listener2 = listener2;
-        }
-
-        public Dilemma2(String text1, String text2, String option1, ButtonListener listener1) {
-            this.text1 = text1;
-            this.text2 = text2;
-            this.option1 = option1;
-            this.listener1 = listener1;
-        }
-
-        public String getText1() {
-            return text1;
-        }
-
-        public String getText2() {
-            return text2;
-        }
-
-        public String getOption1() {
-            return option1;
-        }
-
-        public ButtonListener getListener1() {
-            return listener1;
-        }
-
-        public String getOption2() {
-            return option2;
-        }
-
-        public ButtonListener getListener2() {
-            return listener2;
-        }
-    }
-
-    /** Spawn specified resources at mouse cursor when picking this option. */
-    private class PayoutListener extends CloseDilemmaListener {
-        private final InventorySystem.Resource[] resources;
-
-        public PayoutListener(InventorySystem.Resource ... resources )
-        {
-            this.resources = resources;
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            for (InventorySystem.Resource resource : resources) {
-                productionSimulationSystem.spawnCollectibleRandomlyOnShip(resource);
-            }
-        }
-    }
-
-    /** Spawn specified resources at mouse cursor when picking this option. */
-    private class PenaltyListener extends CloseDilemmaListener {
-        private final InventorySystem.Resource[] resources;
-
-        public PenaltyListener(InventorySystem.Resource ... resources )
-        {
-            this.resources = resources;
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            for (InventorySystem.Resource resource : resources) {
-                inventorySystem.alter(resource,-1);
-            }
-        }
-    }
-
-    private class KillCrewmemberDilemma extends CloseDilemmaListener {
-
-        private final Entity e;
-
-        private KillCrewmemberDilemma( Entity e ) {
-            this.e = e;
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            lifesupportSimulationSystem.changeState(e, CrewMember.Effect.DEAD);
-        }
-    }
-
-    private class InfectCrewmemberDilemma extends CloseDilemmaListener {
-
-        private final Entity e;
-
-        private InfectCrewmemberDilemma( Entity e ) {
-            this.e = e;
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            lifesupportSimulationSystem.changeState(e, CrewMember.Effect.BRAINSLUG);
-        }
-    }
-
-    /** Run another dilemma after this one. */
-    private class ChainDilemma extends ButtonListener {
-        private final Dilemma2 dilemma;
-
-        public ChainDilemma(Dilemma2 dilemma) {
-            super();
-            this.dilemma = dilemma;
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            stopDilemma();
-            startDilemma(dilemma);
         }
     }
 
@@ -524,6 +329,9 @@ public class DilemmaSystem extends EntityProcessingSystem {
                     startDilemma("TEST");
                 } else
                     tutorialSystem.activateNextStep();
+                break;
+            case "INFECT":
+                lifesupportSimulationSystem.changeState(crewMember, CrewMember.Effect.BRAINSLUG);
                 break;
             case "KILL":
                 lifesupportSimulationSystem.changeState(crewMember, CrewMember.Effect.DEAD);

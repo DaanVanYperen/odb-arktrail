@@ -46,6 +46,7 @@
                 }
             ]
         },
+
         {
             "id": "START_TUTORIAL",
             "text": [ "Preparing in space dock, ", "you are ready for your biggest adventure yet!" ],
@@ -107,7 +108,6 @@
         },
 
         {
-            "id": "TEST",
             "text": [ "A probe has discovered a planet", "lush with coconuts. Sentient coconuts..." ],
             "groups": [ "positive" ],
             "choices": [
@@ -178,13 +178,29 @@
         },
 
         {
-            "id": "TEST",
             "text": [ "The away team brought back a pest,", "infested the food stores." ],
             "groups": [ "negative" ],
             "choices": [
                 {
                     "label": [ "My spaceburgers!" ],
                     "success": [ "-FOOD", "-FOOD" ]
+                }
+            ]
+        },
+
+        {
+            "id": "TEST",
+            "text": [ "During a spacewalk, {NAME}'s", "spacesuit was breached." ],
+            "groups": [ "negative", "positive" ],
+            "crew": "INFECTABLE",
+            "choices": [
+                {
+                    "label": [ "I wonder if that slug on {HIS} head is dangerous!" ],
+                    "success": [ "INFECT" ]
+                },
+                {
+                    "label": [ "Throw {HIM} out the airlock" ],
+                    "success": [ "KILL" ]
                 }
             ]
         },
