@@ -92,7 +92,6 @@
         },
 
         {
-            "id": "TEST",
             "text": [ "You discover a rogue gas giant.", "The gas can be converted to fuel."],
             "groups": [ "positive" ],
             "choices": [
@@ -100,6 +99,22 @@
                     "label": [ "Scoop it up!" ],
                     "crew": "BUILD",
                     "success": [ "FUEL","FUEL","FUEL" ]
+                },
+                {
+                    "label": [ "Pass it by, can't spare the crew!" ]
+                }
+            ]
+        },
+
+        {
+            "id": "TEST",
+            "text": [ "A probe has discovered a planet", "lush with coconuts. Sentient coconuts..." ],
+            "groups": [ "positive" ],
+            "choices": [
+                {
+                    "label": [ "Gather!" ],
+                    "crew": "BUILD",
+                    "success": [ "FOOD","FOOD","FOOD" ]
                 },
                 {
                     "label": [ "Pass it by, can't spare the crew!" ]

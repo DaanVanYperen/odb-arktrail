@@ -310,14 +310,6 @@ public class DilemmaSystem extends EntityProcessingSystem {
         return new Dilemma2(text1,text2,option1, new PenaltyListener(resources));
     }
 
-    private Dilemma2 gasGiant() {
-        CrewMember worker = crewSystem.randomWithAsCrew(CrewMember.Ability.BUILD);
-        if ( worker != null ) {
-            return createRewardDilemma("You discover a rogue gas giant.", "The gas can be converted to fuel.", "[Scoop it up!]", InventorySystem.Resource.FUEL, InventorySystem.Resource.FUEL, InventorySystem.Resource.FUEL);
-        }
-        return null;
-    }
-
     private Dilemma2 foodPlanet() {
         CrewMember worker = crewSystem.randomWithAsCrew(CrewMember.Ability.BUILD);
         if ( worker != null ) {
