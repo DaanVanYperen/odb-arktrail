@@ -127,8 +127,8 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
 
         add("hull-0-building",128, 88, 8, 8, 1); // top left
         add("hull-1-building",136, 88, 8, 8, 1); // top
-        add("hull-1-solar-building",136, 88, 8, 8, 1); // yop
-        add("hull-1-wing-building",136, 88, 8,8, 1); // yop
+        add("hull-1-solar-building",152, 88, 8, 8, 1); // yop
+        add("hull-1-wing-building",144, 80, 8, 16, 1); // yop
         add("hull-2-building",160,88, 8, 8, 1); // top right
         add("hull-3-building",128, 96, 8, 8, 1); // left
         add("hull-4-building",160, 96, 8, 8, 1); // right
