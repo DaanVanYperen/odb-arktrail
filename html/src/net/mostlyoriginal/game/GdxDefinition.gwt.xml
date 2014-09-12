@@ -18,5 +18,10 @@
     <!-- Any classes that require reflection on the libgdx side should use this -->
     <extend-configuration-property name="gdx.reflect.include" value="net.mostlyoriginal.api.step" />
 
+    <!-- Json Support -->
+    <extend-configuration-property name="gdx.reflect.include" value="net.mostlyoriginal.game.system.ui.DilemmaLibrary" />
+    <extend-configuration-property name="gdx.reflect.include" value="net.mostlyoriginal.game.system.ui.Dilemma" />
+    <extend-configuration-property name="gdx.reflect.include" value="net.mostlyoriginal.game.system.ui.DilemmaChoice" />
+
 	<set-configuration-property name="gdx.assetpath" value="../android/assets" />
 </module>

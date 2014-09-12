@@ -13,10 +13,16 @@ public class Dilemma {
     /** crew required for all choices. */
     public String crew;
 
-    public static class Choice {
+	public Dilemma() {
+	}
+
+	public static class Choice {
         public String[] label;
         public String[] success;
         public String[] failure;
+
+		public Choice() {
+		}
 
         /** crew required to make choice available. */
         public String crew;
