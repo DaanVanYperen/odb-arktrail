@@ -19,7 +19,7 @@ import net.mostlyoriginal.api.component.physics.Clamped;
 import net.mostlyoriginal.api.component.physics.Homing;
 import net.mostlyoriginal.api.component.physics.Physics;
 import net.mostlyoriginal.api.utils.GdxUtil;
-import net.mostlyoriginal.api.utils.SafeEntityReference;
+import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.ShipComponent;

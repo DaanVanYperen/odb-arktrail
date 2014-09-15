@@ -20,7 +20,7 @@ import net.mostlyoriginal.api.component.physics.Homing;
 import net.mostlyoriginal.api.component.physics.Physics;
 import net.mostlyoriginal.api.manager.AbstractAssetSystem;
 import net.mostlyoriginal.api.manager.AbstractEntityFactorySystem;
-import net.mostlyoriginal.api.utils.SafeEntityReference;
+import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.MainScreen;
 import net.mostlyoriginal.game.component.agent.PlayerControlled;

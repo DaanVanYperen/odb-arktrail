@@ -12,7 +12,8 @@ import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
-import net.mostlyoriginal.api.utils.SafeEntityReference;
+import net.mostlyoriginal.api.event.common.EventManager;
+import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.Button;
@@ -20,6 +21,8 @@ import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.manager.AssetSystem;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
+import net.mostlyoriginal.game.system.event.SelectConstructionEvent;
+import net.mostlyoriginal.game.system.event.StartConstructionEvent;
 import net.mostlyoriginal.game.system.ship.HullSystem;
 import net.mostlyoriginal.game.system.ship.InventorySystem;
 import net.mostlyoriginal.game.system.ship.ShipComponentSystem;
@@ -50,8 +53,9 @@ public class ConstructionSystem extends EntityProcessingSystem {
     private AssetSystem assetSystem;
     private TutorialSystem tutorialSystem;
     public final HashMap<ShipComponent.Type, Entity> constructionButton = new HashMap<>();
+	private EventManager em;
 
-    public ConstructionSystem() {
+	public ConstructionSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class, Clickable.class, Anim.class));
     }
 
@@ -156,8 +160,8 @@ public class ConstructionSystem extends EntityProcessingSystem {
 
             hullSystem.dirty();
 
-            if ( selected == ShipComponent.Type.ENGINE ) tutorialSystem.complete(TutorialSystem.Step.PLACE_ENGINE);
-            if ( selected == ShipComponent.Type.STORAGEPOD ) tutorialSystem.complete(TutorialSystem.Step.PLACE_STORAGEPOD);
+	        // inform other systems (like tutorial).
+	        em.dispatch(new StartConstructionEvent(selected));
         }
     }
 
@@ -187,8 +191,8 @@ public class ConstructionSystem extends EntityProcessingSystem {
     private void startPlacing(ShipComponent.Type selected) {
         this.selected = selected;
 
-        if ( selected == ShipComponent.Type.ENGINE ) tutorialSystem.complete(TutorialSystem.Step.SELECT_ENGINE);
-        if ( selected == ShipComponent.Type.STORAGEPOD ) tutorialSystem.complete(TutorialSystem.Step.SELECT_STORAGEPOD);
+	    // inform other systems (like tutorial).
+	    em.dispatch(new SelectConstructionEvent(selected));
     }
 
     private class ToolSelectButton extends ButtonListener {

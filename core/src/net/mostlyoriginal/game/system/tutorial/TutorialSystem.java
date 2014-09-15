@@ -9,9 +9,12 @@ import com.artemis.utils.EntityBuilder;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
+import net.mostlyoriginal.api.event.common.Subscribe;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.tutorial.TutorialStep;
 import net.mostlyoriginal.game.component.ui.Button;
+import net.mostlyoriginal.game.system.event.SelectConstructionEvent;
+import net.mostlyoriginal.game.system.event.StartConstructionEvent;
 import net.mostlyoriginal.game.system.ship.ProductionSimulationSystem;
 import net.mostlyoriginal.game.system.ui.ButtonSystem;
 import net.mostlyoriginal.game.system.ui.ConstructionSystem;
@@ -209,7 +212,28 @@ public class TutorialSystem extends EntityProcessingSystem {
     protected void process(Entity e) {
     }
 
-    public static enum Step {
+
+	/** Construction started on parts. */
+	@Subscribe
+	public void handleConstruction( StartConstructionEvent event )
+	{
+		switch ( event.type ) {
+			case ENGINE : complete(TutorialSystem.Step.PLACE_ENGINE);
+			case STORAGEPOD : complete(TutorialSystem.Step.PLACE_STORAGEPOD);
+		}
+	}
+
+	/** Constructable selected in UI. */
+	@Subscribe
+	public void handleConstructableSelection ( SelectConstructionEvent event )
+	{
+		switch ( event.type ) {
+			case ENGINE : complete(TutorialSystem.Step.SELECT_ENGINE);
+			case STORAGEPOD : complete(TutorialSystem.Step.SELECT_STORAGEPOD);
+		}
+	}
+
+	public static enum Step {
         SELECT_ENGINE,
         PLACE_ENGINE,
         SELECT_STORAGEPOD,

@@ -2,7 +2,7 @@ package net.mostlyoriginal.game.component.ship;
 
 import com.artemis.Component;
 import net.mostlyoriginal.api.component.graphics.Color;
-import net.mostlyoriginal.api.utils.EntityReference;
+import net.mostlyoriginal.api.utils.reference.EntityReference;
 import net.mostlyoriginal.api.utils.GdxUtil;
 
 /**

@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.MathUtils;
+import net.mostlyoriginal.api.event.common.EventManager;
 import net.mostlyoriginal.api.system.camera.CameraShakeSystem;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.camera.EntityCameraSystem;
@@ -45,6 +46,8 @@ public class MainScreen implements Screen {
         world.setManager(new TagManager());
         world.setManager(new UuidEntityManager());
         world.setManager(new FontManager());
+
+	    world.setManager(new EventManager());
 
         /** UTILITY - PASSIVE */
 

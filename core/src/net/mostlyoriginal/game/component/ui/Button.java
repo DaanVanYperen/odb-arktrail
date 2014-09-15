@@ -2,7 +2,7 @@ package net.mostlyoriginal.game.component.ui;
 
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.Color;
-import net.mostlyoriginal.api.utils.EntityReference;
+import net.mostlyoriginal.api.utils.reference.EntityReference;
 
 /**
  * @author Daan van Yperen

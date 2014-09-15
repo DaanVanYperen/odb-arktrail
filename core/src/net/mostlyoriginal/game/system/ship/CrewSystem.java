@@ -18,7 +18,7 @@ import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Color;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.utils.GdxUtil;
-import net.mostlyoriginal.api.utils.SafeEntityReference;
+import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.NameRolodex;
 import net.mostlyoriginal.game.component.ship.CrewMember;

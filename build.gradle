@@ -93,6 +93,7 @@ project(":html") {
         compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion:sources"
 
         // artemis-odb-contrib
+        compile "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion:sources"
         compile "net.mostlyoriginal.artemis-odb:contrib-components:$artemisContribVersion:sources"
         compile "net.mostlyoriginal.artemis-odb:contrib-components-libgdx:$artemisContribVersion:sources"
         compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion:sources"
@@ -113,9 +114,11 @@ project(":core") {
         compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion:sources"
 
         // artemis-odb-contrib
+        compile "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
         compile "net.mostlyoriginal.artemis-odb:contrib-components:$artemisContribVersion"
         compile "net.mostlyoriginal.artemis-odb:contrib-components-libgdx:$artemisContribVersion"
         compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion"
+        compile "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion:sources"
         compile "net.mostlyoriginal.artemis-odb:contrib-components:$artemisContribVersion:sources"
         compile "net.mostlyoriginal.artemis-odb:contrib-components-libgdx:$artemisContribVersion:sources"
         compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion:sources"
