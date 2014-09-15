@@ -120,32 +120,9 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
     public void createCamera(int cx, int cy)
     {
         // now create a drone that will swerve towards the player which contains the camera. this will create a smooth moving camera.
-        world.createEntity()
-                .addComponent(new Pos(cx, cy))
+        world.createEntity().edit().addComponent(new Pos(cx, cy))
                 .addComponent(createCameraBounds())
-                .addComponent(new Camera())
-                .addToWorld();
-    }
-
-    private Entity createPlayer(int cx, int cy) {
-        Entity player =
-                defaultEntity(cx, cy, "player-idle")
-                        .addComponent(new PlayerControlled())
-                        .addComponent(new MapWallSensor());
-
-        tagManager.register("player", player);
-
-        // now create a drone that will swerve towards the player which contains the camera. this will create a smooth moving camera.
-        world.createEntity()
-                .addComponent(new Pos(0, 0))
-                .addComponent(createCameraBounds())
-                .addComponent(new Physics())
-                .addComponent(new Homing(new SafeEntityReference(player)))
-                .addComponent(new Camera())
-                .addComponent(new Clamped(0, 0, 20 * 16, 15 * 16))
-                .addToWorld();
-
-        return player;
+                .addComponent(new Camera());
     }
 
     private Bounds createCameraBounds() {
@@ -156,15 +133,6 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
                 (Gdx.graphics.getWidth() / 2) / MainScreen.CAMERA_ZOOM_FACTOR,
                 (Gdx.graphics.getHeight() / 2) / MainScreen.CAMERA_ZOOM_FACTOR
         );
-    }
-
-    private Entity defaultEntity(int cx, int cy, String startingAnim) {
-        return world.createEntity()
-                .addComponent(new Pos(cx, cy))
-                .addComponent(new Angle())
-                .addComponent(new Bounds(0, 0, 25, 16))
-                .addComponent(new Anim(startingAnim))
-                .addComponent(new Physics());
     }
 
     public Entity createButton(int x, int y, int width, int height, String animPrefix, ButtonListener listener, String hint)

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Color;
+import net.mostlyoriginal.api.component.graphics.Invisible;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
@@ -38,7 +39,7 @@ public class LabelRenderSystem extends DeferredEntityProcessingSystem {
     protected SpriteBatch batch;
 
     public LabelRenderSystem(EntityProcessPrincipal principal) {
-        super(Aspect.getAspectForAll(Pos.class, Label.class, Renderable.class), principal);
+        super(Aspect.getAspectForAll(Pos.class, Label.class, Renderable.class).exclude(Invisible.class), principal);
         batch = new SpriteBatch(1000);
     }
 

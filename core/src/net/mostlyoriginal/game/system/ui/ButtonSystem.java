@@ -10,6 +10,7 @@ import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Color;
+import net.mostlyoriginal.api.component.graphics.Invisible;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.utils.GdxUtil;
 import net.mostlyoriginal.game.component.ui.Button;
@@ -30,6 +31,7 @@ public class ButtonSystem extends EntityProcessingSystem {
     protected ComponentMapper<Button> mButton;
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<Color> mColor;
+	protected ComponentMapper<Invisible> mInvisible;
     public Label hintlabel;
     public float globalButtonCooldown = 0;
     private AssetSystem assetSystem;
@@ -72,10 +74,11 @@ public class ButtonSystem extends EntityProcessingSystem {
             if ( button.transientIcon != null  ) {
                 if (button.transientIcon.isActive()) {
                     Entity bute = button.transientIcon.get();
-                    if (automaticDisable && bute.isEnabled())
-                        bute.disable();
-                    if (!automaticDisable && !bute.isEnabled()) {
-                        bute.enable();
+                    if ((id != null) && mInvisible.has(bute)) {
+	                    bute.edit().removeComponent(Invisible.class);
+                    }
+                    if ((id == null) && !mInvisible.has(bute)) {
+	                    bute.edit().createComponent(Invisible.class);
                     }
                 }
             }

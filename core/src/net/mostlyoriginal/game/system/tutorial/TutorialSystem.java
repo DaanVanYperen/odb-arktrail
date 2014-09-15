@@ -8,6 +8,7 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.graphics.Invisible;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
@@ -50,8 +51,7 @@ public class TutorialSystem extends EntityProcessingSystem {
     @Override
     protected void initialize() {
         super.initialize();
-        arrow = new EntityBuilder(world).with(new Pos(), new Anim("arrow"), new Renderable(9000)).build();
-        arrow.disable();
+        arrow = new EntityBuilder(world).with(new Pos(), new Anim("arrow"), new Renderable(9000), new Invisible()).build();
     }
 
     public void activateNextStep() {
@@ -61,7 +61,7 @@ public class TutorialSystem extends EntityProcessingSystem {
         } else {
             final int nextStep = currentStep.ordinal() + 1;
             if (nextStep < Step.values().length) {
-                arrow.disable();
+                arrow.edit().addComponent(new Invisible());
                 payoutDelay = 0.5f;
                 payoutStepNr = currentStep;
                 currentStep = Step.values()[nextStep];
@@ -184,7 +184,7 @@ public class TutorialSystem extends EntityProcessingSystem {
         arrowPos.y = pos.y + 16;
 
         enableConstructionButton(button);
-        arrow.enable();
+        arrow.edit().removeComponent(Invisible.class);
     }
 
     public void complete(Step step) {

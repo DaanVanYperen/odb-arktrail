@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Color;
+import net.mostlyoriginal.api.component.graphics.Invisible;
 import net.mostlyoriginal.api.manager.AbstractAssetSystem;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
@@ -36,7 +37,7 @@ public class BarRenderSystem extends DeferredEntityProcessingSystem {
     private SpriteBatch batch;
 
     public BarRenderSystem(EntityProcessPrincipal principal) {
-        super(Aspect.getAspectForAll(Pos.class, Bar.class), principal);
+        super(Aspect.getAspectForAll(Pos.class, Bar.class).exclude(Invisible.class), principal);
         batch  = new SpriteBatch(1000);
     }
 
