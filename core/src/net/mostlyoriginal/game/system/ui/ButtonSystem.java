@@ -78,7 +78,7 @@ public class ButtonSystem extends EntityProcessingSystem {
 	                    bute.edit().remove(Invisible.class);
                     }
                     if ((id == null) && !mInvisible.has(bute)) {
-	                    bute.edit().remove(Invisible.class);
+	                    bute.edit().add(new Invisible());
                     }
                 }
             }
