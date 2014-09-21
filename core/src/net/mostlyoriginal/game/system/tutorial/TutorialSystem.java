@@ -61,7 +61,7 @@ public class TutorialSystem extends EntityProcessingSystem {
         } else {
             final int nextStep = currentStep.ordinal() + 1;
             if (nextStep < Step.values().length) {
-                arrow.edit().addComponent(new Invisible());
+                arrow.edit().add(new Invisible());
                 payoutDelay = 0.5f;
                 payoutStepNr = currentStep;
                 currentStep = Step.values()[nextStep];
@@ -184,7 +184,7 @@ public class TutorialSystem extends EntityProcessingSystem {
         arrowPos.y = pos.y + 16;
 
         enableConstructionButton(button);
-        arrow.edit().removeComponent(Invisible.class);
+        arrow.edit().remove(Invisible.class);
     }
 
     public void complete(Step step) {

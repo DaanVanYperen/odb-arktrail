@@ -75,10 +75,10 @@ public class ButtonSystem extends EntityProcessingSystem {
                 if (button.transientIcon.isActive()) {
                     Entity bute = button.transientIcon.get();
                     if ((id != null) && mInvisible.has(bute)) {
-	                    bute.edit().removeComponent(Invisible.class);
+	                    bute.edit().remove(Invisible.class);
                     }
                     if ((id == null) && !mInvisible.has(bute)) {
-	                    bute.edit().createComponent(Invisible.class);
+	                    bute.edit().remove(Invisible.class);
                     }
                 }
             }

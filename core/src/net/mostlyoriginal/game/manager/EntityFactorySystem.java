@@ -42,148 +42,146 @@ import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 /**
  * Game specific entity factory.
  *
- * @todo transform this into a manager.
  * @author Daan van Yperen
+ * @todo transform this into a manager.
  */
 @Wire
 public class EntityFactorySystem extends AbstractEntityFactorySystem {
 
-    public static final int MOUSE_CURSOR_LAYER = 9999;
-    private TagManager tagManager;
-    private AbstractAssetSystem abstractAssetSystem;
-    private TravelSimulationSystem travelSimulationSystem;
-    private DilemmaSystem dilemmaSystem;
-    private CrewSystem crewSystem;
-    private LifesupportSimulationSystem lifesupportSimulationSystem;
+	public static final int MOUSE_CURSOR_LAYER = 9999;
+	private TagManager tagManager;
+	private AbstractAssetSystem abstractAssetSystem;
+	private TravelSimulationSystem travelSimulationSystem;
+	private DilemmaSystem dilemmaSystem;
+	private CrewSystem crewSystem;
+	private LifesupportSimulationSystem lifesupportSimulationSystem;
 
-    @Override
-    protected void initialize() {
-        super.initialize();
+	@Override
+	protected void initialize() {
+		super.initialize();
 
-        createSpaceshipMetadata();
-
-
-        createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);
-
-        createMousecursor();
-    }
-
-    public void createScanButton() {
-        // engage button.
-        createButton(G.SCREEN_WIDTH - 56 - 4 - 35, 7, 31, 15, "btn-scan", new ButtonListener() {
-            @Override
-            public void run() {
-                dilemmaSystem.scanDilemma();
-                lifesupportSimulationSystem.process();
-            }
-
-            @Override
-            public boolean enabled() {
-                // we don't want to allow engaging while busy!.
-                return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive() && crewSystem.countOf(CrewMember.Ability.BUILD) > 0;
-            }
-        }, "Stick around and look for trouble!");
-    }
-
-    public void createEngageButton() {
-        // engage button.
-        createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage", new ButtonListener() {
-            @Override
-            public void run() {
-                travelSimulationSystem.planWarp();
-            }
-
-            @Override
-            public boolean enabled() {
-                // we don't want to allow engaging while busy!.
-                return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive();
-            }
-        }, "Warp to next landmark. Plan ahead and build!");
-    }
-
-    public Entity createBar(int x, int y, String label, String icon, String iconEmpty, int value, int valueEmpty) {
-        return new EntityBuilder(world).with(new Pos(x,y), new Renderable(), new Bar(label, icon, value, iconEmpty, valueEmpty)).build();
-    }
-
-    private void createSpaceshipMetadata() {
-        new EntityBuilder(world).with(
-                new Travels(),
-                new Inventory()).tag("travels").build();
-    }
-
-    @Override
-    public Entity createEntity(String entity, int cx, int cy, MapProperties properties) {
-        return null;
-    }
+		createSpaceshipMetadata();
 
 
-    public void createCamera(int cx, int cy)
-    {
-        // now create a drone that will swerve towards the player which contains the camera. this will create a smooth moving camera.
-        world.createEntity().edit().addComponent(new Pos(cx, cy))
-                .addComponent(createCameraBounds())
-                .addComponent(new Camera());
-    }
+		createCamera(G.CANVAS_WIDTH / 8, G.CANVAS_HEIGHT / 8);
 
-    private Bounds createCameraBounds() {
-        // convert viewport into bounds.
-        return new Bounds(
-                (-Gdx.graphics.getWidth() / 2) / MainScreen.CAMERA_ZOOM_FACTOR,
-                (-Gdx.graphics.getHeight() / 2) / MainScreen.CAMERA_ZOOM_FACTOR,
-                (Gdx.graphics.getWidth() / 2) / MainScreen.CAMERA_ZOOM_FACTOR,
-                (Gdx.graphics.getHeight() / 2) / MainScreen.CAMERA_ZOOM_FACTOR
-        );
-    }
+		createMousecursor();
+	}
 
-    public Entity createButton(int x, int y, int width, int height, String animPrefix, ButtonListener listener, String hint)
-    {
-        return new EntityBuilder(world)
-                .with(new Pos(x, y),
-                        new Bounds(0, 0, width, height),
-                        new Anim(),
-                        new Color(),
-                        new Renderable(1100),
-                        new Button(animPrefix, listener, hint),
-                        new Clickable()).build();
-    }
+	public void createScanButton() {
+		// engage button.
+		createButton(G.SCREEN_WIDTH - 56 - 4 - 35, 7, 31, 15, "btn-scan", new ButtonListener() {
+			@Override
+			public void run() {
+				dilemmaSystem.scanDilemma();
+				lifesupportSimulationSystem.process();
+			}
 
-    public Entity createRouteNode(int x, int y, RouteNode.Action action, int order) {
+			@Override
+			public boolean enabled() {
+				// we don't want to allow engaging while busy!.
+				return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive() && crewSystem.countOf(CrewMember.Ability.BUILD) > 0;
+			}
+		}, "Stick around and look for trouble!");
+	}
 
-        return new EntityBuilder(world)
-                .with(new Pos(x,y),
-                      new Bounds(0,0,8,8),
-                      new Anim(),
-                      new Renderable(900),
-                      new RouteNode(action, order))
-                .group("route").build();
+	public void createEngageButton() {
+		// engage button.
+		createButton(G.SCREEN_WIDTH - 56 - 4, 4, 56, 15, "btn-engage", new ButtonListener() {
+			@Override
+			public void run() {
+				travelSimulationSystem.planWarp();
+			}
+
+			@Override
+			public boolean enabled() {
+				// we don't want to allow engaging while busy!.
+				return !travelSimulationSystem.isTraveling() && !dilemmaSystem.isDilemmaActive();
+			}
+		}, "Warp to next landmark. Plan ahead and build!");
+	}
+
+	public Entity createBar(int x, int y, String label, String icon, String iconEmpty, int value, int valueEmpty) {
+		return new EntityBuilder(world).with(new Pos(x, y), new Renderable(), new Bar(label, icon, value, iconEmpty, valueEmpty)).build();
+	}
+
+	private void createSpaceshipMetadata() {
+		new EntityBuilder(world).with(
+				new Travels(),
+				new Inventory()).tag("travels").build();
+	}
+
+	@Override
+	public Entity createEntity(String entity, int cx, int cy, MapProperties properties) {
+		return null;
+	}
 
 
-    }
+	public void createCamera(int cx, int cy) {
+		// now create a drone that will swerve towards the player which contains the camera. this will create a smooth moving camera.
+		world.createEntity().edit().add(new Pos(cx, cy))
+				.add(createCameraBounds())
+				.add(new Camera());
+	}
 
-    public Entity createRouteIndicator() {
-        return new EntityBuilder(world)
-                .with(new Pos(5,5),
-                      new Bounds(0,0,8,8),
-                      new Anim("progress-indicator"),
-                      new Renderable(1000),
-                      new RouteIndicator())
-                .tag("routeindicator").build();
-    }
+	private Bounds createCameraBounds() {
+		// convert viewport into bounds.
+		return new Bounds(
+				(-Gdx.graphics.getWidth() / 2) / MainScreen.CAMERA_ZOOM_FACTOR,
+				(-Gdx.graphics.getHeight() / 2) / MainScreen.CAMERA_ZOOM_FACTOR,
+				(Gdx.graphics.getWidth() / 2) / MainScreen.CAMERA_ZOOM_FACTOR,
+				(Gdx.graphics.getHeight() / 2) / MainScreen.CAMERA_ZOOM_FACTOR
+		);
+	}
 
-    private Entity createMousecursor() {
-        return new EntityBuilder(world).with(
-                new MouseCursor(),
-                new Pos(),
-                new Bounds(0,0,0,0),
-                new Anim("cursor"),
-                new Renderable(MOUSE_CURSOR_LAYER)).tag("cursor").build();
+	public Entity createButton(int x, int y, int width, int height, String animPrefix, ButtonListener listener, String hint) {
+		return new EntityBuilder(world)
+				.with(new Pos(x, y),
+						new Bounds(0, 0, width, height),
+						new Anim(),
+						new Color(),
+						new Renderable(1100),
+						new Button(animPrefix, listener, hint),
+						new Clickable()).build();
+	}
 
-    }
+	public Entity createRouteNode(int x, int y, RouteNode.Action action, int order) {
 
-    public void createEngineFlame(int gridX, int gridY) {
-        Entity entity = new EntityBuilder(world).with(new Pos(),
-                new Anim(),
-                new Renderable(600),
-        new EngineFlame(gridX, gridY)).build();
-    }
+		return new EntityBuilder(world)
+				.with(new Pos(x, y),
+						new Bounds(0, 0, 8, 8),
+						new Anim(),
+						new Renderable(900),
+						new RouteNode(action, order))
+				.group("route").build();
+
+
+	}
+
+	public Entity createRouteIndicator() {
+		return new EntityBuilder(world)
+				.with(new Pos(5, 5),
+						new Bounds(0, 0, 8, 8),
+						new Anim("progress-indicator"),
+						new Renderable(1000),
+						new RouteIndicator())
+				.tag("routeindicator").build();
+	}
+
+	private Entity createMousecursor() {
+		return new EntityBuilder(world).with(
+				new MouseCursor(),
+				new Pos(),
+				new Bounds(0, 0, 0, 0),
+				new Anim("cursor"),
+				new Renderable(MOUSE_CURSOR_LAYER)).tag("cursor").build();
+
+	}
+
+	public void createEngineFlame(int gridX, int gridY) {
+		Entity entity = new EntityBuilder(world).with(new Pos(),
+				new Anim(),
+				new Renderable(600),
+				new EngineFlame(gridX, gridY)).build();
+	}
 }
