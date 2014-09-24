@@ -1,4 +1,5 @@
 apply plugin: "java"
+apply plugin: "artemis"
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -26,7 +27,18 @@ task dist(type: Jar) {
     }
 }
 
+weave {
+    enableArtemisPlugin = true
+    enablePooledWeaving = true
+    ideFriendlyPacking = true
+    optimizeEntitySystems = true
+    classesDir = project(':core').sourceSets.main.output.classesDir
+}
+
+weave.dependsOn build
+
 dist.dependsOn classes
+dist.dependsOn weave
 
 eclipse {
     project {
