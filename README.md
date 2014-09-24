@@ -6,7 +6,8 @@ Will you patch up your ship and survive the long journey between worlds to finis
 
 ##### 
 
-Coded in 48 hours for Ludum Dare 30! LibGDX 1.3.0 Artemis-odb 1.6.6-snapshot
+Current version uses LibGDX 1.3.1 and Artemis-odb 1.7.1
+Original coded in 48 hours for Ludum Dare 30! 
 
 ##### License 
 
