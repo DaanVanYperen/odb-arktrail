@@ -1,0 +1,218 @@
+{
+    "dilemmas": [
+        {
+            "id": "OUT_OF_FUEL",
+            "text": [ "You have run out of gas."],
+            "choices": [
+                {
+                    "label": ["Never give up! never surrender!"]
+                },
+                {
+                    "label": ["Give up, Tow back to earth"],
+                    "success": [ "RESTART" ]
+                }
+            ]
+        },
+        {
+            "id": "BRAINSLUGS_DOMINATE",
+            "text": [ "Brainslugs have taken over!", "None of your crew remains."],
+            "choices": [
+                {
+                    "label": ["Lets try that again"],
+                    "success": [ "RESTART" ]
+                }
+            ]
+        },
+        {
+            "id": "NO_PILOTS_REMAIN",
+            "text": [ "Nobody left to pilot the ship!" ],
+            "choices": [
+                {
+                    "label": ["Never give up! never surrender!"]
+                },
+                {
+                    "label": ["Give up, Tow back to earth"],
+                    "success": [ "RESTART" ]
+                }
+            ]
+        },
+        {
+            "id": "VICTORY",
+            "text": [ "You have successfully reached your destination!", "This gate will bring wealth and prosperity to your world!" ],
+            "choices": [
+                {
+                    "label": ["YAY! Play again"],
+                    "success": [ "RESTART" ]
+                }
+            ]
+        },
+
+        {
+            "id": "START_TUTORIAL",
+            "text": [ "Preparing in space dock, ", "you are ready for your biggest adventure yet!" ],
+            "choices": [
+                {
+                    "label": [ "Embark my very own Ark!"],
+                    "success": [ "TUTORIAL_2" ]
+                }
+            ]
+        },
+        {
+            "id": "TUTORIAL_2",
+            "text": [ "you have been tasked with transporting a gate,", "and activating it at a resource heavy planet!" ],
+            "choices": [
+                {
+                    "label": [ "Stop talking and hand me the keys!" ],
+                    "success": [ "NEXT_TUTORIAL_STEP" ]
+                }
+            ]
+        },
+        {
+            "id": "AFTER_TUTORIAL",
+            "text": [ "The space dock rushes ark construction.","Complete further construction in transit!" ],
+            "choices": [
+                {
+                    "label": [ "What, that thing is a deathtrap!" ],
+                    "success": [ "PICK_DIFFICULTY" ]
+                }
+            ]
+        },
+        {
+            "id": "PICK_DIFFICULTY",
+            "text": [ "Place a couple of planned upgrades now.", "Scoop up your crew and resources, and engage!" ],
+            "choices": [
+                {
+                    "label": [ "Normal - Full crew, full resources" ],
+                    "success": [ "ENABLE_ENGAGE", "ENABLE_SCAN", "FUEL", "FUEL", "FUEL", "FOOD","FOOD","FOOD","CREW","CREW","CREW" ]
+                },
+                {
+                    "label": [ "Hard - Small crew, less resources" ],
+                    "success": [ "ENABLE_ENGAGE", "ENABLE_SCAN", "FUEL", "FUEL", "FOOD", "CREW","CREW" ]
+                }
+            ]
+        },
+
+        {
+            "text": [ "You discover a rogue gas giant.", "The gas can be converted to fuel."],
+            "groups": [ "positive" ],
+            "choices": [
+                {
+                    "label": [ "Scoop it up!" ],
+                    "crew": "BUILD",
+                    "success": [ "FUEL","FUEL","FUEL" ]
+                },
+                {
+                    "label": [ "Pass it by, can't spare the crew!" ]
+                }
+            ]
+        },
+
+        {
+            "text": [ "A probe has discovered a planet", "lush with coconuts. Sentient coconuts..." ],
+            "groups": [ "positive" ],
+            "choices": [
+                {
+                    "label": [ "Gather!" ],
+                    "crew": "BUILD",
+                    "success": [ "FOOD","FOOD","FOOD" ]
+                },
+                {
+                    "label": [ "Pass it by, can't spare the crew!" ]
+                }
+            ]
+        },
+
+        {
+            "text": [ "You come across an abandoned refueling station.", "Your scanners indicate some fuel remains."],
+            "groups": [ "positive" ],
+            "choices": [
+                {
+                    "label": [ "Attempt to recover the fuel" ],
+                    "crew": "BUILD",
+                    "success": [ "FUEL" ],
+                    "failure": [ "ALIEN_EATS_REFUELING_VICTIM" ]
+                },
+                {
+                    "label": [ "Pass it by, can't spare any crew!" ]
+                }
+            ]
+        },
+
+        {
+            "id": "ALIEN_EATS_REFUELING_VICTIM",
+            "text": [ "The away team reports a room full of leathery",
+                      "objects, like eggs or something. Moments later,",
+                      "{NAME}'s camera cuts to screaming."],
+            "crew": "BUILD",
+            "choices": [
+                {
+                    "label": [ "Turn off {HIS} audio feed to silence the screaming" ],
+                    "success": [ "KILL" ]
+                }
+            ]
+        },
+
+        {
+            "text": [ "Stuck with {NAME} in the turbolift,", "water starts dripping down {HIS} leg! so typical."],
+            "groups": [ "positive" ],
+            "crew": "GIVE_BIRTH",
+            "choices": [
+                {
+                    "label": [ "Deliver baby" ],
+                    "crew": "BUILD",
+                    "success": [ "CREW" ]
+                }
+            ]
+        },
+
+        {
+            "text": [ "{NAME} stuck {HIS} fingers","in an active plasma conduit."],
+            "groups": [ "negative" ],
+            "crew": "BUILD",
+            "choices": [
+                {
+                    "label": [ "Scrape {HIM} off the walls" ],
+                    "success": [ "KILL" ]
+                }
+            ]
+        },
+
+        {
+            "text": [ "The away team brought back a pest,", "infested the food stores." ],
+            "groups": [ "negative" ],
+            "choices": [
+                {
+                    "label": [ "My spaceburgers!" ],
+                    "success": [ "-FOOD", "-FOOD" ]
+                }
+            ]
+        },
+
+        {
+            "text": [ "During a spacewalk, {NAME}'s", "spacesuit was breached." ],
+            "groups": [ "negative", "positive" ],
+            "crew": "INFECTABLE",
+            "choices": [
+                {
+                    "label": [ "I wonder if that slug on {HIS} head is dangerous!" ],
+                    "success": [ "INFECT" ]
+                },
+                {
+                    "label": [ "Throw {HIM} out the airlock" ],
+                    "success": [ "KILL" ]
+                }
+            ]
+        },
+
+        {
+            "text": [ "Another uneventful year passes."],
+            "groups": [ "negative", "positive" ],
+            "choices": [
+                {
+                    "label": [ "I wish something exploded" ]
+                }
+            ]
+        }
+
+    ]
+}

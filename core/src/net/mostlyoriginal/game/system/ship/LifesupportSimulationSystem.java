@@ -68,8 +68,8 @@ public class LifesupportSimulationSystem extends EntityProcessingSystem {
 
     private void checkBrainslugDomination() {
         int infect    = crewSystem.countOf(CrewMember.Ability.INFECT);
-        int notInfect = crewSystem.countNotOf(CrewMember.Ability.INFECT);
-        if ( infect > 0 && notInfect <= 1 )
+        int counterInfected = crewSystem.countOf(CrewMember.Ability.COUNTER_INFECTED);
+        if ( infect > 0 &&  counterInfected == 0 )
         {
             dilemmaSystem.brainslugTakeoverDilemma();
         }

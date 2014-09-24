@@ -1,6 +1,8 @@
 apply plugin: "java"
+apply plugin: "artemis"
 
 sourceCompatibility = 1.7
+targetCompatibility = 1.7
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 project.ext.mainClassName = "net.mostlyoriginal.game.desktop.DesktopLauncher"
@@ -25,7 +27,18 @@ task dist(type: Jar) {
     }
 }
 
+weave {
+    enableArtemisPlugin = true
+    enablePooledWeaving = true
+    ideFriendlyPacking = true
+    optimizeEntitySystems = true
+    classesDir = project(':core').sourceSets.main.output.classesDir
+}
+
+weave.dependsOn build
+
 dist.dependsOn classes
+dist.dependsOn weave
 
 eclipse {
     project {

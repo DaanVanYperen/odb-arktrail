@@ -3,6 +3,9 @@
 <module rename-to="html">
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
     <inherits name='com.artemis.backends.artemis_backends_gwt' />
+    <inherits name='net.mostlyoriginal.ContribComponents' />
+    <inherits name='net.mostlyoriginal.ContribComponentsLibgdx' />
+    <inherits name='net.mostlyoriginal.ContribEventBus' />
 	<inherits name='MyGame' />
 	<entry-point class='net.mostlyoriginal.game.client.HtmlLauncher' />
 
@@ -17,6 +20,11 @@
 
     <!-- Any classes that require reflection on the libgdx side should use this -->
     <extend-configuration-property name="gdx.reflect.include" value="net.mostlyoriginal.api.step" />
+
+    <!-- Json Support -->
+    <extend-configuration-property name="gdx.reflect.include" value="net.mostlyoriginal.game.system.ui.DilemmaLibrary" />
+    <extend-configuration-property name="gdx.reflect.include" value="net.mostlyoriginal.game.system.ui.Dilemma" />
+    <extend-configuration-property name="gdx.reflect.include" value="net.mostlyoriginal.game.system.ui.DilemmaChoice" />
 
 	<set-configuration-property name="gdx.assetpath" value="../android/assets" />
 </module>

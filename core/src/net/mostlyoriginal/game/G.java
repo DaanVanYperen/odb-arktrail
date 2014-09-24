@@ -5,6 +5,8 @@ package net.mostlyoriginal.game;
  */
 public class G {
 
+    public static final String version = "v5";
+
     public static final int CANVAS_WIDTH = 1280;
     public static final int CANVAS_HEIGHT = 720;
     public static final int SCREEN_HEIGHT = CANVAS_HEIGHT / MainScreen.CAMERA_ZOOM_FACTOR;

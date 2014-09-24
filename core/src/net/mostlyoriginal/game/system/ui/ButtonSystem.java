@@ -6,10 +6,13 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
-import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.graphics.Color;
+import net.mostlyoriginal.api.component.graphics.Invisible;
+import net.mostlyoriginal.api.component.graphics.Renderable;
+import net.mostlyoriginal.api.utils.GdxUtil;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Label;
@@ -27,6 +30,8 @@ public class ButtonSystem extends EntityProcessingSystem {
     protected ComponentMapper<Label> mLabel;
     protected ComponentMapper<Button> mButton;
     protected ComponentMapper<Anim> mAnim;
+    protected ComponentMapper<Color> mColor;
+	protected ComponentMapper<Invisible> mInvisible;
     public Label hintlabel;
     public float globalButtonCooldown = 0;
     private AssetSystem assetSystem;
@@ -40,8 +45,7 @@ public class ButtonSystem extends EntityProcessingSystem {
         super.initialize();
 
         hintlabel = new Label("hintlabel");
-        hintlabel.color.set(Color.valueOf("004290"));
-        new EntityBuilder(world).with(new Pos(10, 6), hintlabel).build();
+        new EntityBuilder(world).with(new Renderable(), new Pos(10, 6), hintlabel, GdxUtil.asColor("004290")).build();
     }
 
     @Override
@@ -61,8 +65,8 @@ public class ButtonSystem extends EntityProcessingSystem {
 
         if (id != null) {
             final Button button = mButton.get(e);
-            boolean disabled = button.hideIfDisabled && !button.listener.enabled();
-            if (disabled) {
+            boolean automaticDisable = button.hideIfDisabled && !button.listener.enabled();
+            if (automaticDisable) {
                 id = null;
             }
 
@@ -70,18 +74,20 @@ public class ButtonSystem extends EntityProcessingSystem {
             if ( button.transientIcon != null  ) {
                 if (button.transientIcon.isActive()) {
                     Entity bute = button.transientIcon.get();
-                    if (disabled && bute.isEnabled())
-                        bute.disable();
-                    if (!disabled && !bute.isEnabled()) {
-                        bute.enable();
+                    if ((id != null) && mInvisible.has(bute)) {
+	                    bute.edit().remove(Invisible.class);
+                    }
+                    if ((id == null) && !mInvisible.has(bute)) {
+	                    bute.edit().add(new Invisible());
                     }
                 }
             }
 
             if (mAnim.has(e)) {
                 mAnim.get(e).id = id;
-            } else if (mLabel.has(e)) {
-                mLabel.get(e).color = Color.valueOf(id);
+            } else if (mColor.has(e)) {
+                // @todo fix this hack! XD
+                mColor.get(e).set(GdxUtil.asColor(id));
             }
         }
     }
@@ -100,12 +106,22 @@ public class ButtonSystem extends EntityProcessingSystem {
         }
 
         // gray out disabled items. @todo separate.
-        boolean active = button.listener.enabled();
-        if (mAnim.has(e)) {
-            Anim anim = mAnim.get(e);
-            anim.color.r = active ? 1f : 0.5f;
-            anim.color.g = active ? 1f : 0.5f;
-            anim.color.b = active ? 1f : 0.5f;
+        boolean active = button.listener.enabled() && !button.manualDisable;
+        if (mColor.has(e)) {
+            Color color = mColor.get(e);
+            color.r = button.color.r * (active ? 1f : 0.5f);
+            color.g = button.color.g * (active ? 1f : 0.5f);
+            color.b = button.color.b * (active ? 1f : 0.5f);
+            color.a = button.color.a;
+
+            if ( button.transientIcon != null && button.transientIcon.isActive() )
+            {
+                final Entity iconEntity = button.transientIcon.get();
+                if ( mColor.has(iconEntity )) {
+                    mColor.get(iconEntity).set(color);
+                }
+            }
+
             if (!active) {
                 return button.animDefault;
             }
@@ -132,7 +148,7 @@ public class ButtonSystem extends EntityProcessingSystem {
     }
 
     private void triggerButton(Button button) {
-        if (button.listener.enabled() && globalButtonCooldown <= 0 ) {
+        if (button.listener.enabled() && globalButtonCooldown <= 0 && !button.manualDisable ) {
 
             if ( !button.autoclick) assetSystem.playSfx("snd-click");
             // prevent spamming by accident.

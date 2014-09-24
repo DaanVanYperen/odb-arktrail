@@ -8,10 +8,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.MathUtils;
-import net.mostlyoriginal.api.system.anim.ColorAnimationSystem;
+import net.mostlyoriginal.api.event.common.EventManager;
 import net.mostlyoriginal.api.system.camera.CameraShakeSystem;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.camera.EntityCameraSystem;
+import net.mostlyoriginal.api.system.graphics.ColorAnimationSystem;
+import net.mostlyoriginal.api.system.graphics.RenderBatchingSystem;
 import net.mostlyoriginal.api.system.mouse.MouseCursorSystem;
 import net.mostlyoriginal.api.system.physics.*;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
@@ -20,10 +22,10 @@ import net.mostlyoriginal.api.system.script.SchedulerSystem;
 import net.mostlyoriginal.game.manager.AssetSystem;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
 import net.mostlyoriginal.game.manager.FontManager;
-import net.mostlyoriginal.game.system.ship.ShipComponentSystem;
 import net.mostlyoriginal.game.system.render.BarRenderSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 import net.mostlyoriginal.game.system.ship.*;
+import net.mostlyoriginal.game.system.tutorial.TutorialSystem;
 import net.mostlyoriginal.game.system.ui.*;
 
 /**
@@ -44,6 +46,8 @@ public class MainScreen implements Screen {
         world.setManager(new TagManager());
         world.setManager(new UuidEntityManager());
         world.setManager(new FontManager());
+
+	    world.setManager(new EventManager());
 
         /** UTILITY - PASSIVE */
 
@@ -78,6 +82,7 @@ public class MainScreen implements Screen {
         world.setSystem(new MouseCursorSystem());
         world.setSystem(new MouseClickSystem());
         world.setSystem(new ButtonSystem());
+        world.setSystem(new TutorialSystem());
 
         /** SIMULATE */
 
@@ -115,10 +120,12 @@ public class MainScreen implements Screen {
         world.setSystem(new CameraShakeSystem());
 
         /** Rendering */
-        //world.setSystem(new MapRenderSystem());
-        world.setSystem(new AnimRenderSystem());
-        world.setSystem(new LabelRenderSystem(), true); // triggered from AnimRenderSystem.
-        world.setSystem(new BarRenderSystem(), true); // triggered from AnimRenderSystem.
+
+        final RenderBatchingSystem renderBatchingSystem = new RenderBatchingSystem();
+        world.setSystem(renderBatchingSystem);
+        world.setSystem(new AnimRenderSystem(renderBatchingSystem), true);
+        world.setSystem(new LabelRenderSystem(renderBatchingSystem), true);
+        world.setSystem(new BarRenderSystem(renderBatchingSystem), true);
 
         world.initialize();
     }

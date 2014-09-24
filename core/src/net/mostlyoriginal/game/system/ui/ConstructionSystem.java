@@ -8,9 +8,12 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
-import net.mostlyoriginal.api.utils.SafeEntityReference;
+import net.mostlyoriginal.api.component.graphics.Renderable;
+import net.mostlyoriginal.api.event.common.EventManager;
+import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.Button;
@@ -18,9 +21,15 @@ import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.manager.AssetSystem;
 import net.mostlyoriginal.game.manager.EntityFactorySystem;
+import net.mostlyoriginal.game.system.event.SelectConstructionEvent;
+import net.mostlyoriginal.game.system.event.StartConstructionEvent;
 import net.mostlyoriginal.game.system.ship.HullSystem;
+import net.mostlyoriginal.game.system.ship.InventorySystem;
 import net.mostlyoriginal.game.system.ship.ShipComponentSystem;
 import net.mostlyoriginal.game.system.ship.TravelSimulationSystem;
+import net.mostlyoriginal.game.system.tutorial.TutorialSystem;
+
+import java.util.HashMap;
 
 /**
  * @author Daan van Yperen
@@ -38,10 +47,15 @@ public class ConstructionSystem extends EntityProcessingSystem {
     protected ComponentMapper<ShipComponent> mShipComponent;
     protected ComponentMapper<Clickable> mClickable;
     protected ComponentMapper<Button> mButton;
+
+    private InventorySystem inventorySystem;
     private HullSystem hullSystem;
     private AssetSystem assetSystem;
+    private TutorialSystem tutorialSystem;
+    public final HashMap<ShipComponent.Type, Entity> constructionButton = new HashMap<>();
+	private EventManager em;
 
-    public ConstructionSystem() {
+	public ConstructionSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class, Clickable.class, Anim.class));
     }
 
@@ -55,55 +69,86 @@ public class ConstructionSystem extends EntityProcessingSystem {
 
     @Override
     protected void process(Entity e) {
-        final Anim anim = mAnim.get(e);
+        // Building is restricted to hull parts.
         final ShipComponent shipComponent = mShipComponent.get(e);
-
         if ( shipComponent.type == ShipComponent.Type.HULL)
         {
             // show building indicator while placing.
-            boolean validLocale = getLocaleValidity(anim, shipComponent);
+            final boolean validDestination = canAttachTo(selected, e);
 
-            anim.id2 = validLocale ? "c-indicator" : null;
-            anim.color.a = 1;
+            final Anim anim = mAnim.get(e);
+            anim.id2 = validDestination ? "c-indicator" : null;
 
             // start construction when clicked.
-            Clickable clickable = mClickable.get(e);
-            if ( clickable.state == Clickable.ClickState.CLICKED && validLocale )
+            final Clickable clickable = mClickable.get(e);
+            if ( clickable.state == Clickable.ClickState.CLICKED && validDestination )
             {
                 startConstruction(e, selected);
+
+                // continue placement as long as control is pressed.
                 if ( !Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT ) && !Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT ) ) stopConstructionmode();
             }
-
-        } else {
-            anim.color.a = 1f;
         }
-
     }
 
+    /** Finish construction of passed ship component. */
+    public void complete(Entity entity) {
+        if (entity != null) {
+            final ShipComponent c = mShipComponent.get(entity);
+            if (c.state == ShipComponent.State.UNDER_CONSTRUCTION) {
+                c.state = ShipComponent.State.CONSTRUCTED;
+                switch (c.type) {
+                    case HULL:
+                        break;
+                    case BUNKS:
+                        break;
+                    case MEDBAY:
+                        inventorySystem.alter(InventorySystem.Resource.BIOGEL_STORAGE, 1);
+                        break;
+                    case HYDROPONICS:
+                        break;
+                    case STORAGEPOD:
+                        inventorySystem.alter(InventorySystem.Resource.STORAGE, 1);
+                        break;
+                    case ENGINE:
+                        efs.createEngineFlame(c.gridX - 3, c.gridY);
+                        inventorySystem.alter(InventorySystem.Resource.THRUST, 1);
+                        break;
+                    case RAMSCOOP:
+                        break;
+                }
+            }
+        }
+    }
+
+
     /** Return if locale is valid. */
-    private boolean getLocaleValidity(Anim anim, ShipComponent shipComponent) {
-        boolean validLocale = selected != null;
+    private boolean canAttachTo(ShipComponent.Type type, Entity destination) {
+
+        final Anim anim = mAnim.get(destination);
+        final ShipComponent shipComponent = mShipComponent.get(destination);
+        if ( anim == null || shipComponent == null ) return false;
 
         // don't allow expanding at the borders so the hull doesn't break.
         if ( shipComponent.gridX <= 0 ||shipComponent.gridY <= 0 || shipComponent.gridX >= ShipComponentSystem.MAX_X-1 || shipComponent.gridY >= ShipComponentSystem.MAX_Y -1 )
             return false;
 
         // only allow engine on left facing hull.
-        if ( selected == ShipComponent.Type.ENGINE && !"hull-3".equals(anim.id) ) validLocale = false;
+        if ( type == ShipComponent.Type.ENGINE && (!"hull-3".equals(anim.id) && !"hull-3-building".equals(anim.id)) ) return false;
         // only allow ramscoop on right facing hull.
-        if ( selected == ShipComponent.Type.RAMSCOOP && !"hull-4".equals(anim.id) ) validLocale = false;
-        return validLocale;
+        if ( type == ShipComponent.Type.RAMSCOOP && (!"hull-4".equals(anim.id) && !"hull-4-building".equals(anim.id)) ) return false;
+
+        return type != null;
     }
 
-    private void stopConstructionmode() {
+    public void stopConstructionmode() {
         selected=null;
     }
 
     /** Activate shipcomponent! */
     private void startConstruction(Entity e, ShipComponent.Type selected) {
-        if ( selected != null && e != null && mAnim.has(e) && mShipComponent.has(e) ) {
 
-            //e.addComponent(new ColorAnimation( Color.CLEAR, new Color(1f,1f,1f,0.5f), Interpolation.linear, 2f, 0.4f )).changedInWorld();
+        if ( selected != null && e != null && mAnim.has(e) && mShipComponent.has(e) ) {
 
             assetSystem.playSfx("snd-click");
 
@@ -114,6 +159,9 @@ public class ConstructionSystem extends EntityProcessingSystem {
             mAnim.get(e).id = selected.animId;
 
             hullSystem.dirty();
+
+	        // inform other systems (like tutorial).
+	        em.dispatch(new StartConstructionEvent(selected));
         }
     }
 
@@ -123,11 +171,16 @@ public class ConstructionSystem extends EntityProcessingSystem {
             if (structure.buildable) {
                 int x = G.SCREEN_WIDTH + MARGIN_RIGHT - (index + 1) * 18;
                 int y = 7;
-                Entity button = efs.createButton(x, y, 15, 15, "btn-construct", new ToolSelectButton(structure), null);
+                final Entity button = efs.createButton(x, y, 15, 15, "btn-construct", new ToolSelectButton(structure), null);
+                constructionButton.put(structure, button);
                 Button button1 = mButton.get(button);
+                button1.color = Color.WHITE;
                 button1.hint = structure.label;
                 button1.hideIfDisabled  =true;
-                button1.transientIcon = new SafeEntityReference(new EntityBuilder(world).with(new Pos(x + 4, y + 5), new Anim(structure.animId, 4000)).build());
+                button1.transientIcon = new SafeEntityReference(new EntityBuilder(world).with(
+                        new Pos(x + 4, y + 5),
+                        new Anim(structure.animId),
+                        new Renderable(4000)).build());
                 // add icon over button. @todo merge with button logic.
 
                 index++;
@@ -137,6 +190,9 @@ public class ConstructionSystem extends EntityProcessingSystem {
 
     private void startPlacing(ShipComponent.Type selected) {
         this.selected = selected;
+
+	    // inform other systems (like tutorial).
+	    em.dispatch(new SelectConstructionEvent(selected));
     }
 
     private class ToolSelectButton extends ButtonListener {

@@ -6,12 +6,15 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.EntityBuilder;
+import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
-import net.mostlyoriginal.game.component.ship.EngineFlame;
+import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.system.ui.ConstructionSystem;
 
 /**
  * Holds a spatial map of the ship.
@@ -26,9 +29,11 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     protected ComponentMapper<Pos> mPos;
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<ShipComponent> mShipComponent;
+    protected ComponentMapper<Renderable> mRenderable;
     private HullSystem hullSystem;
     private AccelerationEffectSystem accelerationEffectSystem;
     private InventorySystem inventorySystem;
+    private ConstructionSystem constructionSystem;
 
     public ShipComponentSystem() {
         super(Aspect.getAspectForAll(ShipComponent.class, Pos.class, Anim.class));
@@ -50,15 +55,19 @@ public class ShipComponentSystem extends EntityProcessingSystem {
 
         // initialize basic ship.
         // create test expansion slot.
-        createComponent(shipCenterX -1, shipCenterY+1, ShipComponent.Type.ENGINE, ShipComponent.State.CONSTRUCTED);
-        createComponent(shipCenterX, shipCenterY, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
-        createComponent(shipCenterX, shipCenterY - 1, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
-        createComponent(shipCenterX, shipCenterY + 1, ShipComponent.Type.STORAGEPOD, ShipComponent.State.CONSTRUCTED);
-        createComponent(shipCenterX+1, shipCenterY, ShipComponent.Type.BUNKS, ShipComponent.State.CONSTRUCTED);
+        final ShipComponent.State constructed = ShipComponent.State.UNDER_CONSTRUCTION;
+        //createComponent(shipCenterX -1, shipCenterY+1, ShipComponent.Type.ENGINE, constructed);
 
-        createComponent(shipCenterX-2, shipCenterY, ShipComponent.Type.CHAIN, ShipComponent.State.CONSTRUCTED);
-        createComponent(shipCenterX-3, shipCenterY, ShipComponent.Type.CHAIN, ShipComponent.State.CONSTRUCTED);
-        createComponent(shipCenterX-4, shipCenterY, ShipComponent.Type.CHAIN, ShipComponent.State.CONSTRUCTED);
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -2; y <= 2; y++) {
+                createComponent(shipCenterX+x, shipCenterY+y, ShipComponent.Type.HULL, constructed);
+            }
+        }
+
+        createComponent(shipCenterX - 2, shipCenterY, ShipComponent.Type.CHAIN, constructed);
+        createComponent(shipCenterX - 3, shipCenterY, ShipComponent.Type.CHAIN, constructed);
+        createComponent(shipCenterX - 4, shipCenterY, ShipComponent.Type.CHAIN, constructed);
+
         hullSystem.dirty();
     }
 
@@ -68,44 +77,21 @@ public class ShipComponentSystem extends EntityProcessingSystem {
     public Entity createComponent(int gridX, int gridY, ShipComponent.Type type, ShipComponent.State state) {
         if (gridY < 0 || gridX < 0 || gridX >= MAX_X || gridY >= MAX_Y) return null;
         if (get(gridX, gridY) == null) {
-            Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(), new ShipComponent(type, gridX, gridY, ShipComponent.State.UNDER_CONSTRUCTION), new Bounds(0, 0, 8, 8), new Clickable()).build();
-            set(gridX,gridY, entity);
+            Entity entity = new EntityBuilder(world).with(
+                    new Pos(),
+                    new Anim(),
+                    new Renderable(),
+                    new ShipComponent(type, gridX, gridY, ShipComponent.State.UNDER_CONSTRUCTION),
+                    new Bounds(0, 0, 8, 8),
+                    new Clickable()).build();
+            set(gridX, gridY, entity);
 
-            completeConstructionOf(entity);
+            if (state == ShipComponent.State.CONSTRUCTED) {
+                constructionSystem.complete(entity);
+            }
             return entity;
         }
         return null;
-    }
-
-    public void completeConstructionOf(Entity entity) {
-        final ShipComponent c = mShipComponent.get(entity);
-        if ( c.state == ShipComponent.State.UNDER_CONSTRUCTION) {
-            c.state = ShipComponent.State.CONSTRUCTED;
-            switch (c.type) {
-                case HULL:
-                    break;
-                case BUNKS:
-                    break;
-                case MEDBAY:
-                    inventorySystem.alter(InventorySystem.Resource.BIOGEL_STORAGE, 1);
-                    break;
-                case HYDROPONICS:
-                    break;
-                case STORAGEPOD:
-                    inventorySystem.alter(InventorySystem.Resource.STORAGE, 1);
-                    break;
-                case ENGINE:
-                    createEngineFlame(c.gridX - 3, c.gridY);
-                    inventorySystem.alter(InventorySystem.Resource.THRUST, 1);
-                    break;
-                case RAMSCOOP:
-                    break;
-            }
-        }
-    }
-
-    private void createEngineFlame(int gridX, int gridY) {
-        Entity entity = new EntityBuilder(world).with(new Pos(), new Anim(600), new EngineFlame(gridX, gridY)).build();
     }
 
     @Override
@@ -153,9 +139,11 @@ public class ShipComponentSystem extends EntityProcessingSystem {
         pos.x = shipComponent.gridX * 8 + MARGIN_LEFT + shipComponent.type.xOffset + 10f * accelerationEffectSystem.speedFactor;
         pos.y = shipComponent.gridY * 8 + MARGIN_TOP;
 
-        Anim anim = mAnim.get(e);
-        anim.layer = shipComponent.type.layer;
+        final Renderable renderable = mRenderable.get(e);
+        renderable.layer = shipComponent.type.layer;
+
         if (shipComponent.type.animId != null) {
+            Anim anim = mAnim.get(e);
             anim.id = shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION ? shipComponent.type.buildingAnimId : shipComponent.type.placedAnimId;
             anim.id2 = null;
         }
@@ -163,15 +151,22 @@ public class ShipComponentSystem extends EntityProcessingSystem {
 
     public int shipValue() {
 
-        int count=0;
+        int count = 0;
         for (Entity entity : getActives()) {
-            if ( mc.has(entity) )
-            {
+            if (mc.has(entity)) {
                 ShipComponent shipComponent = mc.get(entity);
                 count += shipComponent.type.pointValue;
             }
         }
 
         return count;
+    }
+
+    /**
+     * Fetch random ship part.
+     */
+    public Entity getRandomPart() {
+        final ImmutableBag<Entity> actives = getActives();
+        return actives.isEmpty() ? null : actives.get(MathUtils.random(0, actives.size() - 1));
     }
 }

@@ -11,12 +11,14 @@ import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.EntityBuilder;
 import com.artemis.utils.ImmutableBag;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
-import net.mostlyoriginal.api.utils.SafeEntityReference;
+import net.mostlyoriginal.api.component.graphics.Color;
+import net.mostlyoriginal.api.component.graphics.Renderable;
+import net.mostlyoriginal.api.utils.GdxUtil;
+import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.NameRolodex;
 import net.mostlyoriginal.game.component.ship.CrewMember;
@@ -50,6 +52,7 @@ public class CrewSystem extends EntitySystem {
     protected ComponentMapper<Pos> mPos;
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<Label> mLabel;
+    protected ComponentMapper<Color> mColor;
     protected EntityFactorySystem efs;
 
     protected float labelCooldown = 4;
@@ -57,7 +60,7 @@ public class CrewSystem extends EntitySystem {
 
     protected int crewIndex = 0;
 
-    public static final Color NEUTRAL = Color.valueOf("2C4142");
+    public static final Color NEUTRAL = GdxUtil.asColor("2C4142");
 
     private final List<Entity> sortedEntities = new ArrayList<Entity>();
     public boolean sortedDirty = false;
@@ -177,7 +180,7 @@ public class CrewSystem extends EntitySystem {
         {
             Label l = mLabel.get(e2);
             l.text = label;
-            l.color = color;
+            mColor.get(e2).set(color);
         }
     }
 
@@ -240,26 +243,26 @@ public class CrewSystem extends EntitySystem {
 
     private void populateTransients(CrewMember crewMember, Entity e) {
         if ( crewMember.icon == null ) {
-            crewMember.icon = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), new Anim(crewMember.animId)).build());
+            crewMember.icon = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), new Renderable(), new Anim(crewMember.animId)).build());
         }
 
         if ( crewMember.biogelButton == null ) {
             Button btn = new Button("btn-heal", new HealButton(crewMember, e), "Heal the crewmember.");
-            crewMember.biogelButton = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), new Bounds(-2,-2,10, 8), new Clickable(), new Anim(),
+            crewMember.biogelButton = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), new Bounds(-2,-2,10, 8), new Clickable(), new Renderable(), new Anim(),
                     btn).build());
             btn.hideIfDisabled=true;
 
         }
 
         if ( crewMember.labelName == null ) {
-            Label label = new Label(crewMember.name, NEUTRAL);
+            Label label = new Label(crewMember.name);
             label.align = Label.Align.RIGHT;
-            crewMember.labelName = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), label).build());
+            crewMember.labelName = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), label, new Renderable(),  new Color(NEUTRAL)).build());
         }
         if ( crewMember.labelStatus == null ) {
-            Label label = new Label(crewMember.effect.label, NEUTRAL);
+            Label label = new Label(crewMember.effect.label);
             label.align = Label.Align.RIGHT;
-            crewMember.labelStatus = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), label).build());
+            crewMember.labelStatus = new SafeEntityReference(new EntityBuilder(world).with(new Pos(), label, new Renderable(),  new Color(NEUTRAL)).build());
         }
     }
 

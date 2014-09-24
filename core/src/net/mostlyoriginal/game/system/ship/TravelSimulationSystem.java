@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.game.component.environment.RouteNode;
 import net.mostlyoriginal.game.component.ship.CrewMember;
 import net.mostlyoriginal.game.component.ship.Travels;
+import net.mostlyoriginal.game.system.ui.ConstructionSystem;
 import net.mostlyoriginal.game.system.ui.DilemmaSystem;
 import net.mostlyoriginal.game.system.ui.RouteSystem;
 
@@ -30,6 +31,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
     private CrewSystem crewSystem;
     private LifesupportSimulationSystem lifesupportSimulationSystem;
     private ProductionSimulationSystem productionSimulationSystem;
+    private ConstructionSystem constructionSystem;
 
     public TravelSimulationSystem() {
         super(Aspect.getAspectForAll(Travels.class));
@@ -43,7 +45,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
 
         if ( inventorySystem.get(InventorySystem.Resource.FUEL) < 1 )
         {
-            dilemmaSystem.outOfGasDilemma();
+            dilemmaSystem.outOfFuelDilemma();
             return;
         }
 
@@ -93,6 +95,8 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
 
         if (handleNoPilotsLeft()) return;
 
+
+        constructionSystem.stopConstructionmode();
         Entity shipMetadata = getShipMetadata();
         if ( shipMetadata != null )
         {
@@ -117,7 +121,7 @@ public class TravelSimulationSystem extends EntityProcessingSystem {
                 travels.nextJumpAfterCooldown -= world.delta;
                 if (travels.nextJumpAfterCooldown <= 0) {
                     travels.nextJumpAfterCooldown=0;
-                    warp(MathUtils.random(1, inventorySystem.get(InventorySystem.Resource.THRUST)));
+                    warp(MathUtils.random(1, MathUtils.clamp(inventorySystem.get(InventorySystem.Resource.THRUST),1,99)));
                 }
             }
         }

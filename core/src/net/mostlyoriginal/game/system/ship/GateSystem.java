@@ -9,6 +9,7 @@ import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.component.ship.Gate;
 
 /**
@@ -33,7 +34,7 @@ public class GateSystem extends EntityProcessingSystem {
     protected void initialize() {
         super.initialize();
 
-        new EntityBuilder(world).with(new Gate(), new Pos(), new Anim("gate")).build();
+        new EntityBuilder(world).with(new Gate(), new Pos(), new Anim("gate"), new Renderable()).build();
     }
 
     @Override

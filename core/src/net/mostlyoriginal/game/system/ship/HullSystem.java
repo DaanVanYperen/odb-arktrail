@@ -5,7 +5,9 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
+import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.thirdparty.SimplexNoise;
 import net.mostlyoriginal.game.component.ship.ShipComponent;
 
 /**
@@ -38,11 +40,24 @@ public class HullSystem extends EntityProcessingSystem {
 
     private static class Pattern {
         private final int[] layout;
-        public final String animId;
+        public final String[] animId;
+        public final String[] animIdBuilding;
 
         private Pattern( String animId, int ... layout ) {
             this.layout = layout;
+            this.animId = new String[] {animId};
+            this.animIdBuilding = new String[] {animId + "-building"};
+        }
+
+        private Pattern( String[] animId, int ... layout ) {
+            this.layout = layout;
             this.animId = animId;
+
+            this.animIdBuilding = new String[animId.length];
+            for (int i=0;i<animId.length;i++)
+            {
+                this.animIdBuilding[i] = animId[i] + "-building";
+            }
         }
 
         public boolean matches(int[] pat) {
@@ -64,7 +79,7 @@ public class HullSystem extends EntityProcessingSystem {
                     2, 0, 2,
                     0, 1, 1,
                     2, 1, 1),
-            new Pattern("hull-1",
+            new Pattern(new String[] {"hull-1","hull-1","hull-1","hull-1", "hull-1-solar", "hull-1-wing"},
                     2, 0, 2,
                     1, 1, 1,
                     2, 1, 2),
@@ -149,7 +164,12 @@ public class HullSystem extends EntityProcessingSystem {
                         for (Pattern pattern : patterns) {
                             if ( pattern.matches(pat))
                             {
-                                anim.id = pattern.animId;
+                                final String[] newId = shipComponent.state == ShipComponent.State.UNDER_CONSTRUCTION ? pattern.animIdBuilding : pattern.animId;
+
+                                if ( !newId.equals(anim.id) ) {
+                                    double index = (SimplexNoise.noise(gridX*100f,gridY*100f,0)+1.0)*0.5;
+                                    anim.id = newId[Math.min(newId.length, (int)(index * newId.length))];
+                                }
                                 break;
                             }
                         }
@@ -202,7 +222,7 @@ public class HullSystem extends EntityProcessingSystem {
         
         final Entity entity = shipComponentSystem.get(gridX, gridY);
         if ( entity == null ) {
-               shipComponentSystem.createComponent(gridX, gridY, ShipComponent.Type.HULL, ShipComponent.State.CONSTRUCTED);
+               shipComponentSystem.createComponent(gridX, gridY, ShipComponent.Type.HULL, ShipComponent.State.UNDER_CONSTRUCTION);
         }
     }
 
